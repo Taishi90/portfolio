@@ -4,7 +4,7 @@ import skillMd from '../skill.md?raw';
 
 export const PROFILE = {
   name: 'Linh Nguyen',
-  role: 'Developer', // TODO: your job title
+  role: 'Game Developer',
   about: [
     "Hi! I'm Linh.",
     'A game developer with over 5 years of experience in mobile game development using Unity, passionate about creating diverse game genres and delivering exceptional experiences to players.',
