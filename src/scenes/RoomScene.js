@@ -85,7 +85,8 @@ export default class RoomScene extends Phaser.Scene {
       .setDepth(1) // on the floor: the player walks over it
       .setAlpha(0);
     this.rugText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    this.onRug = false;
+    // The player spawns on the rug: count that as already on it, so the text only shows after leaving and coming back
+    this.onRug = true;
 
     this.player = this.physics.add.sprite(160, 150, 'player', 'down0');
     this.player.body.setSize(10, 6).setOffset(3, 10);
