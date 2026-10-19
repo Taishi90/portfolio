@@ -111,13 +111,32 @@ a { color: #1f5fbf; }
   #dpad [data-dir='down'] { grid-area: down; }
   #dpad [data-dir='left'] { grid-area: left; }
   #dpad [data-dir='right'] { grid-area: right; }
-  #hint { bottom: 210px; }
-  /* bảng thông tin nằm trên D-pad để vẫn đi lại được khi đang đọc */
-  #panel { top: max(60px, env(safe-area-inset-top)); bottom: auto; max-height: 40vh; }
+}
+
+/* Điện thoại dọc: game ở trên, bảng thông tin ở giữa, D-pad ở dưới */
+@media (pointer: coarse) and (orientation: portrait) {
+  #game-view { --game-h: min(75vw, 45vh); --top: 64px; }
+  #game { position: absolute; top: var(--top); height: var(--game-h); }
+  #hint { top: calc(var(--top) + var(--game-h) + 12px); bottom: auto; }
+  #panel {
+    top: calc(var(--top) + var(--game-h) + 8px);
+    bottom: 208px;
+    max-height: none;
+    transform: translateX(-50%);
+  }
+  @keyframes pop { from { opacity: 0; } }
+}
+
+/* Điện thoại ngang: D-pad góc trái dưới, bảng thông tin bên phải */
+@media (pointer: coarse) and (orientation: landscape) {
+  #dpad { left: 16px; transform: none; grid-template-rows: 48px 48px 48px; grid-template-columns: 48px 48px 48px; }
+  #hint { display: none; }
+  #panel { left: auto; right: 16px; top: 56px; bottom: 16px; width: min(360px, 45%); max-height: none; transform: none; }
+  @keyframes pop { from { opacity: 0; } }
 }
 
 /* Trang thường */
-body.classic-mode { background: #f4ecd8; }
+html:has(body.classic-mode), body.classic-mode { background: #f4ecd8; height: auto; min-height: 100%; }
 #classic { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
 #classic header { padding: 24px 0 16px; border-bottom: 4px solid var(--border); margin-bottom: 8px; }
 #classic h1 { margin: 0; font-size: 36px; }

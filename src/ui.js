@@ -32,7 +32,8 @@ function renderClassic() {
 
 let game;
 
-function setMode(mode) {
+// sectionId: cuộn tới mục đó trên trang thường (vd. link .../#projects)
+function setMode(mode, sectionId) {
   const classic = mode === 'classic';
   $('classic').hidden = !classic;
   $('game-view').hidden = classic;
@@ -40,8 +41,12 @@ function setMode(mode) {
   if (classic) {
     if (!$('classic').innerHTML) renderClassic();
     game.loop.sleep();
-    if (location.hash !== '#classic') history.replaceState(null, '', '#classic');
-    window.scrollTo(0, 0);
+    if (sectionId) {
+      document.getElementById(sectionId)?.scrollIntoView();
+    } else {
+      history.replaceState(null, '', '#classic');
+      window.scrollTo(0, 0);
+    }
   } else {
     game.loop.wake();
     history.replaceState(null, '', location.pathname);
@@ -83,9 +88,7 @@ export function initUI(phaserGame) {
   // Mở thẳng trang thường bằng link .../#classic hoặc một mục cụ thể như #projects
   const hash = location.hash.slice(1);
   if (hash === 'classic' || SECTIONS.some((s) => s.id === hash)) {
-    game.events.once('ready', () => {
-      setMode('classic');
-      if (hash !== 'classic') document.getElementById(hash)?.scrollIntoView();
-    });
+    // Phaser bật vòng lặp ngay SAU sự kiện 'ready', nên đợi 1 nhịp rồi mới cho game ngủ
+    game.events.once('ready', () => setTimeout(() => setMode('classic', hash === 'classic' ? null : hash)));
   }
 }
