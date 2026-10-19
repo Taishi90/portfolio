@@ -1,6 +1,6 @@
 // Hình pixel art TẠM THỜI, vẽ bằng code để game chạy được ngay không cần file ảnh.
 // Muốn thay bằng ảnh thật (vd. asset itch.io): bỏ ảnh vào public/assets/,
-// load trong RoomScene.preload() với cùng key ('player', 'obj-about', ...) và xoá phần vẽ tương ứng ở đây.
+// load trong RoomScene.preload() với cùng key ('player', 'obj-about', ...). Key nào đã có ảnh thì code ở đây tự bỏ qua.
 
 const PALETTE = {
   h: '#4a2f27', // tóc
@@ -77,7 +77,9 @@ function createPlayer(scene) {
 }
 
 // Vẽ một texture bằng các hình chữ nhật: draw(r) với r(màu, x, y, w, h)
+// Nếu key đã được load từ file ảnh thật (preload) thì giữ ảnh thật, không vẽ đè
 function makeTexture(scene, key, w, h, draw) {
+  if (scene.textures.exists(key)) return;
   const g = scene.make.graphics({ x: 0, y: 0 }, false);
   draw((color, x, y, rw, rh) => {
     g.fillStyle(color);
@@ -163,8 +165,7 @@ function createObjects(scene) {
 }
 
 export function createTextures(scene) {
-  if (scene.textures.exists('player')) return;
-  createPlayer(scene);
+  if (!scene.textures.exists('player')) createPlayer(scene);
   createObjects(scene);
 }
 
