@@ -10,8 +10,8 @@ const T = 16;
 const WALL_TOP = 48;
 const SPEED = 80;
 
-// Vị trí 4 đồ vật. x, y = điểm giữa-đáy của hình.
-// solid: vùng va chạm (không đi xuyên qua). zone: đứng vào đây sẽ mở thông tin.
+// The 4 objects. x, y = bottom-center of the image.
+// solid: collision area (cannot walk through). zone: standing here opens the info panel.
 const OBJECTS = [
   { id: 'about', key: 'obj-about', x: 72, y: 40, solid: null, zone: [52, 48, 40, 18] },
   { id: 'projects', key: 'obj-projects', x: 248, y: 80, solid: [228, 48, 40, 30], zone: [226, 78, 44, 18] },
@@ -59,10 +59,10 @@ export default class RoomScene extends Phaser.Scene {
         })
         .setOrigin(0.5, 0)
         .setScale(1 / 3)
-        .setDepth(o.y + 1); // nhân vật đứng trước nhãn sẽ che nhãn
-      // chữ vẽ to rồi thu nhỏ, lọc mịn để không bị răng cưa như pixel art
+        .setDepth(o.y + 1); // the player in front of a label covers it
+      // text is drawn large then scaled down with smooth filtering, so it is not jagged like the pixel art
       label.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-      // khung ảnh treo tường: nhãn đặt dưới chân tường cho dễ đọc
+      // the picture hangs on the wall: put its label at the foot of the wall so it is readable
       if (o.id === 'about') label.setY(WALL_TOP + 1);
       return { ...o, section, zone: new Phaser.Geom.Rectangle(...o.zone), bang, label };
     });
@@ -85,7 +85,7 @@ export default class RoomScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.wasd = this.input.keyboard.addKeys('W,A,S,D');
 
-    // Bảng chỉ mở khi vừa bước vào vùng mới, nên đóng bằng nút × thì không tự mở lại cho tới lần sau
+    // The panel only opens when entering a new zone, so closing it with × keeps it closed until the next visit
     this.activeId = null;
   }
 

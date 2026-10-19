@@ -17,7 +17,7 @@ body:not(.classic-mode) { overflow: hidden; }
 #game { width: 100%; height: 100%; }
 canvas { image-rendering: pixelated; }
 
-/* Nút kiểu pixel */
+/* Pixel-style buttons */
 button {
   font: inherit;
   cursor: pointer;
@@ -80,7 +80,7 @@ button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 v
   box-shadow: none;
 }
 
-/* Nội dung dùng chung (bảng + trang thường) */
+/* Shared content styles (info panel + classic page) */
 .lead { font-size: 17px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 4px 0 12px; list-style: none; }
 .chips li { padding: 3px 8px; background: var(--border); color: #fff; font-size: 13px; }
@@ -91,7 +91,7 @@ button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 v
 .contact span { display: inline-block; min-width: 70px; font-weight: 700; }
 a { color: #1f5fbf; }
 
-/* D-pad: chỉ hiện trên thiết bị cảm ứng */
+/* D-pad: only shown on touch devices */
 #dpad { display: none; }
 @media (pointer: coarse) {
   #dpad {
@@ -113,7 +113,7 @@ a { color: #1f5fbf; }
   #dpad [data-dir='right'] { grid-area: right; }
 }
 
-/* Điện thoại dọc: game ở trên, bảng thông tin ở giữa, D-pad ở dưới */
+/* Phone portrait: game on top, info panel in the middle, D-pad at the bottom */
 @media (pointer: coarse) and (orientation: portrait) {
   #game-view { --game-h: min(75vw, 45vh); --top: 64px; }
   #game { position: absolute; top: var(--top); height: var(--game-h); }
@@ -127,7 +127,7 @@ a { color: #1f5fbf; }
   @keyframes pop { from { opacity: 0; } }
 }
 
-/* Điện thoại ngang: D-pad góc trái dưới, bảng thông tin bên phải */
+/* Phone landscape: D-pad bottom-left, info panel on the right */
 @media (pointer: coarse) and (orientation: landscape) {
   #dpad { left: 16px; transform: none; grid-template-rows: 48px 48px 48px; grid-template-columns: 48px 48px 48px; }
   #hint { display: none; }
@@ -135,7 +135,7 @@ a { color: #1f5fbf; }
   @keyframes pop { from { opacity: 0; } }
 }
 
-/* Trang thường */
+/* Classic page */
 html:has(body.classic-mode), body.classic-mode { background: #f4ecd8; height: auto; min-height: 100%; }
 #classic { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
 #classic header { padding: 24px 0 16px; border-bottom: 4px solid var(--border); margin-bottom: 8px; }

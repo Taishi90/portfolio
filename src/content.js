@@ -1,35 +1,35 @@
-// Toàn bộ nội dung portfolio. Sửa ở đây là cả game lẫn trang thường đều đổi theo.
-// Riêng phần Kỹ năng được đọc từ file skill.md ở thư mục gốc.
+// All portfolio content. Edit it here and both the game and the classic page update.
+// Skills are read from skill.md in the project root.
 import skillMd from '../skill.md?raw';
 
 export const PROFILE = {
   name: 'Linh Nguyen',
-  role: 'Developer', // TODO: chức danh của bạn
+  role: 'Developer', // TODO: your job title
   about: [
-    'Xin chào! Mình là Linh. (Sửa đoạn giới thiệu này trong src/content.js)',
-    'Mình thích làm web, game nhỏ và những thứ vui vui có tính tương tác.',
+    "Hi! I'm Linh. (Edit this intro in src/content.js)",
+    'I love building websites, small games and fun interactive things.',
   ],
   projects: [
     {
       name: 'Pixel Portfolio',
-      desc: 'Chính là trang này: portfolio dạng game 2D pixel art.',
+      desc: 'This very site: a portfolio as a 2D pixel art game.',
       tech: ['Phaser 3', 'Vite'],
       link: '',
     },
     {
-      name: 'Dự án mẫu',
-      desc: 'Mô tả ngắn về dự án. (Thay bằng dự án thật)',
+      name: 'Sample project',
+      desc: 'A short description of the project. (Replace with a real one)',
       tech: ['JavaScript'],
       link: '',
     },
   ],
   contact: [
-    { label: 'Email', value: 'ban@email.com', href: 'mailto:ban@email.com' },
-    { label: 'GitHub', value: 'github.com/ten-ban', href: 'https://github.com/' },
+    { label: 'Email', value: 'you@email.com', href: 'mailto:you@email.com' },
+    { label: 'GitHub', value: 'github.com/your-name', href: 'https://github.com/' },
   ],
 };
 
-// Đọc skill.md: "## Nhóm" và "- kỹ năng"
+// Parse skill.md: "## Group" and "- skill"
 export function parseSkills(md) {
   const groups = [];
   let cur = null;
@@ -51,18 +51,18 @@ export const SKILLS = parseSkills(skillMd);
 const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-// Mỗi section = 1 đồ vật trong phòng = 1 mục trên trang thường
+// Each section = 1 object in the room = 1 section on the classic page
 export const SECTIONS = [
   {
     id: 'about',
-    title: 'Giới thiệu',
+    title: 'About',
     html: () =>
       `<p class="lead"><strong>${esc(PROFILE.name)}</strong> · ${esc(PROFILE.role)}</p>` +
       PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join(''),
   },
   {
     id: 'projects',
-    title: 'Dự án',
+    title: 'Projects',
     html: () =>
       PROFILE.projects
         .map(
@@ -76,7 +76,7 @@ export const SECTIONS = [
   },
   {
     id: 'skills',
-    title: 'Kỹ năng',
+    title: 'Skills',
     html: () =>
       SKILLS.map(
         (g) => `<h3>${esc(g.title)}</h3><ul class="chips">${g.items.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>`,
@@ -84,7 +84,7 @@ export const SECTIONS = [
   },
   {
     id: 'contact',
-    title: 'Liên hệ',
+    title: 'Contact',
     html: () =>
       `<ul class="contact">${PROFILE.contact
         .map((c) => `<li><span>${esc(c.label)}</span> <a href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.value)}</a></li>`)

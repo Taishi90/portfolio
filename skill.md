@@ -1,11 +1,11 @@
-# Kỹ năng
+# Skills
 
 <!--
-  File này là nơi DUY NHẤT lưu kỹ năng của bạn.
-  Game (kệ sách "Kỹ năng") và trang thường đều đọc trực tiếp từ đây.
-  Quy ước:
-    ## Tên nhóm      -> một nhóm kỹ năng
-    - Tên kỹ năng    -> một kỹ năng trong nhóm
+  This file is the ONLY place where your skills are stored.
+  The game (the "Skills" bookshelf) and the classic page both read it directly.
+  Format:
+    ## Group name   -> a group of skills
+    - Skill name    -> one skill in that group
 -->
 
 ## Frontend
@@ -13,11 +13,11 @@
 - JavaScript
 - Phaser 3
 
-## Công cụ
+## Tools
 - Git
 - Vite
 - Claude Code
 
-## Kỹ năng mềm
-- Tự học
-- Làm việc nhóm
+## Soft skills
+- Self-learning
+- Teamwork

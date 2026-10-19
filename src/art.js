@@ -1,14 +1,14 @@
-// Hình pixel art TẠM THỜI, vẽ bằng code để game chạy được ngay không cần file ảnh.
-// Muốn thay bằng ảnh thật (vd. asset itch.io): bỏ ảnh vào public/assets/,
-// load trong RoomScene.preload() với cùng key ('player', 'obj-about', ...). Key nào đã có ảnh thì code ở đây tự bỏ qua.
+// PLACEHOLDER pixel art, drawn in code so the game runs without any image files.
+// To use real images (e.g. itch.io assets): put them in public/assets/,
+// load them in RoomScene.preload() with the same keys ('player', 'obj-about', ...). Keys that already have an image are skipped here.
 
 const PALETTE = {
-  h: '#4a2f27', // tóc
-  s: '#f2c39b', // da
-  e: '#2b1d1d', // mắt
-  t: '#3f7fd1', // áo
-  p: '#2e3a59', // quần
-  b: '#1d1d1d', // giày
+  h: '#4a2f27', // hair
+  s: '#f2c39b', // skin
+  e: '#2b1d1d', // eyes
+  t: '#3f7fd1', // shirt
+  p: '#2e3a59', // pants
+  b: '#1d1d1d', // shoes
 };
 
 const LEGS_STAND = ['....pppppppp....', '....ppp..ppp....', '....bbb..bbb....'];
@@ -76,8 +76,8 @@ function createPlayer(scene) {
   names.forEach((name, i) => tex.add(name, 0, i * 16, 0, 16, 16));
 }
 
-// Vẽ một texture bằng các hình chữ nhật: draw(r) với r(màu, x, y, w, h)
-// Nếu key đã được load từ file ảnh thật (preload) thì giữ ảnh thật, không vẽ đè
+// Draw a texture out of rectangles: draw(r) with r(color, x, y, w, h)
+// If the key was already loaded from a real image (preload), keep it and do not draw over it
 function makeTexture(scene, key, w, h, draw) {
   if (scene.textures.exists(key)) return;
   const g = scene.make.graphics({ x: 0, y: 0 }, false);
@@ -90,7 +90,7 @@ function makeTexture(scene, key, w, h, draw) {
 }
 
 function createObjects(scene) {
-  // Giới thiệu: khung ảnh chân dung treo tường
+  // About: framed portrait on the wall
   makeTexture(scene, 'obj-about', 28, 24, (r) => {
     r(0xc9a227, 0, 0, 28, 24);
     r(0x8a6d12, 1, 1, 26, 22);
@@ -101,7 +101,7 @@ function createObjects(scene) {
     r(0x4a2f27, 10, 7, 1, 3);
   });
 
-  // Dự án: bàn làm việc + máy tính
+  // Projects: desk + computer
   makeTexture(scene, 'obj-projects', 40, 32, (r) => {
     r(0x5c3a21, 3, 19, 3, 13);
     r(0x5c3a21, 34, 19, 3, 13);
@@ -118,7 +118,7 @@ function createObjects(scene) {
     r(0xaaaaaa, 26, 15, 4, 3);
   });
 
-  // Kỹ năng: kệ sách
+  // Skills: bookshelf
   makeTexture(scene, 'obj-skills', 24, 40, (r) => {
     r(0x5c3a21, 0, 0, 24, 40);
     r(0x3b2414, 2, 2, 20, 36);
@@ -135,7 +135,7 @@ function createObjects(scene) {
     });
   });
 
-  // Liên hệ: hộp thư
+  // Contact: mailbox
   makeTexture(scene, 'obj-contact', 16, 28, (r) => {
     r(0x5c3a21, 6, 13, 4, 15);
     r(0xb83232, 1, 2, 14, 12);
@@ -146,7 +146,7 @@ function createObjects(scene) {
     r(0xffd23f, 12, 0, 2, 3);
   });
 
-  // Trang trí: chậu cây
+  // Decoration: potted plant
   makeTexture(scene, 'deco-plant', 14, 22, (r) => {
     r(0x2e7d32, 2, 2, 10, 10);
     r(0x4caf50, 4, 0, 6, 8);
@@ -156,7 +156,7 @@ function createObjects(scene) {
     r(0x8d4a12, 3, 12, 8, 2);
   });
 
-  // Dấu "!" nhấp nháy trên đồ vật
+  // Bouncing "!" above each object
   makeTexture(scene, 'bang', 4, 9, (r) => {
     r(0x000000, 0, 0, 4, 9);
     r(0xffd23f, 1, 1, 2, 4);
@@ -169,10 +169,10 @@ export function createTextures(scene) {
   createObjects(scene);
 }
 
-// Vẽ nền phòng: sàn gỗ, tường, cửa sổ, thảm
+// Draw the room background: wooden floor, walls, window, rug
 export function drawRoom(scene, W, H, T, wallTop) {
   const g = scene.add.graphics();
-  // sàn
+  // floor
   g.fillStyle(0x8b5a3c);
   g.fillRect(0, 0, W, H);
   for (let y = wallTop; y < H; y += 8) {
@@ -181,14 +181,14 @@ export function drawRoom(scene, W, H, T, wallTop) {
     const shift = (y / 8) % 2 ? 0 : 24;
     for (let x = shift; x < W; x += 48) g.fillRect(x, y, 1, 7);
   }
-  // tường trên
+  // top wall
   g.fillStyle(0x4b3a63);
   g.fillRect(0, 0, W, wallTop);
   g.fillStyle(0x5d4a7a);
   for (let x = 0; x < W; x += 8) g.fillRect(x, 0, 4, wallTop - 6);
   g.fillStyle(0x2f2340);
   g.fillRect(0, wallTop - 6, W, 6);
-  // cửa sổ
+  // window
   g.fillStyle(0x2f2340);
   g.fillRect(138, 8, 44, 30);
   g.fillStyle(0x87ceeb);
@@ -199,7 +199,7 @@ export function drawRoom(scene, W, H, T, wallTop) {
   g.fillStyle(0x2f2340);
   g.fillRect(159, 11, 2, 24);
   g.fillRect(141, 22, 38, 2);
-  // tường trái/phải/dưới
+  // left/right/bottom walls
   g.fillStyle(0x2f2340);
   g.fillRect(0, 0, T, H);
   g.fillRect(W - T, 0, T, H);
@@ -207,7 +207,7 @@ export function drawRoom(scene, W, H, T, wallTop) {
   g.fillStyle(0x3b2d52);
   g.fillRect(T - 3, wallTop, 3, H - wallTop - T);
   g.fillRect(W - T, wallTop, 3, H - wallTop - T);
-  // thảm
+  // rug
   g.fillStyle(0x7a2e3a);
   g.fillRect(112, 118, 96, 60);
   g.fillStyle(0xa8434f);

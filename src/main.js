@@ -16,5 +16,5 @@ const game = new Phaser.Game({
 
 initUI(game);
 
-// để debug trong console trình duyệt khi chạy npm run dev
+// for debugging in the browser console while running npm run dev
 if (import.meta.env.DEV) window.game = game;

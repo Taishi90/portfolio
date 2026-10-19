@@ -1,41 +1,41 @@
 # Pixel Portfolio
 
-Portfolio dạng game 2D pixel art (Phaser 3 + Vite). Đi lại trong căn phòng, bước tới đồ vật để xem
-**Giới thiệu · Dự án · Kỹ năng · Liên hệ**. Có nút **Skip** để xem bản trang thường, và D-pad cho điện thoại.
+A portfolio as a 2D pixel art game (Phaser 3 + Vite). Walk around a room and step up to objects to see
+**About · Projects · Skills · Contact**. A **Skip** button switches to a classic web page, and there is a D-pad for phones.
 
-## Chạy
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Build để đưa lên mạng: `npm run build` → upload thư mục `dist/` (GitHub Pages, Netlify, Vercel...).
+Build for deployment: `npm run build` → upload the `dist/` folder (GitHub Pages, Netlify, Vercel...).
 
-## Sửa nội dung
+## Editing content
 
-| Muốn sửa | File |
+| What | File |
 |---|---|
-| Tên, giới thiệu, dự án, liên hệ | `src/content.js` |
-| Kỹ năng | `skill.md` |
-| Vị trí đồ vật / vùng kích hoạt | mảng `OBJECTS` trong `src/scenes/RoomScene.js` |
-| Màu sắc, bố cục bảng thông tin | `src/style.css` |
+| Name, intro, projects, contact | `src/content.js` |
+| Skills | `skill.md` |
+| Object positions / trigger zones | the `OBJECTS` array in `src/scenes/RoomScene.js` |
+| Colors, info panel layout | `src/style.css` |
 
-Link trực tiếp: `/#classic` mở trang thường, `/#projects` (hoặc `#about`, `#skills`, `#contact`) mở thẳng mục đó.
+Direct links: `/#classic` opens the classic page, `/#projects` (or `#about`, `#skills`, `#contact`) opens that section directly.
 
-## Thay hình bằng asset thật (itch.io hoặc hình của bạn)
+## Replacing the art with real assets (itch.io or your own)
 
-Hiện tại hình được vẽ bằng code trong `src/art.js`. Để thay:
+The art is currently drawn in code in `src/art.js`. To replace it:
 
-1. Tải asset miễn phí trên itch.io (tìm "pixel art tileset", "pixel character 16x16"), **đọc kỹ license**.
-2. Bỏ file vào `public/assets/`, ví dụ `public/assets/bookshelf.png`.
-3. Thêm `preload()` vào `RoomScene` và load với **cùng key** đang dùng:
+1. Download free assets from itch.io (search "pixel art tileset", "pixel character 16x16") and **read the license carefully**.
+2. Put the files in `public/assets/`, e.g. `public/assets/bookshelf.png`.
+3. Add a `preload()` to `RoomScene` and load them with the **same keys** already in use:
    ```js
    preload() {
      this.load.image('obj-skills', 'assets/bookshelf.png');
      this.load.spritesheet('player', 'assets/player.png', { frameWidth: 16, frameHeight: 16 });
    }
    ```
-4. Hình nào đã load từ file thì `src/art.js` tự bỏ qua, không cần xoá code. Riêng nhân vật dạng spritesheet có frame đánh số (0, 1, 2...) nên cần sửa tên frame trong animation ở `RoomScene.js`.
+4. Any key loaded from a file is skipped automatically by `src/art.js`, no need to delete code. A character spritesheet has numbered frames (0, 1, 2...), so update the frame names in the animations in `RoomScene.js`.
 
-Ghi nguồn asset (credit) vào README nếu license yêu cầu.
+Credit the asset authors in this README if the license requires it.

@@ -1,4 +1,4 @@
-// Phần giao diện HTML nằm trên game: bảng thông tin, nút Skip, trang thường, D-pad cảm ứng
+// HTML UI layered over the game: info panel, Skip button, classic page, touch D-pad
 import { PROFILE, SECTIONS } from './content.js';
 import { touch } from './touch.js';
 
@@ -24,7 +24,7 @@ function renderClassic() {
       <h1>${PROFILE.name}</h1>
       <p>${PROFILE.role}</p>
       <nav>${nav}</nav>
-      <button id="play-btn" type="button">🎮 Chơi bản game</button>
+      <button id="play-btn" type="button">🎮 Play the game</button>
     </header>
     ${body}`;
   $('play-btn').addEventListener('click', () => setMode('game'));
@@ -32,7 +32,7 @@ function renderClassic() {
 
 let game;
 
-// sectionId: cuộn tới mục đó trên trang thường (vd. link .../#projects)
+// sectionId: scroll to that section on the classic page (e.g. link .../#projects)
 function setMode(mode, sectionId) {
   const classic = mode === 'classic';
   $('classic').hidden = !classic;
@@ -81,14 +81,14 @@ export function initUI(phaserGame) {
     if (e.key === 'Escape') hidePanel();
   });
   if (matchMedia('(pointer: coarse)').matches) {
-    $('hint').textContent = 'Dùng các nút mũi tên để đi tới các đồ vật';
+    $('hint').textContent = 'Use the arrow buttons to walk up to the objects';
   }
   initDpad();
 
-  // Mở thẳng trang thường bằng link .../#classic hoặc một mục cụ thể như #projects
+  // Open the classic page directly via .../#classic or a specific section such as #projects
   const hash = location.hash.slice(1);
   if (hash === 'classic' || SECTIONS.some((s) => s.id === hash)) {
-    // Phaser bật vòng lặp ngay SAU sự kiện 'ready', nên đợi 1 nhịp rồi mới cho game ngủ
+    // Phaser starts its loop right AFTER the 'ready' event, so wait one tick before putting it to sleep
     game.events.once('ready', () => setTimeout(() => setMode('classic', hash === 'classic' ? null : hash)));
   }
 }
