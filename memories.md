@@ -43,3 +43,8 @@
 
 **What** — Translated all UI text, content, `skill.md`, code comments, README, CLAUDE.md and this file to English.
 **Decisions** — Section titles are now About / Projects / Skills / Contact; `<html lang="en">`. Replies to the user stay in Vietnamese.
+
+## 2026-10-19 — Rug message
+
+**What** — "From Pixel / To Picture" fades in inside the red rug while the player stands on it (`checkRug()` in RoomScene; rug size is `RUG` in `art.js`, shared by drawing and the trigger zone).
+**Decisions** — Text depth 1 so the player walks over it. The player spawns on the rug, so the message is visible right at start.

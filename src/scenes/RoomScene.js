@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { createTextures, drawRoom } from '../art.js';
+import { createTextures, drawRoom, RUG } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
 import { showPanel, hidePanel } from '../ui.js';
@@ -67,6 +67,26 @@ export default class RoomScene extends Phaser.Scene {
       return { ...o, section, zone: new Phaser.Geom.Rectangle(...o.zone), bang, label };
     });
 
+    // Message inside the rug, fades in while the player stands on it
+    this.rugZone = new Phaser.Geom.Rectangle(RUG.x, RUG.y, RUG.w, RUG.h);
+    this.rugText = this.add
+      .text(RUG.x + RUG.w / 2, RUG.y + RUG.h / 2, 'From Pixel\nTo Picture', {
+        fontFamily: 'system-ui, sans-serif',
+        fontSize: '30px',
+        fontStyle: 'bold',
+        color: '#ffe8a3',
+        align: 'center',
+        stroke: '#5a1f29',
+        strokeThickness: 6,
+        lineSpacing: -4,
+      })
+      .setOrigin(0.5)
+      .setScale(1 / 3)
+      .setDepth(1) // on the floor: the player walks over it
+      .setAlpha(0);
+    this.rugText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+    this.onRug = false;
+
     this.player = this.physics.add.sprite(160, 150, 'player', 'down0');
     this.player.body.setSize(10, 6).setOffset(3, 10);
     this.player.setCollideWorldBounds(true);
@@ -114,6 +134,16 @@ export default class RoomScene extends Phaser.Scene {
     this.player.setDepth(this.player.y + 8);
 
     this.checkSpots();
+    this.checkRug();
+  }
+
+  checkRug() {
+    const { x, y } = this.player.body.center;
+    const onRug = this.rugZone.contains(x, y);
+    if (onRug === this.onRug) return;
+    this.onRug = onRug;
+    this.tweens.killTweensOf(this.rugText);
+    this.tweens.add({ targets: this.rugText, alpha: onRug ? 1 : 0, duration: 300 });
   }
 
   checkSpots() {

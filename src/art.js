@@ -169,6 +169,9 @@ export function createTextures(scene) {
   createObjects(scene);
 }
 
+// Red rug in the middle of the room (RoomScene shows a message when the player steps on it)
+export const RUG = { x: 112, y: 118, w: 96, h: 60 };
+
 // Draw the room background: wooden floor, walls, window, rug
 export function drawRoom(scene, W, H, T, wallTop) {
   const g = scene.add.graphics();
@@ -208,14 +211,15 @@ export function drawRoom(scene, W, H, T, wallTop) {
   g.fillRect(T - 3, wallTop, 3, H - wallTop - T);
   g.fillRect(W - T, wallTop, 3, H - wallTop - T);
   // rug
+  const { x, y, w, h } = RUG;
   g.fillStyle(0x7a2e3a);
-  g.fillRect(112, 118, 96, 60);
+  g.fillRect(x, y, w, h);
   g.fillStyle(0xa8434f);
-  g.fillRect(116, 122, 88, 52);
+  g.fillRect(x + 4, y + 4, w - 8, h - 8);
   g.fillStyle(0xe0b04a);
-  g.fillRect(120, 126, 80, 1);
-  g.fillRect(120, 169, 80, 1);
-  g.fillRect(120, 126, 1, 44);
-  g.fillRect(199, 126, 1, 44);
+  g.fillRect(x + 8, y + 8, w - 16, 1);
+  g.fillRect(x + 8, y + h - 9, w - 16, 1);
+  g.fillRect(x + 8, y + 8, 1, h - 16);
+  g.fillRect(x + w - 9, y + 8, 1, h - 16);
   return g;
 }
