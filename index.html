@@ -2,12 +2,33 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Linh Nguyen · Portfolio</title>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div id="game"></div>
+    <div id="game-view">
+      <div id="game"></div>
+
+      <p id="hint">Dùng phím mũi tên / WASD để đi tới các đồ vật</p>
+      <button id="skip-btn" type="button">Skip ⏭ Xem bản thường</button>
+
+      <section id="panel" role="dialog" aria-live="polite" hidden>
+        <button id="panel-close" type="button" aria-label="Đóng">×</button>
+        <h2 id="panel-title"></h2>
+        <div id="panel-body"></div>
+      </section>
+
+      <div id="dpad" aria-hidden="true">
+        <button data-dir="up" type="button">▲</button>
+        <button data-dir="left" type="button">◀</button>
+        <button data-dir="right" type="button">▶</button>
+        <button data-dir="down" type="button">▼</button>
+      </div>
+    </div>
+
+    <main id="classic" hidden></main>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
