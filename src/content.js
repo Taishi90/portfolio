@@ -6,8 +6,8 @@ export const PROFILE = {
   name: 'Linh Nguyen',
   role: 'Developer', // TODO: your job title
   about: [
-    "Hi! I'm Linh. (Edit this intro in src/content.js)",
-    'I love building websites, small games and fun interactive things.',
+    "Hi! I'm Linh.",
+    'A game developer with over 5 years of experience in mobile game development using Unity, passionate about creating diverse game genres and delivering exceptional experiences to players.',
   ],
   projects: [
     {
@@ -56,9 +56,7 @@ export const SECTIONS = [
   {
     id: 'about',
     title: 'About',
-    html: () =>
-      `<p class="lead"><strong>${esc(PROFILE.name)}</strong> · ${esc(PROFILE.role)}</p>` +
-      PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join(''),
+    html: () => PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join(''),
   },
   {
     id: 'projects',

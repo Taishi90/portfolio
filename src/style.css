@@ -81,7 +81,6 @@ button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 v
 }
 
 /* Shared content styles (info panel + classic page) */
-.lead { font-size: 17px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 4px 0 12px; list-style: none; }
 .chips li { padding: 3px 8px; background: var(--border); color: #fff; font-size: 13px; }
 .project h3, #panel h3 { margin: 12px 0 4px; font-size: 16px; }
