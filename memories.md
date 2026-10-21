@@ -48,3 +48,12 @@
 
 **What** — "From Pixel / To Picture" fades in inside the red rug while the player stands on it (`checkRug()` in RoomScene; rug size is `RUG` in `art.js`, shared by drawing and the trigger zone).
 **Decisions** — Text depth 1 so the player walks over it. The player spawns on the rug but the message stays hidden at start (`onRug = true` initially); it only appears from the second time the player steps on the rug.
+
+## 2026-10-21 — Real projects from Google Play
+
+**What** — Replaced the sample projects with 7 released games (Tactic Manager, Garden Guardians TD, Pop Clover, Dunk Beetle, Bomber Wasp, Winged Survivors Rush, SwatzZapz), in the order the user gave. Each is a block: icon, name (links to Google Play), short description, genre tags.
+**Decisions**
+- Name = Play Store title, desc = Play Store short description (`<meta name="description">`), tags = Play Store genre. Field `tech` was renamed to `tags`.
+- Icons are hot-linked from Google's CDN (`play-lh.googleusercontent.com/<id>=s192`, `=s<size>` resizes) instead of being downloaded into the repo. If they ever break, download them into `public/assets/` and change `icon()` in `content.js`.
+**Lessons / bugs hit**
+- To scrape several Play pages at once: open one Play page in the browser, then `fetch('/store/apps/details?id=...&hl=en')` from it (same origin) and regex the `<meta>` tags. `DOMParser` is blocked there (TrustedHTML).

@@ -83,8 +83,25 @@ button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 v
 /* Shared content styles (info panel + classic page) */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 4px 0 12px; list-style: none; }
 .chips li { padding: 3px 8px; background: var(--border); color: #fff; font-size: 13px; }
-.project h3, #panel h3 { margin: 12px 0 4px; font-size: 16px; }
-.project p { margin: 0 0 4px; }
+#panel h3 { margin: 12px 0 4px; font-size: 16px; }
+
+/* Project blocks: icon on the left, details on the right */
+.projects { display: grid; gap: 10px; }
+.project {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px;
+  background: #fff;
+  border: 3px solid var(--border);
+  box-shadow: 0 3px 0 var(--border);
+}
+.project img { flex: none; width: 64px; height: 64px; border-radius: 14px; background: #e8dfc9; }
+.project h3, #panel .project h3 { margin: 0 0 4px; font-size: 16px; line-height: 1.25; }
+.project h3 a { color: var(--ink); text-decoration: none; }
+.project h3 a:hover { color: var(--accent); text-decoration: underline; }
+.project p { margin: 0 0 6px; font-size: 14px; line-height: 1.4; }
+.project .chips { margin: 0; }
 .contact { padding: 0; list-style: none; }
 .contact li { margin: 6px 0; }
 .contact span { display: inline-block; min-width: 70px; font-weight: 700; }
@@ -145,3 +162,4 @@ html:has(body.classic-mode), body.classic-mode { background: #f4ecd8; height: au
 #play-btn { padding: 8px 12px; font-weight: 700; }
 #classic section { padding: 16px 0; border-bottom: 2px dashed #c9b99a; }
 #classic section h2 { color: var(--accent); margin: 8px 0; }
+@media (min-width: 640px) { #classic .projects { grid-template-columns: 1fr 1fr; } }
