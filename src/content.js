@@ -65,7 +65,8 @@ export const PROFILE = {
       link: play('tech.element6.SwatzZapz'),
       image: icon('swatzzapz'),
     },
-    // Suga Studio games, no longer on the stores (info and icons from AppMagic): they link to the studio's AppMagic page
+    // Suga Studio games, no longer on the stores (info and icons from AppMagic): they link to the studio's AppMagic page.
+    // desc = first two sentences of the official store description, verbatim
     {
       name: 'I Am Hero: AFK Teamfight',
       desc: 'I Am Hero presents unique gameplay with the combination of idle RPG elements with the tactics of auto chess teamfight. Our AFK game lets you build a powerful team to auto fight on your behalf.',
@@ -75,14 +76,14 @@ export const PROFILE = {
     },
     {
       name: 'Overload: Online Car Shooting',
-      desc: 'Multiplayer car shooting: load your guns and missiles and blast away players from all over the world.',
+      desc: 'Overload - the must-have racing action title for your mobile device. Experience the thrill of multiplayer, fast-paced car firing and shooting with amazing graphics and adrenaline pumping action.',
       tags: ['Racing', 'Action'],
       link: SUGA_STUDIO,
       image: icon('overload'),
     },
     {
       name: 'Overleague',
-      desc: 'Fast-paced multiplayer combat racing packed with guns, explosions and 10+ cars to choose from.',
+      desc: 'The ultimate combat racing game is here! Overleague is a one of the best racing games packed with guns, action, shooting and explosions.',
       tags: ['Racing', 'Action'],
       link: SUGA_STUDIO,
       image: icon('overleague'),
