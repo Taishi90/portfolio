@@ -11,12 +11,14 @@ const WALL_TOP = 48;
 const SPEED = 80;
 
 // The 4 objects. x, y = bottom-center of the image.
-// solid: collision area (cannot walk through). zone: standing here opens the info panel.
+// solid: collision area (cannot walk through).
+// zone: [x, y, w, h] trigger area. It is generous on purpose: walking NEAR an object opens its panel,
+// no need to stand on an exact spot. Zones must not overlap each other or the rug. Open the game with ?debug to see them.
 const OBJECTS = [
-  { id: 'about', key: 'obj-about', x: 72, y: 40, solid: null, zone: [52, 48, 40, 18] },
-  { id: 'projects', key: 'obj-projects', x: 248, y: 80, solid: [228, 48, 40, 30], zone: [226, 78, 44, 18] },
-  { id: 'skills', key: 'obj-skills', x: 28, y: 168, solid: [16, 146, 24, 22], zone: [40, 136, 22, 34] },
-  { id: 'contact', key: 'obj-contact', x: 288, y: 204, solid: [282, 192, 12, 12], zone: [260, 178, 24, 30] },
+  { id: 'about', key: 'obj-about', x: 72, y: 40, solid: null, zone: [36, 48, 72, 36] },
+  { id: 'projects', key: 'obj-projects', x: 248, y: 80, solid: [228, 48, 40, 30], zone: [206, 48, 82, 60] },
+  { id: 'skills', key: 'obj-skills', x: 28, y: 168, solid: [16, 146, 24, 22], zone: [16, 112, 60, 76] },
+  { id: 'contact', key: 'obj-contact', x: 288, y: 204, solid: [282, 192, 12, 12], zone: [248, 160, 56, 64] },
 ];
 
 export default class RoomScene extends Phaser.Scene {
@@ -66,6 +68,8 @@ export default class RoomScene extends Phaser.Scene {
       if (o.id === 'about') label.setY(WALL_TOP + 1);
       return { ...o, section, zone: new Phaser.Geom.Rectangle(...o.zone), bang, label };
     });
+
+    if (new URLSearchParams(location.search).has('debug')) this.drawDebugZones();
 
     // Message inside the rug, fades in while the player stands on it
     this.rugZone = new Phaser.Geom.Rectangle(RUG.x, RUG.y, RUG.w, RUG.h);
@@ -136,6 +140,15 @@ export default class RoomScene extends Phaser.Scene {
 
     this.checkSpots();
     this.checkRug();
+  }
+
+  // ?debug in the URL: show trigger zones (yellow) and the rug zone (pink)
+  drawDebugZones() {
+    const g = this.add.graphics().setDepth(2000);
+    g.lineStyle(1, 0xffd23f);
+    for (const s of this.spots) g.strokeRectShape(s.zone);
+    g.lineStyle(1, 0xff66cc);
+    g.strokeRect(RUG.x, RUG.y, RUG.w, RUG.h);
   }
 
   checkRug() {

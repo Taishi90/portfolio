@@ -68,3 +68,8 @@
 - Descriptions are short one-line summaries written from the AppMagic store descriptions (no store short description exists).
 **Lessons / bugs hit**
 - AppMagic is an Angular SPA: read it in the browser. Icon URLs sit in `images.appmagic.rocks/?uri=<original>`; download the original URL at 192px (`=s192-rw` for Google, `/192x192bb.webp` for Apple mzstatic).
+
+## 2026-10-21 — Bigger trigger zones
+
+**What** — The 4 object trigger zones (`zone` in `OBJECTS`, RoomScene.js) were enlarged so walking NEAR an object opens its panel (about 20–35px around each object instead of one exact spot).
+**Decisions** — Zones must not overlap each other or the rug, and the spawn point (160,150) must stay outside all of them. Added `?debug` (e.g. `http://localhost:5173/?debug`) to draw the zones (yellow) and rug (pink) for tuning.
