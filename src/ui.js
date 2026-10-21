@@ -12,6 +12,11 @@ export function showPanel(section) {
   $('hint').hidden = true;
 }
 
+// Called when the room starts: show the in-game hint and D-pad (hidden during the intro)
+export function enterRoom() {
+  document.body.classList.remove('intro');
+}
+
 export function hidePanel() {
   $('panel').hidden = true;
 }

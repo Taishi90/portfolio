@@ -12,6 +12,7 @@
   - `src/content.js` — ALL content (about, projects, contact). Shared by the game and the classic page.
   - `skill.md` — skills. Imported with `?raw` and parsed as `## Group` / `- skill`.
   - `src/art.js` — placeholder pixel art drawn in code (player, 4 objects, room).
+  - `src/scenes/IntroScene.js` — door-opening intro shown on every load/reload, then starts RoomScene.
   - `src/scenes/RoomScene.js` — room, collisions, movement, trigger zones (the `OBJECTS` array).
   - `src/ui.js` — HTML info panel, Skip button, classic page, D-pad.
   - `src/touch.js` — D-pad button state, read by the scene every frame.
@@ -78,3 +79,13 @@
 
 **What** — User found the enlarged zones too big: each zone's AREA was halved (width/height ×0.7), kept anchored on its object (≈8–18px around each object). The `?debug` zone overlay was removed at the user's request (no zone visuals at all).
 **Decisions** — Current zones: about [47,48,50,25], projects [220,48,57,42], skills [16,122,42,53], contact [265,168,39,45]. History: original (too small, exact spot) → enlarged (too big) → this. Tune in small steps from here.
+
+## 2026-10-22 — Door-opening intro
+
+**What** — New `IntroScene` runs on every load/reload before the room (~4s): house front at night with "WELCOME" sign, name + role, player walks up, double doors swing open (leaf `scaleX` → 0.12 + darkening tint), warm light spills out, player steps in while the camera pans/zooms into the doorway, fade to warm white → `RoomScene` fades in from the same color (`DOOR_LIGHT`).
+**Decisions**
+- Click / tap / any key skips straight to the fade. `prefers-reduced-motion` skips the animation after 0.6s.
+- Hint text and D-pad are hidden during the intro via `body.intro` (removed by `enterRoom()` in ui.js when RoomScene starts). The Skip (classic view) button stays visible.
+- Door/lamp textures and `drawFacade()` live in `art.js`; walk animations moved to `createPlayerAnims()` in art.js so both scenes share them.
+**Lessons / bugs hit**
+- Don't tween `tint` directly (it interpolates the hex number → wrong colors). Use `tweens.addCounter` + `Phaser.Display.Color.Interpolate.ColorWithColor`.

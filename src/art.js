@@ -167,6 +167,97 @@ function createObjects(scene) {
 export function createTextures(scene) {
   if (!scene.textures.exists('player')) createPlayer(scene);
   createObjects(scene);
+  createDoor(scene);
+  createPlayerAnims(scene);
+}
+
+// Walk animations 'walk-down' / 'walk-up' / 'walk-side' (animations are global, so create them once)
+function createPlayerAnims(scene) {
+  for (const dir of ['down', 'up', 'side']) {
+    if (scene.anims.exists(`walk-${dir}`)) continue;
+    scene.anims.create({
+      key: `walk-${dir}`,
+      frames: [{ key: 'player', frame: `${dir}1` }, { key: 'player', frame: `${dir}0` }],
+      frameRate: 6,
+      repeat: -1,
+    });
+  }
+}
+
+// Intro: one leaf of the wooden double door (32x96). The right leaf is the same image flipped.
+function createDoor(scene) {
+  makeTexture(scene, 'door-leaf', 32, 96, (r) => {
+    r(0x5c3a21, 0, 0, 32, 96);
+    r(0x8a5a35, 2, 2, 28, 92);
+    // carved panels
+    for (const [y, h] of [[8, 34], [50, 38]]) {
+      r(0x6b4426, 6, y, 20, h);
+      r(0x9c6a42, 8, y + 2, 16, h - 4);
+    }
+    // planks
+    r(0x7a4e2d, 15, 2, 1, 92);
+    // knob (on the inner edge)
+    r(0xc9a227, 26, 46, 3, 4);
+    r(0xffd23f, 27, 46, 1, 1);
+  });
+
+  makeTexture(scene, 'lamp', 10, 14, (r) => {
+    r(0x2b1d1d, 3, 0, 4, 2);
+    r(0x2b1d1d, 1, 2, 8, 10);
+    r(0xffd23f, 2, 3, 6, 8);
+    r(0xfff3c4, 4, 5, 2, 4);
+    r(0x2b1d1d, 3, 12, 4, 2);
+  });
+}
+
+// Intro: front of the house, the door opening is (128, 92) to (192, 188)
+export const DOORWAY = { x: 128, y: 92, w: 64, h: 96 };
+
+export function drawFacade(scene, W, H) {
+  const g = scene.add.graphics();
+  // night sky (IntroScene adds twinkling stars)
+  g.fillStyle(0x1a1423);
+  g.fillRect(0, 0, W, H);
+  // wall with bricks
+  g.fillStyle(0x4b3a63);
+  g.fillRect(24, 58, W - 48, 142);
+  g.fillStyle(0x3d2e52);
+  for (let y = 58; y < 200; y += 8) {
+    g.fillRect(24, y + 7, W - 48, 1);
+    const shift = (y / 8) % 2 ? 0 : 8;
+    for (let x = 24 + shift; x < W - 24; x += 16) g.fillRect(x, y, 1, 7);
+  }
+  // roof
+  g.fillStyle(0x7a2e3a);
+  g.fillRect(16, 50, W - 32, 10);
+  g.fillStyle(0x5a1f29);
+  g.fillRect(16, 58, W - 32, 3);
+  // ground + path
+  g.fillStyle(0x2f2340);
+  g.fillRect(0, 200, W, H - 200);
+  g.fillStyle(0x6e4430);
+  g.fillRect(136, 200, 48, H - 200);
+  // door frame + step
+  const { x, y, w, h } = DOORWAY;
+  g.fillStyle(0x2f2340);
+  g.fillRect(x - 6, y - 6, w + 12, h + 6);
+  g.fillStyle(0x5c3a21);
+  g.fillRect(x - 4, y - 4, w + 8, h + 4);
+  g.fillStyle(0x8b5a3c);
+  g.fillRect(x - 10, y + h, w + 20, 6);
+  g.fillStyle(0x6e4430);
+  g.fillRect(x - 10, y + h + 6, w + 20, 6);
+  // warm light inside (hidden behind the closed doors)
+  g.fillStyle(0xffe8a3);
+  g.fillRect(x, y, w, h);
+  g.fillStyle(0xfff6d8);
+  g.fillRect(x + 12, y + 8, w - 24, h - 8);
+  // sign above the door
+  g.fillStyle(0x2b1d1d);
+  g.fillRect(x + 6, y - 22, w - 12, 14);
+  g.fillStyle(0xc9a227);
+  g.fillRect(x + 7, y - 21, w - 14, 12);
+  return g;
 }
 
 // Red rug in the middle of the room (RoomScene shows a message when the player steps on it)

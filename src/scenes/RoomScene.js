@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 import { createTextures, drawRoom, RUG } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
-import { showPanel, hidePanel } from '../ui.js';
+import { showPanel, hidePanel, enterRoom } from '../ui.js';
+import { DOOR_LIGHT } from './IntroScene.js';
 
 const W = 320;
 const H = 240;
@@ -28,6 +29,9 @@ export default class RoomScene extends Phaser.Scene {
 
   create() {
     createTextures(this);
+    // continue from the intro's fade into the doorway light
+    this.cameras.main.fadeIn(500, ...DOOR_LIGHT);
+    enterRoom();
     drawRoom(this, W, H, T, WALL_TOP);
 
     this.walls = this.physics.add.staticGroup();
@@ -96,14 +100,6 @@ export default class RoomScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.walls);
     this.facing = 'down';
 
-    for (const dir of ['down', 'up', 'side']) {
-      this.anims.create({
-        key: `walk-${dir}`,
-        frames: [{ key: 'player', frame: `${dir}1` }, { key: 'player', frame: `${dir}0` }],
-        frameRate: 6,
-        repeat: -1,
-      });
-    }
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.wasd = this.input.keyboard.addKeys('W,A,S,D');

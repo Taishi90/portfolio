@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import IntroScene from './scenes/IntroScene.js';
 import RoomScene from './scenes/RoomScene.js';
 import { initUI } from './ui.js';
 
@@ -11,7 +12,7 @@ const game = new Phaser.Game({
   backgroundColor: '#1a1423',
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-  scene: [RoomScene],
+  scene: [IntroScene, RoomScene], // the first scene starts automatically
 });
 
 initUI(game);

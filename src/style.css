@@ -107,6 +107,9 @@ button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 v
 .contact span { display: inline-block; min-width: 70px; font-weight: 700; }
 a { color: #1f5fbf; }
 
+/* Intro (door animation): no hint or D-pad yet */
+body.intro #hint, body.intro #dpad { display: none !important; }
+
 /* D-pad: only shown on touch devices */
 #dpad { display: none; }
 @media (pointer: coarse) {
