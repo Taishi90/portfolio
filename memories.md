@@ -54,6 +54,7 @@
 **What** — Replaced the sample projects with 7 released games (Tactic Manager, Garden Guardians TD, Pop Clover, Dunk Beetle, Bomber Wasp, Winged Survivors Rush, SwatzZapz), in the order the user gave. Each is a block: icon, name (links to Google Play), short description, genre tags.
 **Decisions**
 - Name = Play Store title, desc = Play Store short description (`<meta name="description">`), tags = Play Store genre. Field `tech` was renamed to `tags`.
-- Icons are hot-linked from Google's CDN (`play-lh.googleusercontent.com/<id>=s192`, `=s<size>` resizes) instead of being downloaded into the repo. If they ever break, download them into `public/assets/` and change `icon()` in `content.js`.
+- Icons are stored locally in `public/assets/projects/<slug>.webp` (192px), referenced via `icon('<slug>')` in `content.js` — no dependency on Google links.
+- To fetch a new icon: `curl -o <slug>.webp "https://play-lh.googleusercontent.com/<id>=s192-rw"` (`=s<size>` resizes, `-rw` returns WebP). The `<id>` comes from the Play page's `og:image`.
 **Lessons / bugs hit**
 - To scrape several Play pages at once: open one Play page in the browser, then `fetch('/store/apps/details?id=...&hl=en')` from it (same origin) and regex the `<meta>` tags. `DOMParser` is blocked there (TrustedHTML).

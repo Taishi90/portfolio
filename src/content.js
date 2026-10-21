@@ -3,8 +3,8 @@
 import skillMd from '../skill.md?raw';
 
 const play = (id) => `https://play.google.com/store/apps/details?id=${id}`;
-// Google Play icon served at 192px (Google's image CDN resizes via the "=s<size>" suffix)
-const icon = (id) => `https://play-lh.googleusercontent.com/${id}=s192`;
+// Game icons (192px, from each Google Play page) stored in public/assets/projects/
+const icon = (name) => `assets/projects/${name}.webp`;
 
 export const PROFILE = {
   name: 'Linh Nguyen',
@@ -20,49 +20,49 @@ export const PROFILE = {
       desc: 'Build your dream team, manage tactics & lead your club to glory!',
       tags: ['Sports'],
       link: play('com.hiangames.tacticmanager'),
-      image: icon('OlUw2jaZSxOI6F3sWYNBw-a4i2vJ8aWkgwiSvv3QV5UDBMwzGNXl625D4bE0RIhOi4UgzVzNv0pxA1kWhk67Ng'),
+      image: icon('tactic-manager'),
     },
     {
       name: 'Garden Guardians TD',
       desc: '50+ insect towers, 80+ levels of tower defense — now playable offline!',
       tags: ['Strategy', 'Tower Defense'],
       link: play('tech.element6.gardenguardians'),
-      image: icon('to-R_KIAoQLqmO67Y75RDknO1OXLnmkQEn5vGkfBv7_W8fd0ShErVmj_FOgCN06FFCu6E58mukaeb9YT7o7Xqg'),
+      image: icon('garden-guardians'),
     },
     {
       name: 'Pop Clover',
       desc: 'Pop bubbles, fly and fight for survival.',
       tags: ['Casual'],
       link: play('tech.element6.bubblepop'),
-      image: icon('dp-sklMpZ3N8DsNphbndOcGPdrTpzBJeqZi-tqqHIEU2nSNUS-vEYGd3efWSsr8kzr3rYVFdpcl-0ImRtgAwFA'),
+      image: icon('pop-clover'),
     },
     {
       name: 'Dunk Beetle',
       desc: 'Feel the beat, tap at the right time, make the shot, and then repeat.',
       tags: ['Casual'],
       link: play('tech.element6.dunkbeetle'),
-      image: icon('CvVjh5T6QjYjrDuplmGYHeT02bgyQHG2zBTJTN6Rb_4Y2CY9V-T2fi7MzkIRc0f71JE5KsWi7q6_qexIgtw1'),
+      image: icon('dunk-beetle'),
     },
     {
       name: 'Bomber Wasp',
       desc: 'Fun bomb game: show your lightning-fast reflexes, avoid bombsquad to stay alive.',
       tags: ['Casual', 'Action'],
       link: play('tech.element6.bomb'),
-      image: icon('y88jlPsXR7bFZBSoavKxdXuQzUH8mKN0w9f3sOEkThTzhwi8lNTMeoWh5st1-8Q0Ka3F-PO6o6-fE4UmsYl_IQ'),
+      image: icon('bomber-wasp'),
     },
     {
       name: 'Winged Survivors Rush',
       desc: 'Fun & unique endless flying gameplay. Push your reflex skill to the max level.',
       tags: ['Casual'],
       link: play('tech.element6.flow'),
-      image: icon('YgFn_JF7VnvzNZUIxrTaK6UWn2cltOWNOsSYnq3W_VppWheQ2LItPY3xE0z_WRj_URVrsXulY0_twBtyg4-wxw'),
+      image: icon('winged-survivors-rush'),
     },
     {
       name: 'SwatzZapz',
       desc: 'Immerse in a lively insect game, 100+ levels: fly swatting, matching game & more.',
       tags: ['Casual'],
       link: play('tech.element6.SwatzZapz'),
-      image: icon('SpR8682IkzywBafYLBCyIQlX0TjuA3mEsIZdAUi0VxcpVL8Pe748wV947pO8CdD_6dZztxZ14Dk4nwwaFYOFlS4'),
+      image: icon('swatzzapz'),
     },
   ],
   contact: [
@@ -107,7 +107,7 @@ export const SECTIONS = [
       `<div class="projects">${PROFILE.projects
         .map(
           (p) => `<article class="project">
-            <img src="${esc(p.image)}" alt="${esc(p.name)} icon" width="64" height="64" loading="lazy" referrerpolicy="no-referrer" />
+            <img src="${esc(p.image)}" alt="${esc(p.name)} icon" width="64" height="64" loading="lazy" />
             <div>
               <h3><a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.name)}</a></h3>
               <p>${esc(p.desc)}</p>
