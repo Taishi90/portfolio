@@ -83,7 +83,7 @@ export const PROFILE = {
     },
     {
       name: 'Overleague',
-      desc: 'The ultimate combat racing game is here! Overleague is a one of the best racing games packed with guns, action, shooting and explosions.',
+      desc: 'The ultimate combat racing game is here! Overleague is one of the best racing games packed with guns, action, shooting and explosions.',
       tags: ['Racing', 'Action'],
       link: SUGA_STUDIO,
       image: icon('overleague'),
