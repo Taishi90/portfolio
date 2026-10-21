@@ -58,3 +58,13 @@
 - To fetch a new icon: `curl -o <slug>.webp "https://play-lh.googleusercontent.com/<id>=s192-rw"` (`=s<size>` resizes, `-rw` returns WebP). The `<id>` comes from the Play page's `og:image`.
 **Lessons / bugs hit**
 - To scrape several Play pages at once: open one Play page in the browser, then `fetch('/store/apps/details?id=...&hl=en')` from it (same origin) and regex the `<meta>` tags. `DOMParser` is blocked there (TrustedHTML).
+
+## 2026-10-21 — Suga Studio games (delisted)
+
+**What** — Added I Am Hero: Superheroes Epic Battles, Overload: Online Car Shooting, Overleague after the 7 Google Play games.
+**Decisions**
+- All 3 are removed from the stores (Play returns 404), so info + icons come from AppMagic (publisher page `appmagic.rocks/publisher/suga-studio/2_1497860569`). They have no `link`; the project block shows a plain name when `link` is missing.
+- "Overload" on AppMagic has two games; the user chose **Overload: Online Car Shooting** (iOS 1064842104, 2017), NOT "Overload Arena: Metal Revenge" (2024).
+- Descriptions are short one-line summaries written from the AppMagic store descriptions (no store short description exists).
+**Lessons / bugs hit**
+- AppMagic is an Angular SPA: read it in the browser. Icon URLs sit in `images.appmagic.rocks/?uri=<original>`; download the original URL at 192px (`=s192-rw` for Google, `/192x192bb.webp` for Apple mzstatic).

@@ -64,6 +64,25 @@ export const PROFILE = {
       link: play('tech.element6.SwatzZapz'),
       image: icon('swatzzapz'),
     },
+    // Suga Studio games, no longer on the stores (info and icons from AppMagic), so no store link
+    {
+      name: 'I Am Hero: Superheroes Epic Battles',
+      desc: 'Recruit superheroes from manga, comics and legends, build a powerful team and win through strategic combat.',
+      tags: ['RPG'],
+      image: icon('i-am-hero'),
+    },
+    {
+      name: 'Overload: Online Car Shooting',
+      desc: 'Multiplayer car shooting: load your guns and missiles and blast away players from all over the world.',
+      tags: ['Racing', 'Action'],
+      image: icon('overload'),
+    },
+    {
+      name: 'Overleague',
+      desc: 'Fast-paced multiplayer combat racing packed with guns, explosions and 10+ cars to choose from.',
+      tags: ['Racing', 'Action'],
+      image: icon('overleague'),
+    },
   ],
   contact: [
     { label: 'Email', value: 'you@email.com', href: 'mailto:you@email.com' },
@@ -109,7 +128,7 @@ export const SECTIONS = [
           (p) => `<article class="project">
             <img src="${esc(p.image)}" alt="${esc(p.name)} icon" width="64" height="64" loading="lazy" />
             <div>
-              <h3><a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.name)}</a></h3>
+              <h3>${p.link ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name)}</h3>
               <p>${esc(p.desc)}</p>
               <ul class="chips">${p.tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
             </div>
