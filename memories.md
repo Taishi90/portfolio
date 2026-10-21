@@ -73,3 +73,8 @@
 
 **What** — The 4 object trigger zones (`zone` in `OBJECTS`, RoomScene.js) were enlarged so walking NEAR an object opens its panel (about 20–35px around each object instead of one exact spot).
 **Decisions** — Zones must not overlap each other or the rug, and the spawn point (160,150) must stay outside all of them. Added `?debug` (e.g. `http://localhost:5173/?debug`) to draw the zones (yellow) and rug (pink) for tuning.
+
+## 2026-10-22 — Trigger zones shrunk by 50%
+
+**What** — User found the enlarged zones too big: each zone's AREA was halved (width/height ×0.7), kept anchored on its object (≈8–18px around each object). The `?debug` zone overlay was removed at the user's request (no zone visuals at all).
+**Decisions** — Current zones: about [47,48,50,25], projects [220,48,57,42], skills [16,122,42,53], contact [265,168,39,45]. History: original (too small, exact spot) → enlarged (too big) → this. Tune in small steps from here.
