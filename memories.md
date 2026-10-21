@@ -62,7 +62,8 @@
 
 ## 2026-10-21 — Suga Studio games (delisted)
 
-**What** — Added I Am Hero: Superheroes Epic Battles, Overload: Online Car Shooting, Overleague after the 7 Google Play games.
+**What** — Added I Am Hero, Overload: Online Car Shooting, Overleague after the 7 Google Play games.
+- "I Am Hero" = **I Am Hero: AFK Teamfight** (iOS/iPad 1499340388, 2020, idle RPG + auto chess), NOT "I Am Hero: Superheroes Epic Battles" (Android com.HoGa.IAmHero, 2019) — corrected 2026-10-22 by the user. On the AppMagic publisher page it only shows up as an `/ipad/` link, so search the page text, not just Google Play/iPhone links.
 **Decisions**
 - All 3 are removed from the stores (Play returns 404), so info + icons come from AppMagic (publisher page `appmagic.rocks/publisher/suga-studio/2_1497860569`). Their title links to the Suga Studio AppMagic publisher page (`SUGA_STUDIO` in content.js, added 2026-10-22 at the user's request). A project without `link` still renders as a plain name.
 - "Overload" on AppMagic has two games; the user chose **Overload: Online Car Shooting** (iOS 1064842104, 2017), NOT "Overload Arena: Metal Revenge" (2024).
