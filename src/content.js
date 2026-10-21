@@ -85,8 +85,8 @@ export const PROFILE = {
     },
   ],
   contact: [
-    { label: 'Email', value: 'you@email.com', href: 'mailto:you@email.com' },
-    { label: 'GitHub', value: 'github.com/your-name', href: 'https://github.com/' },
+    { label: 'Email', value: 'linhnc2312@gmail.com', href: 'mailto:linhnc2312@gmail.com' },
+    { label: 'LinkedIn', value: 'linkedin.com/in/linh-nguyen-in-87b965214', href: 'https://www.linkedin.com/in/linh-nguyen-in-87b965214' },
   ],
 };
 
