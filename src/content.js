@@ -2,6 +2,7 @@
 // Skills are read from skill.md in the project root.
 import skillMd from '../skill.md?raw';
 
+const SUGA_STUDIO = 'https://appmagic.rocks/publisher/suga-studio/2_1497860569';
 const play = (id) => `https://play.google.com/store/apps/details?id=${id}`;
 // Game icons (192px, from each Google Play page) stored in public/assets/projects/
 const icon = (name) => `assets/projects/${name}.webp`;
@@ -64,23 +65,26 @@ export const PROFILE = {
       link: play('tech.element6.SwatzZapz'),
       image: icon('swatzzapz'),
     },
-    // Suga Studio games, no longer on the stores (info and icons from AppMagic), so no store link
+    // Suga Studio games, no longer on the stores (info and icons from AppMagic): they link to the studio's AppMagic page
     {
       name: 'I Am Hero: Superheroes Epic Battles',
       desc: 'Recruit superheroes from manga, comics and legends, build a powerful team and win through strategic combat.',
       tags: ['RPG'],
+      link: SUGA_STUDIO,
       image: icon('i-am-hero'),
     },
     {
       name: 'Overload: Online Car Shooting',
       desc: 'Multiplayer car shooting: load your guns and missiles and blast away players from all over the world.',
       tags: ['Racing', 'Action'],
+      link: SUGA_STUDIO,
       image: icon('overload'),
     },
     {
       name: 'Overleague',
       desc: 'Fast-paced multiplayer combat racing packed with guns, explosions and 10+ cars to choose from.',
       tags: ['Racing', 'Action'],
+      link: SUGA_STUDIO,
       image: icon('overleague'),
     },
   ],

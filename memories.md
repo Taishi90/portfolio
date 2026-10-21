@@ -64,7 +64,7 @@
 
 **What** — Added I Am Hero: Superheroes Epic Battles, Overload: Online Car Shooting, Overleague after the 7 Google Play games.
 **Decisions**
-- All 3 are removed from the stores (Play returns 404), so info + icons come from AppMagic (publisher page `appmagic.rocks/publisher/suga-studio/2_1497860569`). They have no `link`; the project block shows a plain name when `link` is missing.
+- All 3 are removed from the stores (Play returns 404), so info + icons come from AppMagic (publisher page `appmagic.rocks/publisher/suga-studio/2_1497860569`). Their title links to the Suga Studio AppMagic publisher page (`SUGA_STUDIO` in content.js, added 2026-10-22 at the user's request). A project without `link` still renders as a plain name.
 - "Overload" on AppMagic has two games; the user chose **Overload: Online Car Shooting** (iOS 1064842104, 2017), NOT "Overload Arena: Metal Revenge" (2024).
 - Descriptions are short one-line summaries written from the AppMagic store descriptions (no store short description exists).
 **Lessons / bugs hit**
