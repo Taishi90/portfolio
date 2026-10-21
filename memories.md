@@ -90,3 +90,8 @@
 - Door/lamp textures and `drawFacade()` live in `art.js`; walk animations moved to `createPlayerAnims()` in art.js so both scenes share them.
 **Lessons / bugs hit**
 - Don't tween `tint` directly (it interpolates the hex number → wrong colors). Use `tweens.addCounter` + `Phaser.Display.Color.Interpolate.ColorWithColor`.
+
+## 2026-10-22 — I Am Hero: use the page's header icon + official text
+
+**What** — I Am Hero: AFK Teamfight now uses the icon shown at the top of its AppMagic page (`appmagic.rocks/ipad/i-am-hero-afk-teamfight/1499340388`, a Google Play icon `cCZqs_…`) and the first two sentences of the official description verbatim.
+**Lessons** — An AppMagic page can group several store apps ("5 APPS SUMMARY"); the `images.appmagic.rocks` URLs further down may belong to a different app in the group. Take the icon at the header (the image next to the `h1` title, top-left) and compare it visually with a screenshot. When the user gives a specific link, prefer the official description text over a paraphrase.

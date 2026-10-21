@@ -68,8 +68,8 @@ export const PROFILE = {
     // Suga Studio games, no longer on the stores (info and icons from AppMagic): they link to the studio's AppMagic page
     {
       name: 'I Am Hero: AFK Teamfight',
-      desc: 'An idle RPG combined with auto chess teamfight tactics: collect and upgrade legendary heroes, build a powerful team and let it auto fight for you.',
-      tags: ['Idle RPG', 'Auto Chess'],
+      desc: 'I Am Hero presents unique gameplay with the combination of idle RPG elements with the tactics of auto chess teamfight. Our AFK game lets you build a powerful team to auto fight on your behalf.',
+      tags: ['Idle RPG', 'Auto Battler'],
       link: SUGA_STUDIO,
       image: icon('i-am-hero'),
     },
