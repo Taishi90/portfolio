@@ -368,16 +368,56 @@ function createDoor(scene) {
   });
 }
 
-export function drawFacade(scene, W, H) {
+// Sun (rays rotate in IntroScene) and a fluffy cloud, for the daytime intro
+function createSky(scene) {
+  canvasTexture(scene, 'sun', 36, 36, (ctx) => {
+    ellipse(ctx, 18, 18, 17, 17, 'rgba(255, 236, 140, 0.25)');
+    ctx.save();
+    ctx.translate(18, 18);
+    for (let i = 0; i < 10; i++) {
+      ctx.rotate((Math.PI * 2) / 10);
+      ctx.beginPath();
+      ctx.roundRect(-1.6, -16, 3.2, 6, 1.6);
+      ctx.fillStyle = '#ffd43b';
+      ctx.fill();
+      ctx.lineWidth = 0.7;
+      ctx.strokeStyle = '#f5a524';
+      ctx.stroke();
+    }
+    ctx.restore();
+    ball(ctx, 18, 18, 9.5, { top: '#fff3a0', bottom: '#ffb020', gloss: 0.45, shade: 0, lw: 0.9, ink: '#e8892a' });
+  });
+
+  canvasTexture(scene, 'cloud', 40, 18, (ctx) => {
+    const path = () => {
+      ctx.beginPath();
+      ctx.arc(11, 11, 6.5, Math.PI * 0.5, Math.PI * 1.5);
+      ctx.arc(19, 7.5, 6.5, Math.PI * 1.05, Math.PI * 1.85);
+      ctx.arc(29, 9.5, 6, Math.PI * 1.25, Math.PI * 0.5);
+      ctx.closePath();
+    };
+    blob(ctx, path, [4, 1, 32, 16.5], { top: '#ffffff', bottom: '#dbeaff', gloss: 0, shade: 0, lw: 0.9, ink: '#6b8cc9' });
+  });
+}
+
+// day: true = morning/afternoon sky with sun, false = night sky with moon (stars/sun/clouds are added by the scene)
+export function drawFacade(scene, W, H, day = false) {
   const { x, y, w, h } = DOORWAY;
-  canvasTexture(scene, 'facade', W, H, (ctx) => {
-    // night sky + moon
-    ctx.fillStyle = vgrad(ctx, 0, 200, '#1d2a6e', '#5a3f92');
-    ctx.fillRect(0, 0, W, H);
-    ellipse(ctx, 278, 22, 18, 18, 'rgba(255, 246, 200, 0.12)');
-    ball(ctx, 278, 22, 9, { top: '#fffbe0', bottom: '#ffe28a', gloss: 0, shade: 0, lw: 0 });
-    ellipse(ctx, 275, 20, 1.6, 1.6, 'rgba(230, 200, 120, 0.6)');
-    ellipse(ctx, 281, 25, 1.1, 1.1, 'rgba(230, 200, 120, 0.6)');
+  const key = day ? 'facade-day' : 'facade-night';
+  canvasTexture(scene, key, W, H, (ctx) => {
+    if (day) {
+      // bright sky with a soft horizon glow
+      ctx.fillStyle = vgrad(ctx, 0, 200, '#5cc2ff', '#c9f0ff');
+      ctx.fillRect(0, 0, W, H);
+    } else {
+      // night sky + moon
+      ctx.fillStyle = vgrad(ctx, 0, 200, '#1d2a6e', '#5a3f92');
+      ctx.fillRect(0, 0, W, H);
+      ellipse(ctx, 278, 22, 18, 18, 'rgba(255, 246, 200, 0.12)');
+      ball(ctx, 278, 22, 9, { top: '#fffbe0', bottom: '#ffe28a', gloss: 0, shade: 0, lw: 0 });
+      ellipse(ctx, 275, 20, 1.6, 1.6, 'rgba(230, 200, 120, 0.6)');
+      ellipse(ctx, 281, 25, 1.1, 1.1, 'rgba(230, 200, 120, 0.6)');
+    }
 
     // grass
     blob(ctx, () => { ctx.beginPath(); ctx.roundRect(-4, 196, W + 8, 60, 8); }, [-4, 196, W + 8, 60], { top: '#6fdc4a', bottom: '#3a9a36', gloss: 0.12, shade: 0 });
@@ -390,10 +430,11 @@ export function drawFacade(scene, W, H) {
     // roof
     box(ctx, 14, 44, W - 28, 17, 7, { top: '#ff7a7a', bottom: '#d93d4f', gloss: 0.3 });
 
-    // lit windows on both sides
+    // windows on both sides: clear blue glass by day, warm light at night
     for (const wx of [48, 234]) {
       box(ctx, wx - 3, 97, 44, 38, 5, { top: '#ffffff', bottom: '#d9e2ff', gloss: 0, shade: 0.06 });
-      box(ctx, wx, 100, 38, 32, 3, { top: '#fff2b8', bottom: '#ffc24a', gloss: 0.3, shade: 0, lw: 0.7 });
+      const glass = day ? { top: '#d6f3ff', bottom: '#7cc6f2' } : { top: '#fff2b8', bottom: '#ffc24a' };
+      box(ctx, wx, 100, 38, 32, 3, { ...glass, gloss: 0.3, shade: 0, lw: 0.7 });
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(wx + 18, 100.5, 2, 31);
       ctx.fillRect(wx + 0.5, 115, 37, 2);
@@ -434,7 +475,7 @@ export function drawFacade(scene, W, H) {
       ball(ctx, bx, by - 5, 10, { top: '#8ef06a', bottom: '#3fa83a', gloss: 0.25, shade: 0 });
     }
   });
-  return scene.add.image(0, 0, 'facade').setOrigin(0).setScale(1 / R);
+  return scene.add.image(0, 0, key).setOrigin(0).setScale(1 / R);
 }
 
 // ---------- room ----------
@@ -522,5 +563,6 @@ export function createTextures(scene) {
   createPlayer(scene);
   createObjects(scene);
   createDoor(scene);
+  createSky(scene);
   createPlayerAnims(scene);
 }

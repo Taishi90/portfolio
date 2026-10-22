@@ -8,6 +8,14 @@ const H = 240;
 // Light color used for the final fade, so the room "opens" from the same warm light
 export const DOOR_LIGHT = [255, 246, 216];
 
+// Day from 6:00 to 18:00 in the viewer's local time. ?sky=day / ?sky=night forces one (for testing).
+export function isDaytime(now = new Date()) {
+  const forced = new URLSearchParams(location.search).get('sky');
+  if (forced === 'day' || forced === 'night') return forced === 'day';
+  const hour = now.getHours();
+  return hour >= 6 && hour < 18;
+}
+
 // Opening animation: the player walks up to the house, the doors swing open,
 // they step into the light and the camera follows them inside. Click / tap / any key skips it.
 export default class IntroScene extends Phaser.Scene {
@@ -25,8 +33,11 @@ export default class IntroScene extends Phaser.Scene {
     const { x, y, w, h } = DOORWAY;
     const doorX = x + w / 2;
 
-    drawFacade(this, W, H);
-    this.addStars(); // after the facade, which paints the night sky
+    const day = isDaytime();
+    drawFacade(this, W, H, day);
+    // after the facade, which paints the sky
+    if (day) this.addSunAndClouds();
+    else this.addStars();
     // sizes in world pixels (the screen shows the 320x240 world about 3-4x bigger)
     this.addText(doorX, y - 19.5, 'WELCOME', 7.5, '#7a3b00', 0);
     this.addText(W / 2, 18, PROFILE.name, 14, '#ffffff', 2.5);
@@ -35,6 +46,7 @@ export default class IntroScene extends Phaser.Scene {
 
     for (const lx of [x - 22, x + w + 22]) {
       const lamp = this.add.image(lx, y + 18, 'lamp').setScale(1 / R);
+      if (day) continue; // lamps only glow at night
       this.tweens.add({ targets: lamp, alpha: 0.75, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
 
@@ -121,6 +133,25 @@ export default class IntroScene extends Phaser.Scene {
     const cam = this.cameras.main;
     cam.fadeOut(450, ...DOOR_LIGHT);
     cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Room'));
+  }
+
+  addSunAndClouds() {
+    const sun = this.add.image(278, 24, 'sun').setScale(1 / R);
+    this.tweens.add({ targets: sun, angle: 360, duration: 24000, repeat: -1 });
+    // clouds drift slowly to the right and wrap around
+    for (const [cx, cy, s, speed] of [[40, 22, 1, 38000], [150, 12, 0.75, 52000], [215, 38, 0.6, 64000]]) {
+      const cloud = this.add.image(cx, cy, 'cloud').setScale(s / R);
+      const travel = (W + 60 - cx) / (W + 60);
+      this.tweens.add({
+        targets: cloud,
+        x: W + 30,
+        duration: speed * travel,
+        onComplete: () => {
+          cloud.x = -30;
+          this.tweens.add({ targets: cloud, x: W + 30, duration: speed, repeat: -1, onRepeat: () => (cloud.x = -30) });
+        },
+      });
+    }
   }
 
   addStars() {

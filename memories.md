@@ -146,3 +146,9 @@
 
 **What** — Coming back from the portfolio, `IntroScene` is started with `{ hold: true }` while the tiles are still covering: the house is drawn under the tiles (no fade from black), and `startIntro()` → `IntroScene.begin()` starts the walk/door animation only once the tiles are fully gone. First page load still fades in from black and calls `begin()` right away.
 **Lesson** — "Intro only after the tiles open" means the ANIMATION waits, not the scene: stopping all scenes left a dark canvas that the user saw as a black loading gap.
+
+## 2026-10-22 — Intro day / night by real local time
+
+**What** — The intro picks its sky from the viewer's local clock (`isDaytime()` in IntroScene.js): **day 6:00–17:59** = bright blue sky, rotating sun (`'sun'` texture, 24s per turn), 3 clouds drifting right and wrapping (`'cloud'`), clear blue windows, lamps steady; **night 18:00–5:59** = old look (moon, twinkling stars, warm lit windows, pulsing lamps). Facade textures are `'facade-day'` / `'facade-night'` (`drawFacade(scene, W, H, day)`).
+**Testing** — add `?sky=day` or `?sky=night` to the URL to force one.
+**Not changed** — the room (its window always shows a day sky) and the portfolio page do not follow the clock.
