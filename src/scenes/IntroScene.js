@@ -15,10 +15,13 @@ export default class IntroScene extends Phaser.Scene {
     super('Intro');
   }
 
-  create() {
+  // data.hold: build the scene but wait for begin() before animating (used when coming back from the
+  // portfolio page: the house is visible under the transition tiles, the animation starts once they are gone)
+  create(data = {}) {
     createTextures(this);
     setupCamera(this);
     this.done = false;
+    this.started = false;
     const { x, y, w, h } = DOORWAY;
     const doorX = x + w / 2;
 
@@ -47,11 +50,20 @@ export default class IntroScene extends Phaser.Scene {
 
     this.player = this.add.sprite(doorX, H + 10, 'player', 'up0').setScale(PLAYER_SCALE / R).setDepth(10);
 
-    const cam = this.cameras.main;
-    cam.fadeIn(500, 0, 0, 0);
+    // first load: fade in from black; coming back from the portfolio the tiles already hide the start
+    if (!data.hold) this.cameras.main.fadeIn(500, 0, 0, 0);
 
     this.input.once('pointerdown', () => this.enter());
     this.input.keyboard.once('keydown', () => this.enter());
+
+    if (!data.hold) this.begin();
+  }
+
+  begin() {
+    if (this.started || this.done) return;
+    this.started = true;
+    const { y, h } = DOORWAY;
+    const doorX = DOORWAY.x + DOORWAY.w / 2;
 
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.time.delayedCall(600, () => this.enter());

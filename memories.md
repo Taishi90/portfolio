@@ -141,3 +141,8 @@
 - Use `img.displayHeight` (not `img.height`) for world positions of scaled images. Door swing tween: `scaleX: 0.12 / R`.
 - World layout, collisions, trigger zones and RUG/DOORWAY rects did not change.
 - The old pixel-art module is in git history (commit before this one) if ever needed.
+
+## 2026-10-22 — No black gap when returning to the game
+
+**What** — Coming back from the portfolio, `IntroScene` is started with `{ hold: true }` while the tiles are still covering: the house is drawn under the tiles (no fade from black), and `startIntro()` → `IntroScene.begin()` starts the walk/door animation only once the tiles are fully gone. First page load still fades in from black and calls `begin()` right away.
+**Lesson** — "Intro only after the tiles open" means the ANIMATION waits, not the scene: stopping all scenes left a dark canvas that the user saw as a black loading gap.

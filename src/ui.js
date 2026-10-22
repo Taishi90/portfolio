@@ -104,19 +104,19 @@ function setMode(mode, sectionId) {
   } else {
     game.loop.wake();
     history.replaceState(null, '', location.pathname);
-    // Coming back to the game always replays the door-opening intro (started by startIntro()).
-    // Until then no scene runs, so the canvas just shows the background color.
+    // Coming back to the game always replays the door-opening intro from the start.
     hidePanel();
     for (const dir in touch) touch[dir] = false;
     document.body.classList.add('intro');
     game.scene.stop('Room');
     game.scene.stop('Intro');
+    // the house is drawn right away (under the transition tiles), its animation waits for startIntro()
+    game.scene.start('Intro', { hold: true });
   }
 }
 
-
 function startIntro() {
-  game.scene.start('Intro');
+  game.scene.getScene('Intro').begin();
 }
 
 // Pixel-wipe transition: tiles sweep in diagonally from the top-right (where the Skip button is),
