@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { createTextures, drawFacade, DOORWAY } from '../art.js';
 import { PROFILE } from '../content.js';
+import { setupCamera, crispText, ZOOM } from '../view.js';
 
 const W = 320;
 const H = 240;
@@ -16,16 +17,18 @@ export default class IntroScene extends Phaser.Scene {
 
   create() {
     createTextures(this);
+    setupCamera(this);
     this.done = false;
     const { x, y, w, h } = DOORWAY;
     const doorX = x + w / 2;
 
-    this.addStars();
     drawFacade(this, W, H);
-    this.addText(doorX, y - 15, 'WELCOME', 18, '#2b1d1d', 0);
-    this.addText(W / 2, 18, PROFILE.name, 36, '#ffffff', 8);
-    this.addText(W / 2, 36, PROFILE.role, 20, '#ffd23f', 6);
-    this.hint = this.addText(W / 2, H - 10, 'Click, tap or press any key to skip', 16, '#ffffff', 5).setAlpha(0.6);
+    this.addStars(); // after the facade, which paints the night sky
+    // sizes in world pixels (the screen shows the 320x240 world about 3-4x bigger)
+    this.addText(doorX, y - 15, 'WELCOME', 7, '#2b1d1d', 0);
+    this.addText(W / 2, 18, PROFILE.name, 14, '#ffffff', 2.5);
+    this.addText(W / 2, 36, PROFILE.role, 8, '#ffd23f', 2);
+    this.hint = this.addText(W / 2, H - 10, 'Click, tap or press any key to skip', 6.5, '#ffffff', 1.5).setAlpha(0.75);
 
     for (const lx of [x - 22, x + w + 22]) {
       const lamp = this.add.image(lx, y + 18, 'lamp');
@@ -94,7 +97,7 @@ export default class IntroScene extends Phaser.Scene {
       this.tweens.add({ targets: this.player, y: floorY - 22, alpha: 0.2, duration: 900 });
       const cam = this.cameras.main;
       cam.pan(doorX, DOORWAY.y + DOORWAY.h / 2, 1100, 'Sine.easeIn');
-      cam.zoomTo(5, 1100, 'Sine.easeIn');
+      cam.zoomTo(5 * ZOOM, 1100, 'Sine.easeIn');
       this.time.delayedCall(700, () => this.enter());
     });
   }
@@ -123,21 +126,7 @@ export default class IntroScene extends Phaser.Scene {
     }
   }
 
-  // Text drawn large then scaled down with smooth filtering (same trick as the room labels)
   addText(x, y, text, size, color, stroke) {
-    const t = this.add
-      .text(x, y, text, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: `${size}px`,
-        fontStyle: 'bold',
-        color,
-        stroke: '#1a1423',
-        strokeThickness: stroke,
-      })
-      .setOrigin(0.5)
-      .setScale(1 / 3)
-      .setDepth(5);
-    t.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
-    return t;
+    return crispText(this, x, y, text, size, { color, stroke }).setOrigin(0.5).setDepth(5);
   }
 }

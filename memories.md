@@ -16,7 +16,8 @@
   - `src/scenes/RoomScene.js` — room, collisions, movement, trigger zones (the `OBJECTS` array).
   - `src/ui.js` — HTML info panel, Skip button, classic page, D-pad.
   - `src/touch.js` — D-pad button state, read by the scene every frame.
-- Game is 320×240, 16px tiles, `pixelArt: true`, `Scale.FIT`. The top wall is 48px tall.
+- World is 320×240, 16px tiles, `pixelArt: true`, `Scale.FIT`. The top wall is 48px tall. The canvas is `320*ZOOM × 240*ZOOM` and every scene calls `setupCamera()` (src/view.js) — all game coordinates stay in 320×240 world pixels.
+  - `src/view.js` — `ZOOM`, `FONT` (Nunito), `setupCamera()`, `crispText()` for ALL in-game text.
 
 ## 2026-10-19 — Built the first full version
 
@@ -34,7 +35,7 @@
 
 **Lessons / bugs hit**
 - Vite reported **500 "Failed to resolve import"** while new files were being created → transient (file did not exist yet when HMR ran). Reloading fixes it.
-- Phaser labels looked jagged because of `pixelArt: true` → draw text large (24px), `setScale(1/3)` and `label.texture.setFilter(LINEAR)`.
+- Phaser labels looked jagged because of `pixelArt: true` → (superseded 2026-10-22, see "Readable game text").
 - Phaser starts its loop **right after** the `ready` event → to `game.loop.sleep()` at startup, wait one tick with `setTimeout`.
 - Automated testing: synthetic `KeyboardEvent`s have no `keyCode`, so Phaser ignores them → test movement by firing `pointerdown/pointerup` on the `#dpad` buttons, or move the player with `game.scene.keys.Room.player.body.reset(x, y)` (`window.game` only exists under `npm run dev`).
 - When the browser tab is hidden, `requestAnimationFrame` does not run → `game.loop.frame` stays at 0. The tab must be visible to test.
@@ -95,3 +96,9 @@
 
 **What** — I Am Hero: AFK Teamfight now uses the icon shown at the top of its AppMagic page (`appmagic.rocks/ipad/i-am-hero-afk-teamfight/1499340388`, a Google Play icon `cCZqs_…`) and the first two sentences of the official description verbatim.
 **Lessons** — An AppMagic page can group several store apps ("5 APPS SUMMARY"); the `images.appmagic.rocks` URLs further down may belong to a different app in the group. Take the icon at the header (the image next to the `h1` title, top-left) and compare it visually with a screenshot. When the user gives a specific link, prefer the official description text over a paraphrase.
+
+## 2026-10-22 — Readable game text (no more pixelated labels)
+
+**What** — Object labels, rug text and intro texts were blurry/pixelated because the canvas itself was only 320×240 and got upscaled. Now the canvas is drawn at `ZOOM` (2–6, ≈ screen size × devicePixelRatio, computed once at load) and each camera zooms by `ZOOM`; text uses the **Nunito** 800 font (Google Fonts in index.html, `document.fonts.load` before the game starts, 1.5s timeout).
+**Decisions** — Use `crispText(scene, x, y, text, sizeInWorldPx, {color, stroke, strokeColor, lineSpacing})` for any game text; never `scene.add.text` directly. Removed `canvas { image-rendering: pixelated }` (canvas is ~screen resolution now). Physics world bounds must be set to 320×240 explicitly (`physics.world.setBounds`), otherwise they follow the big canvas. Camera tweens that zoom must multiply by `ZOOM` (intro: `zoomTo(5 * ZOOM)`).
+**Lessons / bugs hit** — Intro stars were never visible: `drawFacade()` paints the sky over them → stars must be added after the facade.

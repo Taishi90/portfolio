@@ -4,6 +4,7 @@ import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
 import { showPanel, hidePanel, enterRoom } from '../ui.js';
 import { DOOR_LIGHT } from './IntroScene.js';
+import { setupCamera, crispText } from '../view.js';
 
 const W = 320;
 const H = 240;
@@ -30,6 +31,8 @@ export default class RoomScene extends Phaser.Scene {
   create() {
     createTextures(this);
     // continue from the intro's fade into the doorway light
+    setupCamera(this);
+    this.physics.world.setBounds(0, 0, W, H);
     this.cameras.main.fadeIn(500, ...DOOR_LIGHT);
     enterRoom();
     drawRoom(this, W, H, T, WALL_TOP);
@@ -55,19 +58,9 @@ export default class RoomScene extends Phaser.Scene {
       const top = o.y - img.height;
       const bang = this.add.image(o.x, top - 4, 'bang').setOrigin(0.5, 1).setDepth(1000);
       this.tweens.add({ targets: bang, y: top - 8, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
-      const label = this.add
-        .text(o.x, o.y + 2, section.title, {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '24px',
-          color: '#ffffff',
-          stroke: '#1a1423',
-          strokeThickness: 6,
-        })
+      const label = crispText(this, o.x, o.y + 2, section.title, 8, { stroke: 2 })
         .setOrigin(0.5, 0)
-        .setScale(1 / 3)
         .setDepth(o.y + 1); // the player in front of a label covers it
-      // text is drawn large then scaled down with smooth filtering, so it is not jagged like the pixel art
-      label.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
       // the picture hangs on the wall: put its label at the foot of the wall so it is readable
       if (o.id === 'about') label.setY(WALL_TOP + 1);
       return { ...o, section, zone: new Phaser.Geom.Rectangle(...o.zone), bang, label };
@@ -75,22 +68,15 @@ export default class RoomScene extends Phaser.Scene {
 
     // Message inside the rug, fades in while the player stands on it
     this.rugZone = new Phaser.Geom.Rectangle(RUG.x, RUG.y, RUG.w, RUG.h);
-    this.rugText = this.add
-      .text(RUG.x + RUG.w / 2, RUG.y + RUG.h / 2, 'From Pixel\nTo Picture', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '30px',
-        fontStyle: 'bold',
-        color: '#ffe8a3',
-        align: 'center',
-        stroke: '#5a1f29',
-        strokeThickness: 6,
-        lineSpacing: -4,
-      })
+    this.rugText = crispText(this, RUG.x + RUG.w / 2, RUG.y + RUG.h / 2, 'From Pixel\nTo Picture', 10, {
+      color: '#ffe8a3',
+      stroke: 2,
+      strokeColor: '#5a1f29',
+      lineSpacing: -1,
+    })
       .setOrigin(0.5)
-      .setScale(1 / 3)
       .setDepth(1) // on the floor: the player walks over it
       .setAlpha(0);
-    this.rugText.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
     // The player spawns on the rug: count that as already on it, so the text only shows after leaving and coming back
     this.onRug = true;
 
