@@ -131,3 +131,13 @@
 
 **What** — `#skip-btn` ("View Portfolio") and `#play-btn` ("Play the game") were removed. One `#mode-switch` (🎮 Game | 📄 Portfolio segmented control, gold sliding thumb) sits outside both views, `position: fixed`, so it is in exactly the same spot on both screens: `right: max(16px, (100vw - --c-max)/2 + 20px)`, top 10px (aligned with the portfolio top bar's content edge).
 **Decisions** — The thumb moves immediately on click (`updateSwitch`), then the pixel-wipe transition runs; clicking the active side does nothing. `setMode()` keeps the switch in sync (also for direct #classic links). The portfolio top bar reserves `padding-right: 260px` (mobile: the brand row has `padding-right: 206px`) so links never go under the switch. z-index: switch 20 > top bar 10, < transition tiles 100.
+
+## 2026-10-22 — Casual mobile-game art style (replaces pixel art)
+
+**What** — Player, room, 4 objects, plant, "!" badge and the intro house/door were redrawn in the style of the user's reference (Layerlab "GUI Pro – Casual Game" on the Unity Asset Store — used only as visual inspiration, nothing downloaded): chunky rounded shapes, thick navy outline `#1c2541`, vertical gradients, glossy top highlight + darker bottom band, soft drop shadows, saturated colors (blue walls, warm wood floor, red/yellow/green accents). Player = chibi (big head, big eyes, blush). Intro = night sky with moon, blue house, red roof, lit windows, bushes, yellow WELCOME plaque.
+**How** — `src/art.js` draws everything with Canvas 2D (`canvasTexture`, helpers `blob/box/ball/shadow`) at `R = ZOOM` texture px per world px; scenes show them with `setScale(1 / R)`. Room and facade are single big canvas textures (`room-bg`, `facade`). `pixelArt` is off (`antialias: true`).
+**Lessons / gotchas**
+- Arcade body `setSize`/`setOffset` on a scaled sprite are in TEXTURE pixels → multiply by `R` (player: `setSize(10*R, 6*R).setOffset(3*R, 10*R)`).
+- Use `img.displayHeight` (not `img.height`) for world positions of scaled images. Door swing tween: `scaleX: 0.12 / R`.
+- World layout, collisions, trigger zones and RUG/DOORWAY rects did not change.
+- The old pixel-art module is in git history (commit before this one) if ever needed.

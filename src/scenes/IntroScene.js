@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { createTextures, drawFacade, DOORWAY } from '../art.js';
+import { createTextures, drawFacade, DOORWAY, R } from '../art.js';
 import { PROFILE } from '../content.js';
 import { setupCamera, crispText, ZOOM } from '../view.js';
 
@@ -25,13 +25,13 @@ export default class IntroScene extends Phaser.Scene {
     drawFacade(this, W, H);
     this.addStars(); // after the facade, which paints the night sky
     // sizes in world pixels (the screen shows the 320x240 world about 3-4x bigger)
-    this.addText(doorX, y - 15, 'WELCOME', 7, '#2b1d1d', 0);
+    this.addText(doorX, y - 19.5, 'WELCOME', 7.5, '#7a3b00', 0);
     this.addText(W / 2, 18, PROFILE.name, 14, '#ffffff', 2.5);
-    this.addText(W / 2, 36, PROFILE.role, 8, '#ffd23f', 2);
+    this.addText(W / 2, 35, PROFILE.role, 8, '#ffe066', 2);
     this.hint = this.addText(W / 2, H - 10, 'Click, tap or press any key to skip', 6.5, '#ffffff', 1.5).setAlpha(0.75);
 
     for (const lx of [x - 22, x + w + 22]) {
-      const lamp = this.add.image(lx, y + 18, 'lamp');
+      const lamp = this.add.image(lx, y + 18, 'lamp').setScale(1 / R);
       this.tweens.add({ targets: lamp, alpha: 0.75, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
 
@@ -42,10 +42,10 @@ export default class IntroScene extends Phaser.Scene {
     this.glow.fillTriangle(x, y + h, doorX - 60, H, doorX + 60, H);
 
     // doors hinge on the frame: left leaf from its left edge, right leaf from its right edge
-    this.leftDoor = this.add.image(x, y, 'door-leaf').setOrigin(0, 0);
-    this.rightDoor = this.add.image(x + w, y, 'door-leaf').setOrigin(1, 0).setFlipX(true);
+    this.leftDoor = this.add.image(x, y, 'door-leaf').setOrigin(0, 0).setScale(1 / R);
+    this.rightDoor = this.add.image(x + w, y, 'door-leaf').setOrigin(1, 0).setScale(1 / R).setFlipX(true);
 
-    this.player = this.add.sprite(doorX, H + 10, 'player', 'up0').setDepth(10);
+    this.player = this.add.sprite(doorX, H + 10, 'player', 'up0').setScale(1 / R).setDepth(10);
 
     const cam = this.cameras.main;
     cam.fadeIn(500, 0, 0, 0);
@@ -75,7 +75,7 @@ export default class IntroScene extends Phaser.Scene {
 
   // 2. doors swing open, light pours out, 3. step inside while the camera zooms in
   openDoors(doorX, floorY) {
-    this.tweens.add({ targets: [this.leftDoor, this.rightDoor], scaleX: 0.12, duration: 800, delay: 250, ease: 'Cubic.inOut' });
+    this.tweens.add({ targets: [this.leftDoor, this.rightDoor], scaleX: 0.12 / R, duration: 800, delay: 250, ease: 'Cubic.inOut' });
     // darken the leaves as they turn away from us
     const from = Phaser.Display.Color.ValueToColor(0xffffff);
     const to = Phaser.Display.Color.ValueToColor(0x7a6a5a);
@@ -113,7 +113,7 @@ export default class IntroScene extends Phaser.Scene {
 
   addStars() {
     for (let i = 0; i < 40; i++) {
-      const star = this.add.rectangle(Phaser.Math.Between(0, W), Phaser.Math.Between(0, 50), 1, 1, 0xffffff);
+      const star = this.add.circle(Phaser.Math.Between(0, W), Phaser.Math.Between(0, 46), Phaser.Math.FloatBetween(0.4, 0.8), 0xffffff);
       star.setAlpha(Phaser.Math.FloatBetween(0.3, 1));
       this.tweens.add({
         targets: star,

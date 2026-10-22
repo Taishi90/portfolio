@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { createTextures, drawRoom, RUG } from '../art.js';
+import { createTextures, drawRoom, RUG, R } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
 import { showPanel, hidePanel, enterRoom } from '../ui.js';
@@ -48,16 +48,16 @@ export default class RoomScene extends Phaser.Scene {
     solid(W - T, 0, T, H);
     solid(0, H - T, W, T);
 
-    this.add.image(300, 66, 'deco-plant').setOrigin(0.5, 1).setDepth(66);
+    this.add.image(300, 66, 'deco-plant').setOrigin(0.5, 1).setScale(1 / R).setDepth(66);
     solid(294, 56, 12, 10);
 
     this.spots = OBJECTS.map((o) => {
       const section = SECTIONS.find((s) => s.id === o.id);
-      const img = this.add.image(o.x, o.y, o.key).setOrigin(0.5, 1).setDepth(o.y);
+      const img = this.add.image(o.x, o.y, o.key).setOrigin(0.5, 1).setScale(1 / R).setDepth(o.y);
       if (o.solid) solid(...o.solid);
-      const top = o.y - img.height;
-      const bang = this.add.image(o.x, top - 4, 'bang').setOrigin(0.5, 1).setDepth(1000);
-      this.tweens.add({ targets: bang, y: top - 8, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+      const top = o.y - img.displayHeight;
+      const bang = this.add.image(o.x, top - 2, 'bang').setOrigin(0.5, 1).setScale(1 / R).setDepth(1000);
+      this.tweens.add({ targets: bang, y: top - 6, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
       const label = crispText(this, o.x, o.y + 2, section.title, 8, { stroke: 2 })
         .setOrigin(0.5, 0)
         .setDepth(o.y + 1); // the player in front of a label covers it
@@ -69,9 +69,9 @@ export default class RoomScene extends Phaser.Scene {
     // Message inside the rug, fades in while the player stands on it
     this.rugZone = new Phaser.Geom.Rectangle(RUG.x, RUG.y, RUG.w, RUG.h);
     this.rugText = crispText(this, RUG.x + RUG.w / 2, RUG.y + RUG.h / 2, 'From Pixel\nTo Picture', 10, {
-      color: '#ffe8a3',
-      stroke: 2,
-      strokeColor: '#5a1f29',
+      color: '#ffffff',
+      stroke: 2.2,
+      strokeColor: '#a32a45',
       lineSpacing: -1,
     })
       .setOrigin(0.5)
@@ -80,8 +80,9 @@ export default class RoomScene extends Phaser.Scene {
     // The player spawns on the rug: count that as already on it, so the text only shows after leaving and coming back
     this.onRug = true;
 
-    this.player = this.physics.add.sprite(160, 150, 'player', 'down0');
-    this.player.body.setSize(10, 6).setOffset(3, 10);
+    this.player = this.physics.add.sprite(160, 150, 'player', 'down0').setScale(1 / R);
+    // feet-sized body; body size/offset are in texture pixels (the texture is R× the world size)
+    this.player.body.setSize(10 * R, 6 * R).setOffset(3 * R, 10 * R);
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, this.walls);
     this.facing = 'down';

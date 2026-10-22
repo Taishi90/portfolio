@@ -20,7 +20,7 @@ export function setupCamera(scene) {
 }
 
 // In-game text. size / stroke / lineSpacing are in world pixels (1 world px = ZOOM screen px).
-export function crispText(scene, x, y, text, size, { color = '#ffffff', stroke = 0, strokeColor = '#1a1423', lineSpacing = 0, align = 'center' } = {}) {
+export function crispText(scene, x, y, text, size, { color = '#ffffff', stroke = 0, strokeColor = '#1c2541', lineSpacing = 0, align = 'center' } = {}) {
   const t = scene.add
     .text(x, y, text, {
       fontFamily: FONT,

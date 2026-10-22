@@ -23,19 +23,11 @@ Build for deployment: `npm run build` → upload the `dist/` folder (GitHub Page
 
 Direct links: `/#classic` opens the classic page, `/#projects` (or `#about`, `#skills`, `#contact`) opens that section directly.
 
-## Replacing the art with real assets (itch.io or your own)
+## Replacing the art with real assets
 
-The art is currently drawn in code in `src/art.js`. To replace it:
+The art is drawn in code in `src/art.js` (bright "casual mobile game" style: chunky shapes, navy outlines, glossy highlights). Every texture is drawn `R` times bigger than its size in the 320×240 world (`R` = render zoom, 2–6) and shown with `setScale(1 / R)`. To replace a piece with an image:
 
-1. Download free assets from itch.io (search "pixel art tileset", "pixel character 16x16") and **read the license carefully**.
-2. Put the files in `public/assets/`, e.g. `public/assets/bookshelf.png`.
-3. Add a `preload()` to `RoomScene` and load them with the **same keys** already in use:
-   ```js
-   preload() {
-     this.load.image('obj-skills', 'assets/bookshelf.png');
-     this.load.spritesheet('player', 'assets/player.png', { frameWidth: 16, frameHeight: 16 });
-   }
-   ```
-4. Any key loaded from a file is skipped automatically by `src/art.js`, no need to delete code. A character spritesheet has numbered frames (0, 1, 2...), so update the frame names in the animations in `RoomScene.js`.
-
-Credit the asset authors in this README if the license requires it.
+1. Put the file in `public/assets/`, e.g. `public/assets/bookshelf.png`. If it comes from an asset store or itch.io, **check the license** and credit the author here if required.
+2. Load it in the scene's `preload()` with the **same key** already in use (`'player'`, `'obj-about'`, `'obj-projects'`, `'obj-skills'`, `'obj-contact'`, `'deco-plant'`, `'bang'`, `'door-leaf'`, `'lamp'`, `'room-bg'`, `'facade'`). Keys that already exist are skipped by `src/art.js`.
+3. Make the image `R×` its world size (e.g. a 24×40 bookshelf → 96×160 px at R = 4), or change its `setScale` in the scene.
+4. A character spritesheet has numbered frames (0, 1, 2…), so update the frame names in the walk animations in `src/art.js`.

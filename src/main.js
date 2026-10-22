@@ -13,7 +13,8 @@ const game = new Phaser.Game({
   // high-res canvas, cameras zoom into the 320x240 world (see view.js)
   width: WORLD_W * ZOOM,
   height: WORLD_H * ZOOM,
-  pixelArt: true,
+  // smooth rendering for the casual-style art (textures are drawn at high resolution, see art.js)
+  antialias: true,
   backgroundColor: '#0e0c18', // same as the page background (--c-bg)
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
