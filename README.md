@@ -1,7 +1,7 @@
 # Pixel Portfolio
 
 A portfolio as a 2D pixel art game (Phaser 3 + Vite). Walk around a room and step up to objects to see
-**About · Projects · Skills · Contact**. On load, a short door-opening intro plays (click or press any key to skip). A **Skip** button switches to a classic web page, and there is a D-pad for phones.
+**About · Projects · Skills · Contact**. On load, a short door-opening intro plays (click or press any key to skip). A **View Portfolio** button switches to a classic web page, and there is a D-pad for phones.
 
 ## Run
 

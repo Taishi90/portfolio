@@ -29,14 +29,31 @@ button {
 }
 button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 var(--border); }
 
+/* "View Portfolio" button: same modern look as the classic page (gold outline pill) */
 #skip-btn {
   position: absolute;
   top: max(12px, env(safe-area-inset-top));
   right: 16px;
-  padding: 8px 12px;
-  font-weight: 700;
-  font-size: 14px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 204, 77, 0.55);
+  border-radius: 999px;
+  background: rgba(14, 12, 24, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px -10px rgba(255, 204, 77, 0.6);
+  color: #ffcc4d;
+  font: 800 14px/1 'Nunito', var(--font);
+  letter-spacing: 0.02em;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
 }
+#skip-btn span { transition: transform 0.2s; }
+#skip-btn:hover { background: #ffcc4d; color: #1a1423; transform: translateY(-1px); }
+#skip-btn:hover span { transform: translateX(3px); }
+#skip-btn:active { transform: translateY(0); box-shadow: 0 6px 20px -10px rgba(255, 204, 77, 0.6); }
 
 #hint {
   position: absolute;

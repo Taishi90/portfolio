@@ -111,3 +111,8 @@
 - Palette (CSS vars on `#classic`): bg #0e0c18, surfaces #17142a/#1f1b38, text #ece8f7, muted #a49dc4, **gold #ffcc4d = main accent** (from the game), **teal #5fe3d0 = secondary** (links, chips). Red only stays in the game panel. Font: Nunito 400–800.
 - All classic styles are scoped under `#classic`, so the in-game info panel keeps its own look. Skills html now wraps each group in `.skill-group` (inside `.skill-groups`) for card layout.
 - About is shown in the hero (`id="about"`), not as a separate card section.
+
+## 2026-10-22 — "View Portfolio" button + intro replays on return
+
+**What** — The in-game "Skip ⏭ Classic view" button is now **"View Portfolio →"**, styled like the classic page (gold outline pill on dark glass, Nunito, fills gold on hover). Coming back from the classic page always restarts `IntroScene` from the beginning (Room and Intro are stopped, Intro started; panel closed, D-pad state reset, `body.intro` re-added) — the game no longer resumes where it was paused.
+**Note** — README/older entries may still say "Skip button": it is the same `#skip-btn`, only the label changed.

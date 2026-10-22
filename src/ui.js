@@ -105,6 +105,13 @@ function setMode(mode, sectionId) {
   } else {
     game.loop.wake();
     history.replaceState(null, '', location.pathname);
+    // Always replay the door-opening intro when coming back to the game
+    hidePanel();
+    for (const dir in touch) touch[dir] = false;
+    document.body.classList.add('intro');
+    game.scene.stop('Room');
+    game.scene.stop('Intro');
+    game.scene.start('Intro');
   }
 }
 
