@@ -8,8 +8,9 @@ const $ = (id) => document.getElementById(id);
 export function showPanel(section) {
   $('panel-title').textContent = section.title;
   $('panel-body').innerHTML = section.html();
-  $('panel-body').scrollTop = 0;
   $('panel').hidden = false;
+  // the panel itself is the scroll box; reset it after showing it (a hidden element ignores scrollTop)
+  $('panel').scrollTop = 0;
   $('hint').hidden = true;
 }
 

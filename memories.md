@@ -171,3 +171,9 @@
 **What** — `vite.config.js` (`base: './'` = relative asset paths, `chunkSizeWarningLimit: 1600` because Phaser is ~1.2 MB) and `.github/workflows/deploy.yml` (on push to `main`: npm ci → build → upload `dist` → deploy-pages). Tested by serving `dist` under `/portfolio/`: game, fonts and all 10 icons load.
 **State** — Remote is `https://github.com/Taishi90/portfolio.git`; GitHub only has the initial commit. `git fetch` failed with "Invalid username or token" → the user must fix GitHub login on this Mac before pushing (e.g. GitHub CLI `gh auth login`, or GitHub Desktop). After the first push: Settings → Pages → Source: GitHub Actions. Expected URL: https://taishi90.github.io/portfolio/
 **Rule** — never push without the user's explicit OK.
+
+## 2026-10-22 — Panel scroll reset (mobile bug)
+
+**Bug** — Scrolling an info panel, closing it, then opening another object's panel kept the old scroll position (noticed on mobile, where the panel is short and scrolls a lot).
+**Fix** — `showPanel()` resets `#panel.scrollTop` (the panel itself is the scroll box, not `#panel-body`) AFTER `hidden = false` (scrollTop on a `display:none` element is ignored).
+**Deploy** — the site is live at https://taishi90.github.io/portfolio/ (GitHub Pages via Actions). A push to `main` redeploys; the user pushes with GitHub Desktop — never push without asking.
