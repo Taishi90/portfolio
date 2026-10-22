@@ -1,6 +1,7 @@
 // HTML UI layered over the game: info panel, Skip button, classic page, touch D-pad
 import { PROFILE, SECTIONS, STATS, esc } from './content.js';
 import { touch } from './touch.js';
+import { isDaytime } from './view.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -89,6 +90,8 @@ function setMode(mode, sectionId) {
   $('game-view').hidden = classic;
   document.body.classList.toggle('classic-mode', classic);
   if (classic) {
+    // light theme by day, dark theme at night (checked each time the page is shown)
+    document.documentElement.dataset.theme = isDaytime() ? 'day' : 'night';
     if (!$('classic').innerHTML) renderClassic();
     game.loop.sleep();
     // replay the hero entrance animation every time the classic page is shown

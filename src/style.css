@@ -459,6 +459,48 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   :is(#classic, #panel) .projects, :is(#classic, #panel) .skill-groups, :is(#classic, #panel) .contact { grid-template-columns: 1fr; }
 }
 
+/* ===== Classic page: day theme (6:00–18:00, set by ui.js as <html data-theme="day">) =====
+   Same layout and accents, light surfaces. Navy ink = the game's outline color; accents are a bit
+   deeper than at night so they keep enough contrast on white. */
+html[data-theme='day'] #classic {
+  --c-bg: #f4f7ff;
+  --c-surface: #ffffff;
+  --c-surface-2: #eaf0fb;
+  --c-line: rgba(28, 37, 65, 0.1);
+  --c-text: #1c2541;
+  --c-muted: #56608a;
+  --c-gold: #e8930c;
+  --c-teal: #0d9488;
+}
+html[data-theme='day']:has(body.classic-mode),
+html[data-theme='day'] body.classic-mode { background: #f4f7ff; }
+html[data-theme='day'] #classic .topbar { background: rgba(244, 247, 255, 0.85); }
+html[data-theme='day'] #classic .hero {
+  background:
+    radial-gradient(60% 80% at 15% 0%, rgba(255, 204, 77, 0.28), transparent 70%),
+    radial-gradient(50% 70% at 95% 30%, rgba(95, 200, 255, 0.22), transparent 70%);
+}
+html[data-theme='day'] #classic .btn-primary { background: #ffcc4d; box-shadow: 0 6px 18px -8px rgba(232, 147, 12, 0.7); }
+html[data-theme='day'] #classic .eyebrow { background: rgba(255, 204, 77, 0.18); border-color: rgba(232, 147, 12, 0.4); }
+html[data-theme='day'] #classic .dot { background: #f5a524; box-shadow: 0 0 8px rgba(245, 165, 36, 0.8); }
+html[data-theme='day'] #classic .stats li { background: #ffffff; box-shadow: 0 4px 14px -8px rgba(28, 37, 65, 0.25); }
+html[data-theme='day'] #classic .chips li { background: rgba(13, 148, 136, 0.08); border-color: rgba(13, 148, 136, 0.28); }
+html[data-theme='day'] #classic :is(.project, .skill-group, .contact li) { box-shadow: 0 4px 16px -10px rgba(28, 37, 65, 0.3); }
+html[data-theme='day'] #classic :is(.project, .skill-group, .contact li):hover {
+  border-color: rgba(232, 147, 12, 0.5);
+  box-shadow: 0 14px 30px -16px rgba(232, 147, 12, 0.5);
+}
+html[data-theme='day'] #classic .project img { box-shadow: 0 4px 12px -6px rgba(28, 37, 65, 0.45); }
+/* Game | Portfolio switch while the light portfolio page is shown */
+html[data-theme='day'] body.classic-mode #mode-switch {
+  border-color: rgba(232, 147, 12, 0.45);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 20px -12px rgba(28, 37, 65, 0.45);
+}
+html[data-theme='day'] body.classic-mode #mode-switch button { color: #56608a; }
+html[data-theme='day'] body.classic-mode #mode-switch button:hover { color: #1c2541; }
+html[data-theme='day'] body.classic-mode #mode-switch button[aria-pressed='true'] { color: #1a1423; }
+
 /* ===== Game <-> classic transition: pixel tiles ===== */
 #transition {
   position: fixed;

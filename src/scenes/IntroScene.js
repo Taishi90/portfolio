@@ -1,20 +1,12 @@
 import Phaser from 'phaser';
 import { createTextures, drawFacade, DOORWAY, R, PLAYER_SCALE } from '../art.js';
 import { PROFILE } from '../content.js';
-import { setupCamera, crispText, ZOOM } from '../view.js';
+import { setupCamera, crispText, ZOOM, isDaytime } from '../view.js';
 
 const W = 320;
 const H = 240;
 // Light color used for the final fade, so the room "opens" from the same warm light
 export const DOOR_LIGHT = [255, 246, 216];
-
-// Day from 6:00 to 18:00 in the viewer's local time. ?sky=day / ?sky=night forces one (for testing).
-export function isDaytime(now = new Date()) {
-  const forced = new URLSearchParams(location.search).get('sky');
-  if (forced === 'day' || forced === 'night') return forced === 'day';
-  const hour = now.getHours();
-  return hour >= 6 && hour < 18;
-}
 
 // Opening animation: the player walks up to the house, the doors swing open,
 // they step into the light and the camera follows them inside. Click / tap / any key skips it.

@@ -151,4 +151,9 @@
 
 **What** — The intro picks its sky from the viewer's local clock (`isDaytime()` in IntroScene.js): **day 6:00–17:59** = bright blue sky, rotating sun (`'sun'` texture, 24s per turn), 3 clouds drifting right and wrapping (`'cloud'`), clear blue windows, lamps steady; **night 18:00–5:59** = old look (moon, twinkling stars, warm lit windows, pulsing lamps). Facade textures are `'facade-day'` / `'facade-night'` (`drawFacade(scene, W, H, day)`).
 **Testing** — add `?sky=day` or `?sky=night` to the URL to force one.
-**Room window** — also follows `isDaytime()` (added same day at the user's request): `drawRoom(..., day)` → `'room-bg-day'` (blue sky + cloud) / `'room-bg-night'` (night sky, moon, stars). The portfolio page does not follow the clock.
+**Room window** — also follows `isDaytime()` (added same day at the user's request): `drawRoom(..., day)` → `'room-bg-day'` (blue sky + cloud) / `'room-bg-night'` (night sky, moon, stars). The portfolio page follows it too (see next entry).
+
+## 2026-10-22 — Portfolio page day / night theme
+
+**What** — `isDaytime()` moved to `src/view.js` (shared by IntroScene, RoomScene, ui.js). Each time the portfolio page is shown, `setMode('classic')` sets `<html data-theme="day|night">`. Day = light theme: bg #f4f7ff, white cards with soft navy shadows, text navy #1c2541 (= game outline), muted #56608a, accents deepened for contrast (gold #e8930c, teal #0d9488; primary button stays #ffcc4d), light Game | Portfolio switch. Night = the dark theme as before.
+**Decisions** — Day overrides live in one CSS block `html[data-theme='day'] #classic …` (it redefines the `--c-*` vars on `#classic` + the few hardcoded rgba colors). The in-game panel/hint/D-pad stay dark at all times; the transition tiles stay dark too.

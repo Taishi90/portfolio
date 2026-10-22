@@ -3,8 +3,8 @@ import { createTextures, drawRoom, RUG, R, PLAYER_SCALE } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
 import { showPanel, hidePanel, enterRoom } from '../ui.js';
-import { DOOR_LIGHT, isDaytime } from './IntroScene.js';
-import { setupCamera, crispText } from '../view.js';
+import { DOOR_LIGHT } from './IntroScene.js';
+import { setupCamera, crispText, isDaytime } from '../view.js';
 
 const W = 320;
 const H = 240;

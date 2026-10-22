@@ -14,6 +14,15 @@ export const ZOOM = Phaser.Math.Clamp(
 // Readable, rounded font for all in-game text (loaded in index.html, falls back to the system font)
 export const FONT = '"Nunito", system-ui, -apple-system, "Segoe UI", sans-serif';
 
+// Day from 6:00 to 18:00 in the viewer's local time: intro sky, room window and portfolio theme follow it.
+// ?sky=day / ?sky=night in the URL forces one (for testing).
+export function isDaytime(now = new Date()) {
+  const forced = new URLSearchParams(location.search).get('sky');
+  if (forced === 'day' || forced === 'night') return forced === 'day';
+  const hour = now.getHours();
+  return hour >= 6 && hour < 18;
+}
+
 // Point a scene's main camera at the 320x240 world
 export function setupCamera(scene) {
   scene.cameras.main.setZoom(ZOOM).centerOn(WORLD_W / 2, WORLD_H / 2);
