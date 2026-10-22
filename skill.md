@@ -8,16 +8,25 @@
     - Skill name    -> one skill in that group
 -->
 
-## Frontend
-- HTML / CSS
-- JavaScript
-- Phaser 3
+## Programming
+- C#
+- Unity Engine
+- Nodejs
 
-## Tools
-- Git
-- Vite
-- Claude Code
+## Cloud Services
+- Azure PlayFab
+- Google Cloud Platform (GCP)
+- Amazon Web Services (AWS)
 
-## Soft skills
-- Self-learning
+## Database Management
+- SQL
+- No SQL
+
+## Soft Skills
 - Teamwork
+- Adaptability
+- Open-minded Learning
+- Task planning/management
+
+## Languages
+- English (Business Level)
