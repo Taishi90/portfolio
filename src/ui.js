@@ -1,5 +1,5 @@
 // HTML UI layered over the game: info panel, Skip button, classic page, touch D-pad
-import { PROFILE, SECTIONS } from './content.js';
+import { PROFILE, SECTIONS, STATS, esc } from './content.js';
 import { touch } from './touch.js';
 
 const $ = (id) => document.getElementById(id);
@@ -21,21 +21,67 @@ export function hidePanel() {
   $('panel').hidden = true;
 }
 
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
 function renderClassic() {
+  const initials = PROFILE.name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2);
   const nav = SECTIONS.map((s) => `<a href="#${s.id}">${s.title}</a>`).join('');
-  const body = SECTIONS.map((s) => `<section id="${s.id}"><h2>${s.title}</h2>${s.html()}</section>`).join('');
+  const stats = STATS.map((st) => `<li><strong>${esc(st.value)}</strong><span>${esc(st.label)}</span></li>`).join('');
+  // About lives in the hero; the other sections are numbered cards below it
+  const sections = SECTIONS.filter((s) => s.id !== 'about')
+    .map(
+      (s, i) => `<section id="${s.id}" class="block reveal">
+        <h2><span class="sec-num">0${i + 1}</span>${s.title}</h2>
+        ${s.html()}
+      </section>`,
+    )
+    .join('');
+
   $('classic').innerHTML = `
-    <header>
-      <h1>${PROFILE.name}</h1>
-      <p>${PROFILE.role}</p>
-      <nav>${nav}</nav>
-      <button id="play-btn" type="button">🎮 Play the game</button>
+    <nav class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#about"><span class="brand-badge">${esc(initials)}</span>${esc(PROFILE.name)}</a>
+        <div class="topbar-links">${nav}</div>
+        <button id="play-btn" class="btn btn-primary" type="button">🎮 Play the game</button>
+      </div>
+    </nav>
+    <header class="hero" id="about">
+      <div class="hero-inner">
+        <p class="eyebrow"><span class="dot"></span>${esc(PROFILE.role)}</p>
+        <h1>${esc(PROFILE.name)}</h1>
+        <div class="hero-about">${PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
+        <ul class="stats">${stats}</ul>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#projects">View projects</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
     </header>
-    ${body}`;
-  $('play-btn').addEventListener('click', () => setMode('game'));
+    <div class="blocks">${sections}</div>
+    <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)} · Built with Phaser 3</footer>`;
+  $('play-btn').addEventListener('click', () => switchMode('game'));
+
+  // sections fade up the first time they scroll into view
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    },
+    { threshold: 0.12 },
+  );
+  for (const el of $('classic').querySelectorAll('.reveal')) io.observe(el);
 }
 
 let game;
+let switching = false;
 
 // sectionId: scroll to that section on the classic page (e.g. link .../#projects)
 function setMode(mode, sectionId) {
@@ -46,6 +92,10 @@ function setMode(mode, sectionId) {
   if (classic) {
     if (!$('classic').innerHTML) renderClassic();
     game.loop.sleep();
+    // replay the hero entrance animation every time the classic page is shown
+    $('classic').classList.remove('enter');
+    void $('classic').offsetWidth;
+    $('classic').classList.add('enter');
     if (sectionId) {
       document.getElementById(sectionId)?.scrollIntoView();
     } else {
@@ -56,6 +106,40 @@ function setMode(mode, sectionId) {
     game.loop.wake();
     history.replaceState(null, '', location.pathname);
   }
+}
+
+// Pixel-wipe transition: tiles sweep in diagonally from the top-right (where the Skip button is),
+// the view is swapped while the screen is covered, then the tiles sweep out.
+const TILE = 64;
+const TILE_MS = 260;
+const STEP_MS = 22;
+
+async function switchMode(mode) {
+  if (switching) return;
+  if (reducedMotion()) return setMode(mode);
+  switching = true;
+
+  const el = $('transition');
+  const cols = Math.ceil(window.innerWidth / TILE);
+  const rows = Math.ceil(window.innerHeight / TILE);
+  el.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  el.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+  let tiles = '';
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) tiles += `<i style="--d:${(cols - 1 - c + r) * STEP_MS}ms"></i>`;
+  }
+  el.innerHTML = tiles;
+  const total = (cols + rows - 2) * STEP_MS + TILE_MS;
+
+  el.hidden = false;
+  el.className = 'cover';
+  await wait(total);
+  setMode(mode);
+  el.className = 'uncover';
+  await wait(total);
+  el.hidden = true;
+  el.innerHTML = '';
+  switching = false;
 }
 
 function initDpad() {
@@ -80,7 +164,7 @@ function initDpad() {
 
 export function initUI(phaserGame) {
   game = phaserGame;
-  $('skip-btn').addEventListener('click', () => setMode('classic'));
+  $('skip-btn').addEventListener('click', () => switchMode('classic'));
   $('panel-close').addEventListener('click', hidePanel);
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') hidePanel();

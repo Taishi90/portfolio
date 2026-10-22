@@ -102,3 +102,12 @@
 **What** — Object labels, rug text and intro texts were blurry/pixelated because the canvas itself was only 320×240 and got upscaled. Now the canvas is drawn at `ZOOM` (2–6, ≈ screen size × devicePixelRatio, computed once at load) and each camera zooms by `ZOOM`; text uses the **Nunito** 800 font (Google Fonts in index.html, `document.fonts.load` before the game starts, 1.5s timeout).
 **Decisions** — Use `crispText(scene, x, y, text, sizeInWorldPx, {color, stroke, strokeColor, lineSpacing})` for any game text; never `scene.add.text` directly. Removed `canvas { image-rendering: pixelated }` (canvas is ~screen resolution now). Physics world bounds must be set to 320×240 explicitly (`physics.world.setBounds`), otherwise they follow the big canvas. Camera tweens that zoom must multiply by `ZOOM` (intro: `zoomTo(5 * ZOOM)`).
 **Lessons / bugs hit** — Intro stars were never visible: `drawFacade()` paints the sky over them → stars must be added after the facade.
+
+## 2026-10-22 — Classic view redesign + pixel-wipe transition
+
+**What** — Classic page is now a modern "gaming" dark theme: sticky top bar (initials badge, section links, gold "Play the game" button), hero (role chip, big name, about text, stats from `STATS` in content.js, CTA buttons, faint grid + gold/teal glows), numbered sections (01 Projects, 02 Skills, 03 Contact) as hover-lift cards, footer. Sections fade up when scrolled into view (IntersectionObserver), hero animates in each time the page is shown.
+**Transition** — `switchMode(mode)` in ui.js: a grid of 64px tiles (`#transition`) sweeps in diagonally from the top-right (Skip button corner) with a gold leading edge, the view swaps while covered, tiles sweep out. Used by Skip and "Play the game" both ways. Direct links (#classic, #projects…) and `prefers-reduced-motion` skip it.
+**Decisions**
+- Palette (CSS vars on `#classic`): bg #0e0c18, surfaces #17142a/#1f1b38, text #ece8f7, muted #a49dc4, **gold #ffcc4d = main accent** (from the game), **teal #5fe3d0 = secondary** (links, chips). Red only stays in the game panel. Font: Nunito 400–800.
+- All classic styles are scoped under `#classic`, so the in-game info panel keeps its own look. Skills html now wraps each group in `.skill-group` (inside `.skill-groups`) for card layout.
+- About is shown in the hero (`id="about"`), not as a separate card section.

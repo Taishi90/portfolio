@@ -95,6 +95,13 @@ export const PROFILE = {
   ],
 };
 
+// Highlight numbers in the classic page hero
+export const STATS = [
+  { value: '5+', label: 'Years in mobile games' },
+  { value: String(PROFILE.projects.length), label: 'Games released' },
+  { value: 'Unity', label: 'Main engine' },
+];
+
 // Parse skill.md: "## Group" and "- skill"
 export function parseSkills(md) {
   const groups = [];
@@ -114,7 +121,7 @@ export function parseSkills(md) {
 
 export const SKILLS = parseSkills(skillMd);
 
-const esc = (s) =>
+export const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 // Each section = 1 object in the room = 1 section on the classic page
@@ -145,9 +152,10 @@ export const SECTIONS = [
     id: 'skills',
     title: 'Skills',
     html: () =>
-      SKILLS.map(
-        (g) => `<h3>${esc(g.title)}</h3><ul class="chips">${g.items.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>`,
-      ).join(''),
+      `<div class="skill-groups">${SKILLS.map(
+        (g) =>
+          `<div class="skill-group"><h3>${esc(g.title)}</h3><ul class="chips">${g.items.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></div>`,
+      ).join('')}</div>`,
   },
   {
     id: 'contact',
