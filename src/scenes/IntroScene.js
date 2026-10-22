@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { createTextures, drawFacade, DOORWAY, R } from '../art.js';
+import { createTextures, drawFacade, DOORWAY, R, PLAYER_SCALE } from '../art.js';
 import { PROFILE } from '../content.js';
 import { setupCamera, crispText, ZOOM } from '../view.js';
 
@@ -45,7 +45,7 @@ export default class IntroScene extends Phaser.Scene {
     this.leftDoor = this.add.image(x, y, 'door-leaf').setOrigin(0, 0).setScale(1 / R);
     this.rightDoor = this.add.image(x + w, y, 'door-leaf').setOrigin(1, 0).setScale(1 / R).setFlipX(true);
 
-    this.player = this.add.sprite(doorX, H + 10, 'player', 'up0').setScale(1 / R).setDepth(10);
+    this.player = this.add.sprite(doorX, H + 10, 'player', 'up0').setScale(PLAYER_SCALE / R).setDepth(10);
 
     const cam = this.cameras.main;
     cam.fadeIn(500, 0, 0, 0);

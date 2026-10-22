@@ -137,7 +137,7 @@
 **What** — Player, room, 4 objects, plant, "!" badge and the intro house/door were redrawn in the style of the user's reference (Layerlab "GUI Pro – Casual Game" on the Unity Asset Store — used only as visual inspiration, nothing downloaded): chunky rounded shapes, thick navy outline `#1c2541`, vertical gradients, glossy top highlight + darker bottom band, soft drop shadows, saturated colors (blue walls, warm wood floor, red/yellow/green accents). Player = chibi (big head, big eyes, blush). Intro = night sky with moon, blue house, red roof, lit windows, bushes, yellow WELCOME plaque.
 **How** — `src/art.js` draws everything with Canvas 2D (`canvasTexture`, helpers `blob/box/ball/shadow`) at `R = ZOOM` texture px per world px; scenes show them with `setScale(1 / R)`. Room and facade are single big canvas textures (`room-bg`, `facade`). `pixelArt` is off (`antialias: true`).
 **Lessons / gotchas**
-- Arcade body `setSize`/`setOffset` on a scaled sprite are in TEXTURE pixels → multiply by `R` (player: `setSize(10*R, 6*R).setOffset(3*R, 10*R)`).
+- Arcade body `setSize`/`setOffset` on a scaled sprite are in TEXTURE pixels. The player is shown `PLAYER_SCALE` (1.25, user request 2026-10-22) bigger: scale `PLAYER_SCALE / R`, body `10R/PLAYER_SCALE × 6R/PLAYER_SCALE` at the bottom of the 16R frame → still a 10×6 world-px feet hitbox; depth = `y + 8 * PLAYER_SCALE`.
 - Use `img.displayHeight` (not `img.height`) for world positions of scaled images. Door swing tween: `scaleX: 0.12 / R`.
 - World layout, collisions, trigger zones and RUG/DOORWAY rects did not change.
 - The old pixel-art module is in git history (commit before this one) if ever needed.

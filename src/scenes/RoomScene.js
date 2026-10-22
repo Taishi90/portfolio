@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { createTextures, drawRoom, RUG, R } from '../art.js';
+import { createTextures, drawRoom, RUG, R, PLAYER_SCALE } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
 import { showPanel, hidePanel, enterRoom } from '../ui.js';
@@ -80,9 +80,12 @@ export default class RoomScene extends Phaser.Scene {
     // The player spawns on the rug: count that as already on it, so the text only shows after leaving and coming back
     this.onRug = true;
 
-    this.player = this.physics.add.sprite(160, 150, 'player', 'down0').setScale(1 / R);
-    // feet-sized body; body size/offset are in texture pixels (the texture is R× the world size)
-    this.player.body.setSize(10 * R, 6 * R).setOffset(3 * R, 10 * R);
+    this.player = this.physics.add.sprite(160, 150, 'player', 'down0').setScale(PLAYER_SCALE / R);
+    // feet-sized body, 10x6 world px at the bottom of the frame. Body size/offset are in texture pixels
+    // (the frame is 16R x 16R texture px, shown PLAYER_SCALE / R times smaller).
+    const bw = (10 * R) / PLAYER_SCALE;
+    const bh = (6 * R) / PLAYER_SCALE;
+    this.player.body.setSize(bw, bh).setOffset((16 * R - bw) / 2, 16 * R - bh);
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, this.walls);
     this.facing = 'down';
@@ -117,7 +120,7 @@ export default class RoomScene extends Phaser.Scene {
       const frame = this.facing === 'left' || this.facing === 'right' ? 'side' : this.facing;
       this.player.setFrame(`${frame}0`);
     }
-    this.player.setDepth(this.player.y + 8);
+    this.player.setDepth(this.player.y + 8 * PLAYER_SCALE); // depth = feet position
 
     this.checkSpots();
     this.checkRug();

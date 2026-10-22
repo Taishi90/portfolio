@@ -10,6 +10,9 @@ import { ZOOM } from './view.js';
 
 export const R = ZOOM; // texture pixels per world pixel
 
+// The 16x16 player frames are shown this much bigger in the world (both scenes)
+export const PLAYER_SCALE = 1.25;
+
 const INK = '#1c2541'; // outline color
 const LW = 0.9; // outline width (world px)
 
