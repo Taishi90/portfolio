@@ -5,8 +5,13 @@ import { setupCamera, crispText, ZOOM, isDaytime } from '../view.js';
 
 const W = 320;
 const H = 240;
-// Light color used for the final fade, so the room "opens" from the same warm light
-export const DOOR_LIGHT = [255, 246, 216];
+// Fade colors (RGB), following the day/night theme:
+// - the intro appears from the page color (light by day, black at night)
+// - intro -> room goes through the warm light of the doorway (paler by day, deeper amber at night)
+export const fadeColors = (day) => ({
+  start: day ? [244, 247, 255] : [0, 0, 0],
+  door: day ? [255, 246, 216] : [255, 205, 120],
+});
 
 // Opening animation: the player walks up to the house, the doors swing open,
 // they step into the light and the camera follows them inside. Click / tap / any key skips it.
@@ -26,6 +31,7 @@ export default class IntroScene extends Phaser.Scene {
     const doorX = x + w / 2;
 
     const day = isDaytime();
+    this.fades = fadeColors(day);
     drawFacade(this, W, H, day);
     // after the facade, which paints the sky
     if (day) this.addSunAndClouds();
@@ -55,7 +61,7 @@ export default class IntroScene extends Phaser.Scene {
     this.player = this.add.sprite(doorX, H + 10, 'player', 'up0').setScale(PLAYER_SCALE / R).setDepth(10);
 
     // first load: fade in from black; coming back from the portfolio the tiles already hide the start
-    if (!data.hold) this.cameras.main.fadeIn(500, 0, 0, 0);
+    if (!data.hold) this.cameras.main.fadeIn(500, ...this.fades.start);
 
     this.input.once('pointerdown', () => this.enter());
     this.input.keyboard.once('keydown', () => this.enter());
@@ -123,7 +129,7 @@ export default class IntroScene extends Phaser.Scene {
     if (this.done) return;
     this.done = true;
     const cam = this.cameras.main;
-    cam.fadeOut(450, ...DOOR_LIGHT);
+    cam.fadeOut(450, ...this.fades.door);
     cam.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Room'));
   }
 

@@ -3,7 +3,7 @@ import { createTextures, drawRoom, RUG, R, PLAYER_SCALE } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
 import { showPanel, hidePanel, enterRoom } from '../ui.js';
-import { DOOR_LIGHT } from './IntroScene.js';
+import { fadeColors } from './IntroScene.js';
 import { setupCamera, crispText, isDaytime } from '../view.js';
 
 const W = 320;
@@ -33,7 +33,7 @@ export default class RoomScene extends Phaser.Scene {
     // continue from the intro's fade into the doorway light
     setupCamera(this);
     this.physics.world.setBounds(0, 0, W, H);
-    this.cameras.main.fadeIn(500, ...DOOR_LIGHT);
+    this.cameras.main.fadeIn(500, ...fadeColors(isDaytime()).door);
     enterRoom();
     drawRoom(this, W, H, T, WALL_TOP, isDaytime()); // window sky follows the local time, like the intro
 

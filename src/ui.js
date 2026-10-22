@@ -145,6 +145,7 @@ const currentMode = () => (document.body.classList.contains('classic-mode') ? 'c
 async function switchMode(mode) {
   if (switching || mode === currentMode()) return;
   updateSwitch(mode); // the thumb slides right away, before the transition
+  applyTheme(); // tiles use the current day/night colors
   if (reducedMotion()) {
     setMode(mode);
     if (mode === 'game') startIntro();

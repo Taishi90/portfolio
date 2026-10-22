@@ -525,23 +525,27 @@ html[data-theme='day'] #dpad button.active { background: #ffcc4d; color: #1a1423
 
 /* ===== Game <-> classic transition: pixel tiles ===== */
 #transition {
+  /* tile colors follow the day/night theme (day override below) */
+  --tile: #0e0c18;
+  --tile-edge: #ffcc4d;
   position: fixed;
   inset: 0;
   z-index: 100;
   display: grid;
   pointer-events: all;
 }
-#transition i { display: block; background: #0e0c18; transform: scale(0); }
+html[data-theme='day'] #transition { --tile: #f4f7ff; --tile-edge: #ffcc4d; }
+#transition i { display: block; background: var(--tile); transform: scale(0); }
 #transition.cover i { animation: tile-in 260ms var(--d) both steps(5); }
 #transition.uncover i { animation: tile-out 260ms var(--d) both steps(5); }
 @keyframes tile-in {
-  0% { transform: scale(0); background: #ffcc4d; }
-  70% { transform: scale(1.02); background: #ffcc4d; }
-  100% { transform: scale(1.02); background: #0e0c18; }
+  0% { transform: scale(0); background: var(--tile-edge); }
+  70% { transform: scale(1.02); background: var(--tile-edge); }
+  100% { transform: scale(1.02); background: var(--tile); }
 }
 @keyframes tile-out {
-  0% { transform: scale(1.02); background: #0e0c18; }
-  100% { transform: scale(0); background: #0e0c18; }
+  0% { transform: scale(1.02); background: var(--tile); }
+  100% { transform: scale(0); background: var(--tile); }
 }
 
 @media (prefers-reduced-motion: reduce) {
