@@ -11,7 +11,7 @@
 ## Programming
 - C#
 - Unity Engine
-- Nodejs
+- Node.js
 
 ## Cloud Services
 - Azure PlayFab
@@ -20,7 +20,7 @@
 
 ## Database Management
 - SQL
-- No SQL
+- NoSQL
 
 ## Soft Skills
 - Teamwork
