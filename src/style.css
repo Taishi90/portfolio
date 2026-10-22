@@ -34,31 +34,61 @@ button {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* "View Portfolio" button: gold outline pill */
-#skip-btn {
-  position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  right: 16px;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 16px;
-  border: 1px solid rgba(255, 204, 77, 0.55);
+/* Game | Portfolio switch. Fixed in the SAME spot on both screens: aligned with the right edge of the
+   portfolio top bar's content (max width --c-max), never closer than 16px to the window edge. */
+#mode-switch {
+  --switch-w: 224px;
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(16px, calc((100vw - var(--c-max)) / 2 + 20px));
+  z-index: 20; /* above the portfolio top bar, below the transition tiles */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: var(--switch-w);
+  height: 40px;
+  padding: 4px;
+  border: 1px solid rgba(255, 204, 77, 0.35);
   border-radius: 999px;
-  background: rgba(14, 12, 24, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 6px 20px -10px rgba(255, 204, 77, 0.6);
-  color: var(--c-gold);
-  font: 800 14px/1 var(--font);
-  letter-spacing: 0.02em;
-  transition: background 0.2s, color 0.2s, transform 0.15s;
+  background: rgba(14, 12, 24, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.9);
 }
-#skip-btn span { transition: transform 0.2s; }
-#skip-btn:hover { background: var(--c-gold); color: #1a1423; transform: translateY(-1px); }
-#skip-btn:hover span { transform: translateX(3px); }
-#skip-btn:active { transform: translateY(0); }
+#mode-switch button {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--c-muted);
+  font: 800 14px/1 var(--font);
+  transition: color 0.25s;
+}
+#mode-switch button:hover { color: var(--c-text); }
+#mode-switch button[aria-pressed='true'] { color: #1a1423; cursor: default; }
+#mode-switch button:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 2px; }
+/* the gold thumb slides under the active side */
+#mode-switch .thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: var(--c-gold);
+  box-shadow: 0 4px 14px -4px rgba(255, 204, 77, 0.7);
+  transition: transform 0.3s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+#mode-switch[data-mode='classic'] .thumb { transform: translateX(100%); }
+@media (max-width: 720px) {
+  #mode-switch { --switch-w: 196px; height: 38px; }
+  #mode-switch button { font-size: 13px; }
+}
 
 /* "Use the arrow keys..." hint: small glass pill at the bottom */
 #hint {
@@ -257,6 +287,7 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   max-width: var(--c-max);
   margin: 0 auto;
   padding: 12px 20px;
+  padding-right: 260px; /* room for the fixed Game | Portfolio switch */
   display: flex;
   align-items: center;
   gap: 24px;
@@ -276,7 +307,6 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
 #classic .topbar-links { display: flex; gap: 22px; margin-left: auto; }
 #classic .topbar-links a { color: var(--c-muted); font-weight: 700; font-size: 15px; }
 #classic .topbar-links a:hover { color: var(--c-text); text-decoration: none; }
-#classic .topbar .btn { padding: 8px 14px; font-size: 14px; }
 
 /* hero */
 #classic .hero {
@@ -417,8 +447,8 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
 
 @media (max-width: 720px) {
   #classic .topbar-inner { flex-wrap: wrap; gap: 10px 16px; padding: 10px 16px; }
-  #classic .topbar .btn { margin-left: auto; }
-  #classic .topbar-links { order: 3; width: 100%; margin: 0; gap: 18px; overflow-x: auto; }
+  #classic .brand { flex: 1 1 100%; min-width: 0; min-height: 38px; padding-right: 206px; } /* switch sits on the brand row */
+  #classic .topbar-links { width: 100%; margin: 0; gap: 18px; overflow-x: auto; }
   #classic .hero-inner { padding: 48px 16px 44px; }
   #classic .hero-about { font-size: 16px; }
   #classic .stats li { min-width: 0; flex: 1 1 30%; padding: 12px; }

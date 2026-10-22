@@ -47,7 +47,6 @@ function renderClassic() {
       <div class="topbar-inner">
         <a class="brand" href="#about"><span class="brand-badge">${esc(initials)}</span>${esc(PROFILE.name)}</a>
         <div class="topbar-links">${nav}</div>
-        <button id="play-btn" class="btn btn-primary" type="button">🎮 Play the game</button>
       </div>
     </nav>
     <header class="hero" id="about">
@@ -64,7 +63,6 @@ function renderClassic() {
     </header>
     <div class="blocks">${sections}</div>
     <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)} · Built with Phaser 3</footer>`;
-  $('play-btn').addEventListener('click', () => switchMode('game'));
 
   // sections fade up the first time they scroll into view
   const io = new IntersectionObserver(
@@ -86,6 +84,7 @@ let switching = false;
 // sectionId: scroll to that section on the classic page (e.g. link .../#projects)
 function setMode(mode, sectionId) {
   const classic = mode === 'classic';
+  updateSwitch(mode);
   $('classic').hidden = !classic;
   $('game-view').hidden = classic;
   document.body.classList.toggle('classic-mode', classic);
@@ -126,8 +125,19 @@ const TILE = 64;
 const TILE_MS = 260;
 const STEP_MS = 22;
 
+// Game | Portfolio switch: move the gold thumb and mark the active side
+function updateSwitch(mode) {
+  $('mode-switch').dataset.mode = mode;
+  for (const btn of $('mode-switch').querySelectorAll('button')) {
+    btn.setAttribute('aria-pressed', String(btn.dataset.mode === mode));
+  }
+}
+
+const currentMode = () => (document.body.classList.contains('classic-mode') ? 'classic' : 'game');
+
 async function switchMode(mode) {
-  if (switching) return;
+  if (switching || mode === currentMode()) return;
+  updateSwitch(mode); // the thumb slides right away, before the transition
   if (reducedMotion()) {
     setMode(mode);
     if (mode === 'game') startIntro();
@@ -182,7 +192,9 @@ function initDpad() {
 
 export function initUI(phaserGame) {
   game = phaserGame;
-  $('skip-btn').addEventListener('click', () => switchMode('classic'));
+  for (const btn of $('mode-switch').querySelectorAll('button')) {
+    btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+  }
   $('panel-close').addEventListener('click', hidePanel);
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') hidePanel();

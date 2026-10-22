@@ -126,3 +126,8 @@
 **Decisions**
 - Theme vars (`--c-*`, `--font` = Nunito) live on `:root` now. Card styles for projects / skill groups / contact / chips are shared via `:is(#classic, #panel)` so the panel and the portfolio page always look the same. Panel-only tweaks use the `#game-view #panel …` prefix (higher specificity than the shared rules).
 - The old pixel-style global `button` look (thick border + drop shadow) is gone.
+
+## 2026-10-22 — Game | Portfolio switch replaces the two buttons
+
+**What** — `#skip-btn` ("View Portfolio") and `#play-btn` ("Play the game") were removed. One `#mode-switch` (🎮 Game | 📄 Portfolio segmented control, gold sliding thumb) sits outside both views, `position: fixed`, so it is in exactly the same spot on both screens: `right: max(16px, (100vw - --c-max)/2 + 20px)`, top 10px (aligned with the portfolio top bar's content edge).
+**Decisions** — The thumb moves immediately on click (`updateSwitch`), then the pixel-wipe transition runs; clicking the active side does nothing. `setMode()` keeps the switch in sync (also for direct #classic links). The portfolio top bar reserves `padding-right: 260px` (mobile: the brand row has `padding-right: 206px`) so links never go under the switch. z-index: switch 20 > top bar 10, < transition tiles 100.
