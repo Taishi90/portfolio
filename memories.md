@@ -165,3 +165,9 @@
 - Game ↔ Portfolio pixel tiles: CSS vars `--tile` / `--tile-edge` on `#transition` (night `#0e0c18`, day `#f4f7ff`, gold edge in both). `switchMode()` calls `applyTheme()` before covering so the tiles get the current colors.
 - Intro first appearance: fades in from `fadeColors(day).start` (day = light #f4f7ff, night = black).
 - Intro → room: fade through `fadeColors(day).door` (day = pale warm `255,246,216`, night = deeper amber `255,205,120`); RoomScene fades in from the same color. `DOOR_LIGHT` constant was replaced by `fadeColors()` in IntroScene.js.
+
+## 2026-10-22 — GitHub Pages setup (not pushed yet)
+
+**What** — `vite.config.js` (`base: './'` = relative asset paths, `chunkSizeWarningLimit: 1600` because Phaser is ~1.2 MB) and `.github/workflows/deploy.yml` (on push to `main`: npm ci → build → upload `dist` → deploy-pages). Tested by serving `dist` under `/portfolio/`: game, fonts and all 10 icons load.
+**State** — Remote is `https://github.com/Taishi90/portfolio.git`; GitHub only has the initial commit. `git fetch` failed with "Invalid username or token" → the user must fix GitHub login on this Mac before pushing (e.g. GitHub CLI `gh auth login`, or GitHub Desktop). After the first push: Settings → Pages → Source: GitHub Actions. Expected URL: https://taishi90.github.io/portfolio/
+**Rule** — never push without the user's explicit OK.

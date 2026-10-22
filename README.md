@@ -10,7 +10,18 @@ npm install
 npm run dev
 ```
 
-Build for deployment: `npm run build` → upload the `dist/` folder (GitHub Pages, Netlify, Vercel...).
+Build for deployment: `npm run build` → the site is in `dist/` (relative paths, works at any address).
+
+## Publish on GitHub Pages
+
+`.github/workflows/deploy.yml` builds and publishes the site on every push to `main`.
+
+1. Push the repo to GitHub (`git push`).
+2. One time only: on GitHub open **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
+3. Wait for the "Deploy to GitHub Pages" run in the **Actions** tab to finish (1–2 minutes).
+4. The site is live at **https://taishi90.github.io/portfolio/**. Every later push to `main` updates it automatically.
+
+GitHub Pages is free for public repositories (a private repo needs a paid plan).
 
 ## Editing content
 
