@@ -105,14 +105,19 @@ function setMode(mode, sectionId) {
   } else {
     game.loop.wake();
     history.replaceState(null, '', location.pathname);
-    // Always replay the door-opening intro when coming back to the game
+    // Coming back to the game always replays the door-opening intro (started by startIntro()).
+    // Until then no scene runs, so the canvas just shows the background color.
     hidePanel();
     for (const dir in touch) touch[dir] = false;
     document.body.classList.add('intro');
     game.scene.stop('Room');
     game.scene.stop('Intro');
-    game.scene.start('Intro');
   }
+}
+
+
+function startIntro() {
+  game.scene.start('Intro');
 }
 
 // Pixel-wipe transition: tiles sweep in diagonally from the top-right (where the Skip button is),
@@ -123,7 +128,11 @@ const STEP_MS = 22;
 
 async function switchMode(mode) {
   if (switching) return;
-  if (reducedMotion()) return setMode(mode);
+  if (reducedMotion()) {
+    setMode(mode);
+    if (mode === 'game') startIntro();
+    return;
+  }
   switching = true;
 
   const el = $('transition');
@@ -147,6 +156,8 @@ async function switchMode(mode) {
   el.hidden = true;
   el.innerHTML = '';
   switching = false;
+  // the intro only starts once the tiles have fully opened
+  if (mode === 'game') startIntro();
 }
 
 function initDpad() {

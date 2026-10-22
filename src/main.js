@@ -14,7 +14,7 @@ const game = new Phaser.Game({
   width: WORLD_W * ZOOM,
   height: WORLD_H * ZOOM,
   pixelArt: true,
-  backgroundColor: '#1a1423',
+  backgroundColor: '#0e0c18', // same as the page background (--c-bg)
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   scene: [IntroScene, RoomScene], // the first scene starts automatically

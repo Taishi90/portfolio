@@ -1,35 +1,40 @@
 :root {
-  --bg: #1a1423;
-  --panel: #fdf6e3;
-  --ink: #2b1d1d;
-  --accent: #d64545;
-  --border: #2f2340;
-  --gold: #ffd23f;
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* One theme for the whole site (game UI + portfolio page): dark navy, gold main accent, teal secondary */
+  --c-bg: #0e0c18;
+  --c-surface: #17142a;
+  --c-surface-2: #1f1b38;
+  --c-line: rgba(255, 255, 255, 0.08);
+  --c-text: #ece8f7;
+  --c-muted: #a49dc4;
+  --c-gold: #ffcc4d;
+  --c-teal: #5fe3d0;
+  --c-radius: 14px;
+  --c-max: 1040px;
+  --font: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; background: var(--bg); font-family: var(--font); color: var(--ink); }
+html, body { margin: 0; height: 100%; background: var(--c-bg); font-family: var(--font); color: var(--c-text); }
 body:not(.classic-mode) { overflow: hidden; }
 [hidden] { display: none !important; }
 
 #game-view { position: fixed; inset: 0; }
 #game { width: 100%; height: 100%; }
 
-/* Pixel-style buttons */
 button {
   font: inherit;
   cursor: pointer;
-  border: 3px solid var(--border);
-  background: var(--panel);
-  color: var(--ink);
-  box-shadow: 0 4px 0 var(--border);
-  border-radius: 0;
   -webkit-tap-highlight-color: transparent;
 }
-button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 var(--border); }
 
-/* "View Portfolio" button: same modern look as the classic page (gold outline pill) */
+/* Glass pill used by the game UI (View Portfolio button, hint) */
+.glass {
+  background: rgba(14, 12, 24, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* "View Portfolio" button: gold outline pill */
 #skip-btn {
   position: absolute;
   top: max(12px, env(safe-area-inset-top));
@@ -45,84 +50,107 @@ button:active, button.active { transform: translateY(3px); box-shadow: 0 1px 0 v
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 6px 20px -10px rgba(255, 204, 77, 0.6);
-  color: #ffcc4d;
-  font: 800 14px/1 'Nunito', var(--font);
+  color: var(--c-gold);
+  font: 800 14px/1 var(--font);
   letter-spacing: 0.02em;
   transition: background 0.2s, color 0.2s, transform 0.15s;
 }
 #skip-btn span { transition: transform 0.2s; }
-#skip-btn:hover { background: #ffcc4d; color: #1a1423; transform: translateY(-1px); }
+#skip-btn:hover { background: var(--c-gold); color: #1a1423; transform: translateY(-1px); }
 #skip-btn:hover span { transform: translateX(3px); }
-#skip-btn:active { transform: translateY(0); box-shadow: 0 6px 20px -10px rgba(255, 204, 77, 0.6); }
+#skip-btn:active { transform: translateY(0); }
 
+/* "Use the arrow keys..." hint: small glass pill at the bottom */
 #hint {
   position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
   margin: 0;
-  text-align: center;
-  color: #fff;
+  padding: 8px 16px;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  background: rgba(14, 12, 24, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--c-muted);
   font-size: 14px;
-  opacity: 0.8;
+  font-weight: 700;
+  text-align: center;
   pointer-events: none;
 }
 
+/* In-game info panel: dark glass card with a gold edge, same cards as the portfolio page inside */
 #panel {
   position: absolute;
   left: 50%;
   bottom: 16px;
   transform: translateX(-50%);
-  width: min(560px, calc(100% - 32px));
-  max-height: 45vh;
+  width: min(580px, calc(100% - 32px));
+  max-height: 46vh;
   overflow: auto;
-  padding: 16px 20px;
-  background: var(--panel);
-  border: 4px solid var(--border);
-  box-shadow: 0 6px 0 var(--border);
-  animation: pop 0.15s ease-out;
+  padding: 18px 20px 20px;
+  background: rgba(19, 16, 35, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 204, 77, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  color: var(--c-text);
+  line-height: 1.55;
+  animation: pop 0.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
-@keyframes pop { from { transform: translateX(-50%) scale(0.95); opacity: 0; } }
-#panel h2 { margin: 0 32px 8px 0; font-size: 20px; color: var(--accent); }
+@keyframes pop { from { transform: translateX(-50%) translateY(10px); opacity: 0; } }
+#panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 40px 14px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--c-text);
+}
+/* small gold bar before the title */
+#panel h2::before { content: ''; width: 4px; height: 20px; border-radius: 2px; background: var(--c-gold); box-shadow: 0 0 10px rgba(255, 204, 77, 0.6); }
+#panel a { color: var(--c-teal); text-decoration: none; }
+#panel p { margin: 0 0 10px; color: var(--c-muted); }
+#panel p:first-child { color: var(--c-text); font-weight: 700; }
 #panel-close {
   position: sticky;
   float: right;
   top: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
   width: 32px;
   height: 32px;
   padding: 0;
-  font-size: 20px;
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  color: var(--c-muted);
+  font-size: 18px;
   line-height: 1;
-  box-shadow: none;
+  transition: color 0.2s, border-color 0.2s;
 }
+#panel-close:hover { color: var(--c-gold); border-color: rgba(255, 204, 77, 0.5); }
+/* narrower cards inside the panel (#game-view prefix: must beat the shared card rules below) */
+#game-view #panel .projects, #game-view #panel .skill-groups, #game-view #panel .contact { grid-template-columns: 1fr; gap: 10px; }
+#game-view #panel .project { padding: 12px; }
+#game-view #panel .project img { width: 56px; height: 56px; border-radius: 13px; }
+#game-view #panel .skill-group { padding: 14px; }
+#game-view #panel .contact li { padding: 14px 16px; }
 
-/* Shared content styles (info panel + classic page) */
-.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 4px 0 12px; list-style: none; }
-.chips li { padding: 3px 8px; background: var(--border); color: #fff; font-size: 13px; }
-#panel h3 { margin: 12px 0 4px; font-size: 16px; }
-
-/* Project blocks: icon on the left, details on the right */
-.projects { display: grid; gap: 10px; }
-.project {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 10px;
-  background: #fff;
-  border: 3px solid var(--border);
-  box-shadow: 0 3px 0 var(--border);
-}
-.project img { flex: none; width: 64px; height: 64px; border-radius: 14px; background: #e8dfc9; }
-.project h3, #panel .project h3 { margin: 0 0 4px; font-size: 16px; line-height: 1.25; }
-.project h3 a { color: var(--ink); text-decoration: none; }
-.project h3 a:hover { color: var(--accent); text-decoration: underline; }
-.project p { margin: 0 0 6px; font-size: 14px; line-height: 1.4; }
-.project .chips { margin: 0; }
+/* Base layout for the shared content (colors and cards: see "Shared cards" below) */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.projects { display: grid; }
+.project { display: flex; align-items: flex-start; }
+.project img { flex: none; object-fit: cover; }
 .contact { padding: 0; list-style: none; }
-.contact li { margin: 6px 0; }
 .contact a { overflow-wrap: anywhere; }
-.contact span { display: inline-block; min-width: 70px; font-weight: 700; }
-a { color: #1f5fbf; }
 
 /* Intro (door animation): no hint or D-pad yet */
 body.intro #hint, body.intro #dpad { display: none !important; }
@@ -137,12 +165,26 @@ body.intro #hint, body.intro #dpad { display: none !important; }
     transform: translateX(-50%);
     display: grid;
     grid-template: 'a up b' 56px 'left c right' 56px 'd down e' 56px / 56px 56px 56px;
-    gap: 4px;
+    gap: 6px;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
   }
-  #dpad button { font-size: 20px; opacity: 0.85; touch-action: none; }
+  /* glass keys with a gold outline; pressed = gold */
+  #dpad button {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(255, 204, 77, 0.4);
+    border-radius: 14px;
+    background: rgba(23, 20, 42, 0.85);
+    color: var(--c-gold);
+    font-size: 18px;
+    touch-action: none;
+    box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.8);
+    transition: background 0.1s, transform 0.1s;
+  }
+  #dpad button.active { background: var(--c-gold); color: #1a1423; transform: scale(0.94); }
   #dpad [data-dir='up'] { grid-area: up; }
   #dpad [data-dir='down'] { grid-area: down; }
   #dpad [data-dir='left'] { grid-area: left; }
@@ -174,17 +216,6 @@ body.intro #hint, body.intro #dpad { display: none !important; }
 /* ===== Classic page: modern gaming dark theme =====
    Navy/purple base, gold (from the game) as the main accent, teal as the secondary accent. */
 #classic {
-  --c-bg: #0e0c18;
-  --c-surface: #17142a;
-  --c-surface-2: #1f1b38;
-  --c-line: rgba(255, 255, 255, 0.08);
-  --c-text: #ece8f7;
-  --c-muted: #a49dc4;
-  --c-gold: #ffcc4d;
-  --c-teal: #5fe3d0;
-  --c-radius: 14px;
-  --c-max: 1040px;
-  font-family: 'Nunito', var(--font);
   color: var(--c-text);
   line-height: 1.6;
 }
@@ -199,7 +230,7 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   gap: 8px;
   padding: 10px 18px;
   border-radius: 10px;
-  font: 800 15px/1 'Nunito', var(--font);
+  font: 800 15px/1 var(--font);
   border: 1px solid transparent;
   box-shadow: none;
   cursor: pointer;
@@ -310,8 +341,8 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
 #classic h3 { color: var(--c-text); }
 
 /* chips */
-#classic .chips { gap: 6px; margin: 0; }
-#classic .chips li {
+:is(#classic, #panel) .chips { gap: 6px; margin: 0; }
+:is(#classic, #panel) .chips li {
   padding: 3px 10px;
   border-radius: 999px;
   background: rgba(95, 227, 208, 0.08);
@@ -322,29 +353,29 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
 }
 
 /* cards (projects, skill groups, contact rows) */
-#classic .project,
-#classic .skill-group,
-#classic .contact li {
+:is(#classic, #panel) .project,
+:is(#classic, #panel) .skill-group,
+:is(#classic, #panel) .contact li {
   background: var(--c-surface);
   border: 1px solid var(--c-line);
   border-radius: var(--c-radius);
   box-shadow: none;
   transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
-#classic .project:hover,
-#classic .skill-group:hover,
-#classic .contact li:hover {
+:is(#classic, #panel) .project:hover,
+:is(#classic, #panel) .skill-group:hover,
+:is(#classic, #panel) .contact li:hover {
   transform: translateY(-3px);
   border-color: rgba(255, 204, 77, 0.45);
   box-shadow: 0 14px 30px -16px rgba(255, 204, 77, 0.45);
 }
-#classic .projects { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-#classic .project { padding: 16px; gap: 14px; }
-#classic .project img { width: 72px; height: 72px; border-radius: 16px; background: var(--c-surface-2); box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.8); }
-#classic .project h3 { margin: 0 0 6px; font-size: 17px; }
-#classic .project h3 a { color: var(--c-text); }
-#classic .project h3 a:hover { color: var(--c-gold); text-decoration: none; }
-#classic .project p {
+:is(#classic, #panel) .projects { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+:is(#classic, #panel) .project { padding: 16px; gap: 14px; }
+:is(#classic, #panel) .project img { width: 72px; height: 72px; border-radius: 16px; background: var(--c-surface-2); box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.8); }
+:is(#classic, #panel) .project h3 { margin: 0 0 6px; font-size: 17px; }
+:is(#classic, #panel) .project h3 a { color: var(--c-text); }
+:is(#classic, #panel) .project h3 a:hover { color: var(--c-gold); text-decoration: none; }
+:is(#classic, #panel) .project p {
   margin: 0 0 10px;
   color: var(--c-muted);
   font-size: 14px;
@@ -354,15 +385,15 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-#classic .skill-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-#classic .skill-group { padding: 18px; }
-#classic .skill-group h3 { margin: 0 0 12px; font-size: 16px; }
-#classic .contact { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; margin: 0; }
-#classic .contact li { margin: 0; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; }
-#classic .contact span { min-width: 0; color: var(--c-muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
-#classic .contact a { font-size: 17px; font-weight: 800; color: var(--c-text); }
-#classic .contact a::after { content: ' ↗'; color: var(--c-gold); }
-#classic .contact a:hover { color: var(--c-gold); text-decoration: none; }
+:is(#classic, #panel) .skill-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+:is(#classic, #panel) .skill-group { padding: 18px; }
+:is(#classic, #panel) .skill-group h3 { margin: 0 0 12px; font-size: 16px; }
+:is(#classic, #panel) .contact { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; margin: 0; }
+:is(#classic, #panel) .contact li { margin: 0; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; }
+:is(#classic, #panel) .contact span { min-width: 0; color: var(--c-muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+:is(#classic, #panel) .contact a { font-size: 17px; font-weight: 800; color: var(--c-text); }
+:is(#classic, #panel) .contact a::after { content: ' ↗'; color: var(--c-gold); }
+:is(#classic, #panel) .contact a:hover { color: var(--c-gold); text-decoration: none; }
 
 #classic .foot {
   max-width: var(--c-max);
@@ -395,7 +426,7 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   #classic .blocks { padding: 0 16px 24px; }
   #classic .block { padding-top: 44px; scroll-margin-top: 100px; }
   #classic .block h2 { font-size: 24px; }
-  #classic .projects, #classic .skill-groups, #classic .contact { grid-template-columns: 1fr; }
+  :is(#classic, #panel) .projects, :is(#classic, #panel) .skill-groups, :is(#classic, #panel) .contact { grid-template-columns: 1fr; }
 }
 
 /* ===== Game <-> classic transition: pixel tiles ===== */
@@ -422,5 +453,5 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
 @media (prefers-reduced-motion: reduce) {
   #classic.enter .hero-inner > * { animation: none; }
   #classic .reveal { opacity: 1; transform: none; transition: none; }
-  #classic .btn, #classic .project, #classic .skill-group, #classic .contact li { transition: none; }
+  #classic .btn, :is(#classic, #panel) .project, :is(#classic, #panel) .skill-group, :is(#classic, #panel) .contact li { transition: none; }
 }

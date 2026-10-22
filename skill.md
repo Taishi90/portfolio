@@ -22,6 +22,11 @@
 - SQL
 - NoSQL
 
+## Tools
+- Git
+- Jira
+- Google Workspace
+
 ## Soft Skills
 - Teamwork
 - Adaptability

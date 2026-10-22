@@ -116,3 +116,13 @@
 
 **What** — The in-game "Skip ⏭ Classic view" button is now **"View Portfolio →"**, styled like the classic page (gold outline pill on dark glass, Nunito, fills gold on hover). Coming back from the classic page always restarts `IntroScene` from the beginning (Room and Intro are stopped, Intro started; panel closed, D-pad state reset, `body.intro` re-added) — the game no longer resumes where it was paused.
 **Note** — README/older entries may still say "Skip button": it is the same `#skip-btn`, only the label changed.
+
+## 2026-10-22 — Game UI matches the portfolio theme; intro waits for the transition; Tools skills
+
+**What**
+- Returning to the game: Room/Intro are stopped while the tiles cover/uncover; `startIntro()` runs only after the tiles have fully opened (reduced-motion: right away).
+- Game HTML UI restyled to the portfolio theme: info panel = dark glass card with gold edge + gold title bar, round close button; hint = glass pill; D-pad = glass keys with gold outline (gold when pressed). Phaser `backgroundColor` = `#0e0c18`. The pixel-art room itself is unchanged.
+- skill.md: new **Tools** group (Git, Jira, Google Workspace) after Database Management.
+**Decisions**
+- Theme vars (`--c-*`, `--font` = Nunito) live on `:root` now. Card styles for projects / skill groups / contact / chips are shared via `:is(#classic, #panel)` so the panel and the portfolio page always look the same. Panel-only tweaks use the `#game-view #panel …` prefix (higher specificity than the shared rules).
+- The old pixel-style global `button` look (thick border + drop shadow) is gone.
