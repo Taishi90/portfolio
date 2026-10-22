@@ -483,8 +483,10 @@ export function drawFacade(scene, W, H, day = false) {
 // Red rug in the middle of the room (RoomScene shows a message when the player steps on it)
 export const RUG = { x: 112, y: 118, w: 96, h: 60 };
 
-export function drawRoom(scene, W, H, T, wallTop) {
-  canvasTexture(scene, 'room-bg', W, H, (ctx) => {
+// day: the window shows a blue sky with clouds; false = night sky with the moon and stars
+export function drawRoom(scene, W, H, T, wallTop, day = true) {
+  const key = day ? 'room-bg-day' : 'room-bg-night';
+  canvasTexture(scene, key, W, H, (ctx) => {
     // wooden floor with staggered planks
     ctx.fillStyle = '#f2b66b';
     ctx.fillRect(0, 0, W, H);
@@ -515,14 +517,23 @@ export function drawRoom(scene, W, H, T, wallTop) {
 
     // window
     box(ctx, 137, 6, 46, 32, 5, { top: '#ffffff', bottom: '#d9e2ff', gloss: 0, shade: 0.06 });
-    box(ctx, 140.5, 9.5, 39, 25, 3, { top: '#aef0ff', bottom: '#4fb3ff', gloss: 0, shade: 0, lw: 0.7 });
+    const glass = day ? { top: '#aef0ff', bottom: '#4fb3ff' } : { top: '#1d2a6e', bottom: '#5a3f92' };
+    box(ctx, 140.5, 9.5, 39, 25, 3, { ...glass, gloss: 0, shade: 0, lw: 0.7 });
     ctx.save();
     ctx.beginPath();
     ctx.roundRect(140.5, 9.5, 39, 25, 3);
     ctx.clip();
-    for (const [cx, cy, r] of [[150, 18, 3.4], [154.5, 16.5, 4.2], [159, 18.4, 3]]) ellipse(ctx, cx, cy, r, r, '#ffffff');
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(147, 18.4, 15, 3);
+    if (day) {
+      for (const [cx, cy, r] of [[150, 18, 3.4], [154.5, 16.5, 4.2], [159, 18.4, 3]]) ellipse(ctx, cx, cy, r, r, '#ffffff');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(147, 18.4, 15, 3);
+    } else {
+      ellipse(ctx, 170, 15.5, 6, 6, 'rgba(255, 246, 200, 0.15)');
+      ball(ctx, 170, 15.5, 3.4, { top: '#fffbe0', bottom: '#ffe28a', gloss: 0, shade: 0, lw: 0 });
+      for (const [sx, sy, sr] of [[145, 13, 0.55], [151, 27, 0.45], [156, 14.5, 0.6], [164, 25, 0.45], [176, 28, 0.55], [147.5, 21, 0.4]]) {
+        ellipse(ctx, sx, sy, sr, sr, '#ffffff');
+      }
+    }
     ctx.restore();
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(159, 10, 2, 24);
@@ -556,7 +567,7 @@ export function drawRoom(scene, W, H, T, wallTop) {
     ctx.stroke();
     ctx.setLineDash([]);
   });
-  return scene.add.image(0, 0, 'room-bg').setOrigin(0).setScale(1 / R);
+  return scene.add.image(0, 0, key).setOrigin(0).setScale(1 / R);
 }
 
 export function createTextures(scene) {

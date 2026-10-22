@@ -151,4 +151,4 @@
 
 **What** — The intro picks its sky from the viewer's local clock (`isDaytime()` in IntroScene.js): **day 6:00–17:59** = bright blue sky, rotating sun (`'sun'` texture, 24s per turn), 3 clouds drifting right and wrapping (`'cloud'`), clear blue windows, lamps steady; **night 18:00–5:59** = old look (moon, twinkling stars, warm lit windows, pulsing lamps). Facade textures are `'facade-day'` / `'facade-night'` (`drawFacade(scene, W, H, day)`).
 **Testing** — add `?sky=day` or `?sky=night` to the URL to force one.
-**Not changed** — the room (its window always shows a day sky) and the portfolio page do not follow the clock.
+**Room window** — also follows `isDaytime()` (added same day at the user's request): `drawRoom(..., day)` → `'room-bg-day'` (blue sky + cloud) / `'room-bg-night'` (night sky, moon, stars). The portfolio page does not follow the clock.
