@@ -459,10 +459,10 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   :is(#classic, #panel) .projects, :is(#classic, #panel) .skill-groups, :is(#classic, #panel) .contact { grid-template-columns: 1fr; }
 }
 
-/* ===== Classic page: day theme (6:00–18:00, set by ui.js as <html data-theme="day">) =====
-   Same layout and accents, light surfaces. Navy ink = the game's outline color; accents are a bit
-   deeper than at night so they keep enough contrast on white. */
-html[data-theme='day'] #classic {
+/* ===== Day theme (6:00–18:00, set by ui.js as <html data-theme="day">) =====
+   Portfolio page + game UI (panel, hint, D-pad, switch). Same layout and accents, light surfaces.
+   Navy ink = the game's outline color; accents are a bit deeper so they keep contrast on white. */
+html[data-theme='day'] :is(#classic, #game-view, #mode-switch) {
   --c-bg: #f4f7ff;
   --c-surface: #ffffff;
   --c-surface-2: #eaf0fb;
@@ -484,22 +484,44 @@ html[data-theme='day'] #classic .btn-primary { background: #ffcc4d; box-shadow: 
 html[data-theme='day'] #classic .eyebrow { background: rgba(255, 204, 77, 0.18); border-color: rgba(232, 147, 12, 0.4); }
 html[data-theme='day'] #classic .dot { background: #f5a524; box-shadow: 0 0 8px rgba(245, 165, 36, 0.8); }
 html[data-theme='day'] #classic .stats li { background: #ffffff; box-shadow: 0 4px 14px -8px rgba(28, 37, 65, 0.25); }
-html[data-theme='day'] #classic .chips li { background: rgba(13, 148, 136, 0.08); border-color: rgba(13, 148, 136, 0.28); }
-html[data-theme='day'] #classic :is(.project, .skill-group, .contact li) { box-shadow: 0 4px 16px -10px rgba(28, 37, 65, 0.3); }
-html[data-theme='day'] #classic :is(.project, .skill-group, .contact li):hover {
+html[data-theme='day'] :is(#classic, #panel) .chips li { background: rgba(13, 148, 136, 0.08); border-color: rgba(13, 148, 136, 0.28); }
+html[data-theme='day'] :is(#classic, #panel) :is(.project, .skill-group, .contact li) { box-shadow: 0 4px 16px -10px rgba(28, 37, 65, 0.3); }
+html[data-theme='day'] :is(#classic, #panel) :is(.project, .skill-group, .contact li):hover {
   border-color: rgba(232, 147, 12, 0.5);
   box-shadow: 0 14px 30px -16px rgba(232, 147, 12, 0.5);
 }
-html[data-theme='day'] #classic .project img { box-shadow: 0 4px 12px -6px rgba(28, 37, 65, 0.45); }
-/* Game | Portfolio switch while the light portfolio page is shown */
-html[data-theme='day'] body.classic-mode #mode-switch {
+html[data-theme='day'] :is(#classic, #panel) .project img { box-shadow: 0 4px 12px -6px rgba(28, 37, 65, 0.45); }
+/* Game | Portfolio switch */
+html[data-theme='day'] #mode-switch {
   border-color: rgba(232, 147, 12, 0.45);
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 8px 20px -12px rgba(28, 37, 65, 0.45);
 }
-html[data-theme='day'] body.classic-mode #mode-switch button { color: #56608a; }
-html[data-theme='day'] body.classic-mode #mode-switch button:hover { color: #1c2541; }
-html[data-theme='day'] body.classic-mode #mode-switch button[aria-pressed='true'] { color: #1a1423; }
+html[data-theme='day'] #mode-switch button { color: #56608a; }
+html[data-theme='day'] #mode-switch button:hover { color: #1c2541; }
+html[data-theme='day'] #mode-switch button[aria-pressed='true'] { color: #1a1423; }
+html[data-theme='day'] #mode-switch .thumb { background: #ffcc4d; }
+
+/* In-game info panel, hint and D-pad */
+html[data-theme='day'] #panel {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(232, 147, 12, 0.45);
+  box-shadow: 0 24px 50px -22px rgba(28, 37, 65, 0.55);
+  scrollbar-color: rgba(28, 37, 65, 0.25) transparent;
+}
+html[data-theme='day'] #panel h2::before { box-shadow: 0 0 8px rgba(245, 165, 36, 0.6); }
+html[data-theme='day'] #hint {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(28, 37, 65, 0.12);
+  color: #56608a;
+}
+html[data-theme='day'] #dpad button {
+  border-color: rgba(232, 147, 12, 0.5);
+  background: rgba(255, 255, 255, 0.92);
+  color: #e8930c;
+  box-shadow: 0 6px 16px -8px rgba(28, 37, 65, 0.45);
+}
+html[data-theme='day'] #dpad button.active { background: #ffcc4d; color: #1a1423; }
 
 /* ===== Game <-> classic transition: pixel tiles ===== */
 #transition {

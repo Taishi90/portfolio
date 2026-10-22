@@ -83,15 +83,19 @@ let game;
 let switching = false;
 
 // sectionId: scroll to that section on the classic page (e.g. link .../#projects)
+// Light theme by day, dark at night, for the portfolio page and the game UI (panel, hint, D-pad, switch)
+function applyTheme() {
+  document.documentElement.dataset.theme = isDaytime() ? 'day' : 'night';
+}
+
 function setMode(mode, sectionId) {
   const classic = mode === 'classic';
   updateSwitch(mode);
+  applyTheme(); // re-checked on every switch
   $('classic').hidden = !classic;
   $('game-view').hidden = classic;
   document.body.classList.toggle('classic-mode', classic);
   if (classic) {
-    // light theme by day, dark theme at night (checked each time the page is shown)
-    document.documentElement.dataset.theme = isDaytime() ? 'day' : 'night';
     if (!$('classic').innerHTML) renderClassic();
     game.loop.sleep();
     // replay the hero entrance animation every time the classic page is shown
@@ -195,6 +199,7 @@ function initDpad() {
 
 export function initUI(phaserGame) {
   game = phaserGame;
+  applyTheme();
   for (const btn of $('mode-switch').querySelectorAll('button')) {
     btn.addEventListener('click', () => switchMode(btn.dataset.mode));
   }

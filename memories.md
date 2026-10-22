@@ -156,4 +156,5 @@
 ## 2026-10-22 — Portfolio page day / night theme
 
 **What** — `isDaytime()` moved to `src/view.js` (shared by IntroScene, RoomScene, ui.js). Each time the portfolio page is shown, `setMode('classic')` sets `<html data-theme="day|night">`. Day = light theme: bg #f4f7ff, white cards with soft navy shadows, text navy #1c2541 (= game outline), muted #56608a, accents deepened for contrast (gold #e8930c, teal #0d9488; primary button stays #ffcc4d), light Game | Portfolio switch. Night = the dark theme as before.
-**Decisions** — Day overrides live in one CSS block `html[data-theme='day'] #classic …` (it redefines the `--c-*` vars on `#classic` + the few hardcoded rgba colors). The in-game panel/hint/D-pad stay dark at all times; the transition tiles stay dark too.
+**Decisions** — Day overrides live in one CSS block `html[data-theme='day'] #classic …` (it redefines the `--c-*` vars on `#classic` + the few hardcoded rgba colors). The transition tiles stay dark in both themes.
+**Update (same day)** — the game UI follows the theme too: `applyTheme()` in ui.js runs at load and on every mode switch; the day CSS block scopes the vars to `:is(#classic, #game-view, #mode-switch)` and adds light styles for `#panel`, `#hint`, `#dpad button` (+ `.active`) and the switch. The page background around the canvas stays dark.
