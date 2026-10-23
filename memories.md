@@ -176,7 +176,7 @@
 
 **Bug** — Scrolling an info panel, closing it, then opening another object's panel kept the old scroll position (noticed on mobile, where the panel is short and scrolls a lot).
 **Fix** — `showPanel()` resets `#panel.scrollTop` (the panel itself is the scroll box, not `#panel-body`) AFTER `hidden = false` (scrollTop on a `display:none` element is ignored).
-**Deploy** — the site is live at https://taishi90.github.io/portfolio/ (GitHub Pages via Actions). A push to `main` redeploys; the user pushes with GitHub Desktop — never push without asking.
+**Deploy** — the site is live at https://www.linhnguyen.cloud/ (custom domain, set up 2026-10-22; https://taishi90.github.io/portfolio/ redirects there) via GitHub Pages + Actions. A push to `main` redeploys; the user pushes with GitHub Desktop — never push without asking.
 
 ## 2026-10-23 — Project details window (click a project block)
 
