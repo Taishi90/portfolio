@@ -37,6 +37,15 @@
       <button type="button" data-mode="game" aria-pressed="true"><span aria-hidden="true">🎮</span> Game</button>
       <button type="button" data-mode="classic" aria-pressed="false"><span aria-hidden="true">📄</span> Portfolio</button>
     </div>
+    <!-- Project details (opened by clicking a project block, on the portfolio page or in the game) -->
+    <div id="project-modal" hidden>
+      <div class="pm-backdrop" data-close></div>
+      <article class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+        <button class="pm-close" type="button" aria-label="Close" data-close>×</button>
+        <div id="pm-content"></div>
+      </article>
+    </div>
+
     <div id="transition" hidden aria-hidden="true"></div>
 
     <script type="module" src="/src/main.js"></script>

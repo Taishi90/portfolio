@@ -28,6 +28,7 @@ GitHub Pages is free for public repositories (a private repo needs a paid plan).
 | What | File |
 |---|---|
 | Name, intro, projects, contact | `src/content.js` |
+| Project details (full description, screenshots) | `src/projectDetails.js` + `public/assets/projects/<id>/1-4.webp` |
 | Skills | `skill.md` |
 | Object positions / trigger zones | the `OBJECTS` array in `src/scenes/RoomScene.js` |
 | Colors, info panel layout | `src/style.css` |

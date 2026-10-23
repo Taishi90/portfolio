@@ -17,6 +17,7 @@ export const PROFILE = {
   // Released games, in this order. Name, short description and icon come from each Google Play page.
   projects: [
     {
+      id: 'tactic-manager',
       name: 'Tactic Manager: Road To Glory',
       desc: 'Build your dream team, manage tactics & lead your club to glory!',
       tags: ['Sports'],
@@ -24,6 +25,7 @@ export const PROFILE = {
       image: icon('tactic-manager'),
     },
     {
+      id: 'garden-guardians',
       name: 'Garden Guardians TD',
       desc: '50+ insect towers, 80+ levels of tower defense — now playable offline!',
       tags: ['Strategy', 'Tower Defense'],
@@ -31,6 +33,7 @@ export const PROFILE = {
       image: icon('garden-guardians'),
     },
     {
+      id: 'pop-clover',
       name: 'Pop Clover',
       desc: 'Pop bubbles, fly and fight for survival.',
       tags: ['Casual'],
@@ -38,6 +41,7 @@ export const PROFILE = {
       image: icon('pop-clover'),
     },
     {
+      id: 'dunk-beetle',
       name: 'Dunk Beetle',
       desc: 'Feel the beat, tap at the right time, make the shot, and then repeat.',
       tags: ['Casual'],
@@ -45,6 +49,7 @@ export const PROFILE = {
       image: icon('dunk-beetle'),
     },
     {
+      id: 'bomber-wasp',
       name: 'Bomber Wasp',
       desc: 'Fun bomb game: show your lightning-fast reflexes, avoid bombsquad to stay alive.',
       tags: ['Casual', 'Action'],
@@ -52,6 +57,7 @@ export const PROFILE = {
       image: icon('bomber-wasp'),
     },
     {
+      id: 'winged-survivors-rush',
       name: 'Winged Survivors Rush',
       desc: 'Fun & unique endless flying gameplay. Push your reflex skill to the max level.',
       tags: ['Casual'],
@@ -59,6 +65,7 @@ export const PROFILE = {
       image: icon('winged-survivors-rush'),
     },
     {
+      id: 'swatzzapz',
       name: 'SwatzZapz',
       desc: 'Immerse in a lively insect game, 100+ levels: fly swatting, matching game & more.',
       tags: ['Casual'],
@@ -68,6 +75,7 @@ export const PROFILE = {
     // Suga Studio games, no longer on the stores (info and icons from AppMagic): they link to the studio's AppMagic page.
     // desc = first two sentences of the official store description, verbatim
     {
+      id: 'i-am-hero',
       name: 'I Am Hero: AFK Teamfight',
       desc: 'I Am Hero presents unique gameplay with the combination of idle RPG elements with the tactics of auto chess teamfight. Our AFK game lets you build a powerful team to auto fight on your behalf.',
       tags: ['Idle RPG', 'Auto Battler'],
@@ -75,6 +83,7 @@ export const PROFILE = {
       image: icon('i-am-hero'),
     },
     {
+      id: 'overload',
       name: 'Overload: Online Car Shooting',
       desc: 'Overload - the must-have racing action title for your mobile device. Experience the thrill of multiplayer, fast-paced car firing and shooting with amazing graphics and adrenaline pumping action.',
       tags: ['Racing', 'Action'],
@@ -82,6 +91,7 @@ export const PROFILE = {
       image: icon('overload'),
     },
     {
+      id: 'overleague',
       name: 'Overleague',
       desc: 'The ultimate combat racing game is here! Overleague is one of the best racing games packed with guns, action, shooting and explosions.',
       tags: ['Racing', 'Action'],
@@ -137,7 +147,7 @@ export const SECTIONS = [
     html: () =>
       `<div class="projects">${PROFILE.projects
         .map(
-          (p) => `<article class="project">
+          (p) => `<article class="project" data-project="${esc(p.id)}" tabindex="0" role="button" aria-label="${esc(p.name)}: show details">
             <img src="${esc(p.image)}" alt="${esc(p.name)} icon" width="64" height="64" loading="lazy" />
             <div>
               <h3>${p.link ? `<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.name)}</a>` : esc(p.name)}</h3>

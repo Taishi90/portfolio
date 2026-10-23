@@ -459,10 +459,143 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   :is(#classic, #panel) .projects, :is(#classic, #panel) .skill-groups, :is(#classic, #panel) .contact { grid-template-columns: 1fr; }
 }
 
+/* ===== Project details window ===== */
+html.modal-open, html.modal-open body { overflow: hidden; }
+:is(#classic, #panel) .project[data-project] { cursor: pointer; }
+:is(#classic, #panel) .project[data-project]:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 3px; }
+
+#project-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50; /* above the game UI and the switch, below the transition tiles */
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+}
+#project-modal .pm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 6, 18, 0.62);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: pm-fade 0.2s ease-out;
+}
+#project-modal .pm-dialog {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid rgba(255, 204, 77, 0.35);
+  border-radius: 20px;
+  background: var(--c-surface);
+  color: var(--c-text);
+  box-shadow: 0 30px 80px -24px rgba(0, 0, 0, 0.85);
+  font-family: var(--font);
+  line-height: 1.6;
+  animation: pm-pop 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  scrollbar-width: thin;
+}
+@keyframes pm-fade { from { opacity: 0; } }
+@keyframes pm-pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+#project-modal .pm-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin: -8px -8px 0 12px;
+  padding: 0;
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  color: var(--c-muted);
+  font-size: 20px;
+  line-height: 1;
+  transition: color 0.2s, border-color 0.2s;
+}
+#project-modal .pm-close:hover { color: var(--c-gold); border-color: rgba(255, 204, 77, 0.5); }
+#project-modal .pm-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+#project-modal .pm-icon { flex: none; width: 72px; height: 72px; border-radius: 16px; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.8); }
+#project-modal h2 { margin: 0 0 8px; font-size: 24px; line-height: 1.2; font-weight: 800; }
+#project-modal .chips li {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(95, 227, 208, 0.08);
+  border: 1px solid rgba(95, 227, 208, 0.25);
+  color: var(--c-teal);
+  font-size: 12px;
+  font-weight: 700;
+}
+/* screenshots: one swipeable row */
+#project-modal .pm-shots {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 -24px 20px;
+  padding: 0 24px 8px;
+  scrollbar-width: thin;
+}
+#project-modal .pm-shots a { flex: none; scroll-snap-align: start; scroll-margin-left: 24px; border-radius: 12px; }
+#project-modal .pm-shots img {
+  display: block;
+  height: 240px;
+  width: auto;
+  border-radius: 12px;
+  border: 1px solid var(--c-line);
+  background: var(--c-surface-2);
+}
+#project-modal .pm-desc { color: var(--c-muted); font-size: 15px; }
+#project-modal .pm-desc h4 { margin: 18px 0 6px; color: var(--c-text); font-size: 16px; font-weight: 800; }
+#project-modal .pm-desc p { margin: 0 0 10px; }
+#project-modal .pm-desc ul { margin: 0 0 12px; padding-left: 20px; }
+#project-modal .pm-desc li { margin: 4px 0; }
+#project-modal .pm-desc li::marker { color: var(--c-gold); }
+#project-modal .pm-store {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #ffcc4d;
+  color: #1a1423;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 18px -8px rgba(255, 204, 77, 0.7);
+  transition: transform 0.15s;
+}
+#project-modal .pm-store:hover { transform: translateY(-2px); }
+@media (max-width: 600px) {
+  #project-modal { padding: 0; place-items: end stretch; }
+  #project-modal .pm-dialog {
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+    border-radius: 20px 20px 0 0;
+    animation-name: pm-sheet;
+  }
+  @keyframes pm-sheet { from { transform: translateY(40px); opacity: 0; } }
+  #project-modal .pm-shots { margin: 0 -16px 16px; padding: 0 16px 8px; }
+  #project-modal .pm-shots a { scroll-margin-left: 16px; }
+  #project-modal .pm-shots img { height: 200px; }
+  #project-modal h2 { font-size: 20px; }
+  #project-modal .pm-icon { width: 60px; height: 60px; border-radius: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #project-modal .pm-backdrop, #project-modal .pm-dialog { animation: none; }
+}
+
 /* ===== Day theme (6:00–18:00, set by ui.js as <html data-theme="day">) =====
    Portfolio page + game UI (panel, hint, D-pad, switch). Same layout and accents, light surfaces.
    Navy ink = the game's outline color; accents are a bit deeper so they keep contrast on white. */
-html[data-theme='day'] :is(#classic, #game-view, #mode-switch) {
+html[data-theme='day'] :is(#classic, #game-view, #mode-switch, #project-modal) {
   --c-bg: #f4f7ff;
   --c-surface: #ffffff;
   --c-surface-2: #eaf0fb;
@@ -501,6 +634,9 @@ html[data-theme='day'] #mode-switch button { color: #56608a; }
 html[data-theme='day'] #mode-switch button:hover { color: #1c2541; }
 html[data-theme='day'] #mode-switch button[aria-pressed='true'] { color: #1a1423; }
 html[data-theme='day'] #mode-switch .thumb { background: #ffcc4d; }
+html[data-theme='day'] #project-modal .pm-backdrop { background: rgba(28, 37, 65, 0.35); }
+html[data-theme='day'] #project-modal .pm-dialog { border-color: rgba(232, 147, 12, 0.45); box-shadow: 0 30px 70px -24px rgba(28, 37, 65, 0.55); }
+html[data-theme='day'] #project-modal .chips li { background: rgba(13, 148, 136, 0.08); border-color: rgba(13, 148, 136, 0.28); }
 
 /* In-game info panel, hint and D-pad */
 html[data-theme='day'] #panel {

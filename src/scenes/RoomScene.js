@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { createTextures, drawRoom, RUG, R, PLAYER_SCALE } from '../art.js';
 import { touch } from '../touch.js';
 import { SECTIONS } from '../content.js';
-import { showPanel, hidePanel, enterRoom } from '../ui.js';
+import { showPanel, hidePanel, enterRoom, isModalOpen } from '../ui.js';
 import { fadeColors } from './IntroScene.js';
 import { setupCamera, crispText, isDaytime } from '../view.js';
 
@@ -100,10 +100,12 @@ export default class RoomScene extends Phaser.Scene {
 
   update() {
     const k = this.cursors;
-    const left = k.left.isDown || this.wasd.A.isDown || touch.left;
-    const right = k.right.isDown || this.wasd.D.isDown || touch.right;
-    const up = k.up.isDown || this.wasd.W.isDown || touch.up;
-    const down = k.down.isDown || this.wasd.S.isDown || touch.down;
+    // while the project details window is open, the arrow keys must not move the player
+    const free = !isModalOpen();
+    const left = free && (k.left.isDown || this.wasd.A.isDown || touch.left);
+    const right = free && (k.right.isDown || this.wasd.D.isDown || touch.right);
+    const up = free && (k.up.isDown || this.wasd.W.isDown || touch.up);
+    const down = free && (k.down.isDown || this.wasd.S.isDown || touch.down);
 
     const v = new Phaser.Math.Vector2((right ? 1 : 0) - (left ? 1 : 0), (down ? 1 : 0) - (up ? 1 : 0));
     v.normalize().scale(SPEED);

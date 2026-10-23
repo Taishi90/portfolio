@@ -1,5 +1,6 @@
 // HTML UI layered over the game: info panel, Skip button, classic page, touch D-pad
 import { PROFILE, SECTIONS, STATS, esc } from './content.js';
+import { DETAILS } from './projectDetails.js';
 import { touch } from './touch.js';
 import { isDaytime } from './view.js';
 
@@ -21,6 +22,96 @@ export function enterRoom() {
 
 export function hidePanel() {
   $('panel').hidden = true;
+}
+
+// ---------- project details window ----------
+
+// Store descriptions are plain text: short lines without end punctuation (or ALL CAPS) become small headings,
+// lines starting with "-" or "•" become bullet lists, everything else is a paragraph.
+function formatDescription(text) {
+  const lines = text.split('\n');
+  let out = '';
+  let list = [];
+  const flush = () => {
+    if (list.length) out += `<ul>${list.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>`;
+    list = [];
+  };
+  lines.forEach((raw, i) => {
+    const line = raw.trim();
+    if (!line) return flush();
+    const bullet = line.match(/^[-•–]\s+(.*)/);
+    if (bullet) return list.push(bullet[1]);
+    flush();
+    const next = (lines[i + 1] || '').trim();
+    const allCaps = /[A-Z]/.test(line) && line === line.toUpperCase() && line.length <= 80;
+    const heading = allCaps || (line.length <= 60 && !/[.!?,;:]$/.test(line) && next !== '' && !/^[-•–]\s/.test(next));
+    out += heading ? `<h4>${esc(line)}</h4>` : `<p>${esc(line)}</p>`;
+  });
+  flush();
+  return out;
+}
+
+function storeLabel(link) {
+  if (link.includes('play.google.com')) return 'Google Play';
+  if (link.includes('appmagic.rocks')) return 'AppMagic';
+  return 'Store page';
+}
+
+let lastFocus = null;
+
+export const isModalOpen = () => !$('project-modal').hidden;
+
+function openProject(id) {
+  const p = PROFILE.projects.find((x) => x.id === id);
+  const d = DETAILS[id];
+  if (!p || !d) return;
+  const shots = d.screenshots
+    .map(
+      (src, i) =>
+        `<a href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="${esc(p.name)} screenshot ${i + 1}" loading="lazy" decoding="async" /></a>`,
+    )
+    .join('');
+  $('pm-content').innerHTML = `
+    <header class="pm-head">
+      <img class="pm-icon" src="${esc(p.image)}" alt="" width="72" height="72" />
+      <div>
+        <h2 id="pm-title">${esc(p.name)}</h2>
+        <ul class="chips">${p.tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+      </div>
+    </header>
+    <div class="pm-shots">${shots}</div>
+    <div class="pm-desc">${formatDescription(d.description)}</div>
+    ${p.link ? `<a class="pm-store" href="${esc(p.link)}" target="_blank" rel="noopener">${storeLabel(p.link)} <span aria-hidden="true">↗</span></a>` : ''}`;
+  lastFocus = document.activeElement;
+  $('project-modal').hidden = false;
+  document.documentElement.classList.add('modal-open');
+  $('project-modal').querySelector('.pm-dialog').scrollTop = 0;
+  $('project-modal').querySelector('.pm-shots').scrollLeft = 0;
+  $('project-modal').querySelector('.pm-close').focus();
+}
+
+function closeProject() {
+  if (!isModalOpen()) return;
+  $('project-modal').hidden = true;
+  document.documentElement.classList.remove('modal-open');
+  lastFocus?.focus?.();
+}
+
+function initProjectModal() {
+  // one listener for project blocks on the portfolio page and in the game panel
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.project[data-project]');
+    if (!card || e.target.closest('a')) return; // the title link still opens the store page
+    openProject(card.dataset.project);
+  });
+  document.addEventListener('keydown', (e) => {
+    const card = e.target.closest?.('.project[data-project]');
+    if (card && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      openProject(card.dataset.project);
+    }
+  });
+  for (const el of $('project-modal').querySelectorAll('[data-close]')) el.addEventListener('click', closeProject);
 }
 
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -91,6 +182,7 @@ function applyTheme() {
 
 function setMode(mode, sectionId) {
   const classic = mode === 'classic';
+  closeProject();
   updateSwitch(mode);
   applyTheme(); // re-checked on every switch
   $('classic').hidden = !classic;
@@ -207,8 +299,12 @@ export function initUI(phaserGame) {
   }
   $('panel-close').addEventListener('click', hidePanel);
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') hidePanel();
+    if (e.key !== 'Escape') return;
+    // Esc closes the project details first, then (next press) the game info panel
+    if (isModalOpen()) closeProject();
+    else hidePanel();
   });
+  initProjectModal();
   if (matchMedia('(pointer: coarse)').matches) {
     $('hint').textContent = 'Use the arrow buttons to walk up to the objects';
   }

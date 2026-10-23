@@ -177,3 +177,16 @@
 **Bug** — Scrolling an info panel, closing it, then opening another object's panel kept the old scroll position (noticed on mobile, where the panel is short and scrolls a lot).
 **Fix** — `showPanel()` resets `#panel.scrollTop` (the panel itself is the scroll box, not `#panel-body`) AFTER `hidden = false` (scrollTop on a `display:none` element is ignored).
 **Deploy** — the site is live at https://taishi90.github.io/portfolio/ (GitHub Pages via Actions). A push to `main` redeploys; the user pushes with GitHub Desktop — never push without asking.
+
+## 2026-10-23 — Project details window (click a project block)
+
+**What** — Clicking (or Enter/Space on) any project block, on the portfolio page or in the game panel, opens `#project-modal`: icon, name, tags, 4 swipeable screenshots, full description, store button ("Google Play ↗" / "AppMagic ↗"). Closes with ×, Esc (Esc closes the modal before the game panel), or clicking the backdrop. Phone: bottom sheet. Follows the day/night theme. The player can't move while it is open (`isModalOpen()` checked in RoomScene.update). Switching Game ↔ Portfolio closes it.
+**Data (stored locally, user's choice)** — `src/projectDetails.js` (`DETAILS[id] = { screenshots, description }`, generated once by a scratch script) + screenshots in `public/assets/projects/<id>/1.webp…4.webp` (720px tall, ~3.8 MB total, loaded only when a details window opens). Each project in content.js now has an `id` (= icon slug).
+- Sources: 7 games = live Google Play pages (first 4 store screenshots). I Am Hero = AppMagic description + iPad screenshots from its "App Page History" tab. Overload = AppMagic description + 4 iPhone screenshots from the Wayback Machine copy of its App Store page (2019). Overleague = description + screenshots from the Wayback Machine copy of its Google Play page (Dec 2022).
+- Removed from descriptions (user request): social links, Discord, support emails/pages, terms/privacy, hashtags, review-request/footer lines. Overleague "is a one of" → "is one of"; Overload "carís/thatís" encoding glitches fixed.
+**Lessons**
+- Google image CDN: `=h720-rw` can return LOSSLESS WebP (~1 MB); add `-v1` (`=h720-rw-v1`) for lossy (~130 KB).
+- Apple mzstatic: replace the size suffix with `/0x720h.webp`.
+- AppMagic "App Page History" and some data need login — never log in; Wayback CDX API (`web.archive.org/cdx/search/cdx?url=…&output=json`) finds old store pages; fetch with `id_` in the URL and `curl --compressed`.
+- This Mac's Python has no SSL certs → download with `curl`, parse local files with `python3 -I`.
+- Description formatter (ui.js `formatDescription`): ALL-CAPS lines or short lines without end punctuation followed by text → `<h4>`; lines starting with "-", "•" → bullet list; else `<p>`.
