@@ -8,30 +8,34 @@
     - Skill name    -> one skill in that group
 -->
 
-## Programming
+## Development & Collaboration
+- Jira
+- Task Estimation
+- Project Planning
+- Cross-Functional Coordination
+- Technical Mentoring
+
+## Programming & Game Engine
 - C#
 - Unity Engine
 - Node.js
 
-## Cloud Services
-- Azure PlayFab
-- Google Cloud Platform (GCP)
-- Amazon Web Services (AWS)
+## Game Development
+- Gameplay Systems
+- Game Architecture
+- Mobile Game Development
+- UI Implementation
+- In-Game Events
 
-## Database Management
+## Data & Analytics
 - SQL
-- NoSQL
-
-## Tools
-- Git
-- Jira
-- Google Workspace
+- Game Analytics
 
 ## Soft Skills
 - Teamwork
 - Adaptability
 - Open-minded Learning
-- Task planning/management
 
 ## Languages
+- Vietnamese (Native)
 - English (Business Level)
