@@ -9,7 +9,7 @@ const icon = (name) => `assets/projects/${name}.webp`;
 
 export const PROFILE = {
   name: 'Linh Nguyen',
-  role: 'Game Developer',
+  role: 'Game Development Lead',
   about: [
     "Hi! I'm Linh.",
     'Game Development Lead and Unity Developer with 10+ years of experience in mobile game development, technical leadership, and cross-functional collaboration. Experienced in leading development teams, establishing workflows, planning project execution, and translating product requirements into actionable development roadmaps.',
