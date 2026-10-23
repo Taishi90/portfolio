@@ -12,7 +12,8 @@ export const PROFILE = {
   role: 'Game Developer',
   about: [
     "Hi! I'm Linh.",
-    'A game developer with over 5 years of experience in mobile game development using Unity, passionate about creating diverse game genres and delivering exceptional experiences to players.',
+    'Game Development Lead and Unity Developer with 10+ years of experience in mobile game development, technical leadership, and cross-functional collaboration. Experienced in leading development teams, establishing workflows, planning project execution, and translating product requirements into actionable development roadmaps.',
+    'Experienced in working across multiple game genres, mentoring developers, coordinating with product and creative teams, and supporting projects throughout the development lifecycle.',
   ],
   // Released games, in this order. Name, short description and icon come from each Google Play page.
   projects: [
@@ -107,7 +108,7 @@ export const PROFILE = {
 
 // Highlight numbers in the classic page hero
 export const STATS = [
-  { value: '5+', label: 'Years in mobile games' },
+  { value: '10+', label: 'Years in mobile games' },
   { value: String(PROFILE.projects.length), label: 'Games released' },
   { value: 'Unity', label: 'Main engine' },
 ];
