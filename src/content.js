@@ -12,8 +12,8 @@ export const PROFILE = {
   role: 'Game Development Lead',
   about: [
     "Hi! I'm Linh.",
-    'Game Development Lead and Unity Developer with 10+ years of experience in mobile game development, technical leadership, and cross-functional collaboration. Experienced in leading development teams, establishing workflows, planning project execution, and translating product requirements into actionable development roadmaps.',
-    'Experienced in working across multiple game genres, mentoring developers, coordinating with product and creative teams, and supporting projects throughout the development lifecycle.',
+    'Game Development Lead and Unity developer with 10+ years in mobile games. I lead development teams of 7 people, set up workflows, and turn product requirements into clear, actionable roadmaps — while staying hands-on with gameplay systems and architecture.',
+    "With my teams, I've shipped 10 titles across sports management, tower defense, casual, idle RPG and racing, mentored developers, and worked closely with product and creative teams from prototype to launch.",
   ],
   // Released games, in this order. Name, short description and icon come from each Google Play page.
   projects: [
