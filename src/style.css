@@ -272,6 +272,9 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
 #classic .btn-primary:hover { box-shadow: 0 10px 26px -8px rgba(255, 204, 77, 0.85); }
 #classic .btn-ghost { background: transparent; color: var(--c-text); border-color: var(--c-line); }
 #classic .btn-ghost:hover { border-color: var(--c-teal); color: var(--c-teal); }
+/* Get CV: outlined in gold so it stands out next to the other secondary button */
+#classic .btn-cv { border-color: var(--c-gold); color: var(--c-gold); }
+#classic .btn-cv:hover { background: var(--c-gold); color: #1a1423; border-color: var(--c-gold); }
 
 /* top bar */
 #classic .topbar {

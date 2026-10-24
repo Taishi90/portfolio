@@ -150,6 +150,7 @@ function renderClassic() {
         <ul class="stats">${stats}</ul>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#projects">View projects</a>
+          <a class="btn btn-ghost btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
           <a class="btn btn-ghost" href="#contact">Get in touch</a>
         </div>
       </div>

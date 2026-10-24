@@ -190,3 +190,7 @@
 - AppMagic "App Page History" and some data need login — never log in; Wayback CDX API (`web.archive.org/cdx/search/cdx?url=…&output=json`) finds old store pages; fetch with `id_` in the URL and `curl --compressed`.
 - This Mac's Python has no SSL certs → download with `curl`, parse local files with `python3 -I`.
 - Description formatter (ui.js `formatDescription`): ALL-CAPS lines or short lines without end punctuation followed by text → `<h4>`; lines starting with "-", "•" → bullet list; else `<p>`.
+
+## 2026-10-24 — "Get CV" button
+
+**What** — Portfolio hero has a gold-outlined **Get CV ↗** button (between "View projects" and "Get in touch") that opens `PROFILE.cv` (Canva link, set in content.js) in a new tab. Style: `#classic .btn-cv`. Not shown in the game.

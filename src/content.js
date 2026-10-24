@@ -10,6 +10,7 @@ const icon = (name) => `assets/projects/${name}.webp`;
 export const PROFILE = {
   name: 'Linh Nguyen',
   role: 'Game Development Lead',
+  cv: 'https://canva.link/ixiyg98dbeda2ca', // "Get CV" button on the portfolio page (opens in a new tab)
   about: [
     "Hi! I'm Linh.",
     'Game Development Lead and Unity developer with 10+ years in mobile games. I lead cross-functional development teams of around 7 people, set up workflows, and turn product requirements into clear, actionable roadmaps — backed by hands-on experience building gameplay systems and game architecture.',
