@@ -223,24 +223,10 @@ function renderClassic() {
             <a class="btn btn-ghost" href="#contact">Get in touch</a>
           </div>
         </div>
-        <button class="hero-room" type="button" aria-label="Play the portfolio game">
-          <img alt="The portfolio game: a room with a portrait, a desk, a bookshelf and a mailbox" width="320" height="240" />
-          <span class="hero-room-label">Walk around the room →</span>
-        </button>
       </div>
     </header>
     ${sections}
     <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built with Phaser 3.</footer>`;
-  $('classic').querySelector('.hero-room').addEventListener('click', () => switchMode('game'));
-}
-
-// The hero picture is the game's room, with the window showing the same day/night sky as the game
-const roomPictures = {};
-function updateRoomPicture() {
-  const day = isDaytime();
-  roomPictures[day] ??= artImage('room', { day });
-  const img = $('classic').querySelector('.hero-room img');
-  if (img) img.src = roomPictures[day];
 }
 
 let game;
@@ -262,7 +248,6 @@ function setMode(mode, sectionId) {
   document.body.classList.toggle('classic-mode', classic);
   if (classic) {
     if (!$('classic').innerHTML) renderClassic();
-    updateRoomPicture();
     game.loop.sleep();
     if (sectionId) {
       document.getElementById(sectionId)?.scrollIntoView();

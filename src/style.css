@@ -307,16 +307,13 @@ html:has(body.classic-mode), body.classic-mode { background: var(--c-bg); height
 #classic .topbar-links a { color: var(--c-muted); font-weight: 700; }
 #classic .topbar-links a:hover { color: var(--c-text); text-decoration: none; }
 
-/* hero: text on the left, the game's room on the right (click it to play) */
+/* hero: name, role, about, stats and actions (the Game | Portfolio switch leads to the game) */
 #classic .hero-inner {
   max-width: var(--c-max);
   margin: 0 auto;
   padding: 56px 20px 72px;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 48px;
-  align-items: center;
 }
+#classic .hero-text { max-width: 720px; }
 #classic h1 { margin: 0; font-size: var(--fs-xl); line-height: 1; font-weight: 800; letter-spacing: -0.02em; }
 #classic .role { margin: 12px 0 24px; font-size: var(--fs-m); font-weight: 800; color: var(--c-gold); }
 #classic .hero-about { color: var(--c-muted); }
@@ -326,30 +323,6 @@ html:has(body.classic-mode), body.classic-mode { background: var(--c-bg); height
 #classic .stats strong { display: block; font-size: var(--fs-l); line-height: 1.1; color: var(--c-gold); }
 #classic .stats span { color: var(--c-muted); font-size: var(--fs-s); font-weight: 700; }
 #classic .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-#classic .hero-room {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: 24px;
-  overflow: hidden;
-  background: var(--c-surface);
-  cursor: pointer;
-}
-#classic .hero-room img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; transition: transform 0.4s ease; }
-#classic .hero-room:hover img { transform: scale(1.03); }
-#classic .hero-room-label {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: var(--c-gold);
-  color: #1a1423;
-  font-weight: 800;
-}
-#classic .hero-room:focus-visible { outline: 3px solid var(--c-teal); outline-offset: 4px; }
 
 /* sections: each has its own composition; the game object that holds it in the room marks its title */
 #classic .block { max-width: var(--c-max); margin: 0 auto; padding: 64px 20px; scroll-margin-top: 64px; }
@@ -411,7 +384,6 @@ html:has(body.classic-mode), body.classic-mode { background: var(--c-bg); height
 #classic .foot { max-width: var(--c-max); margin: 0 auto; padding: 32px 20px 48px; color: var(--c-muted); font-size: var(--fs-s); }
 
 @media (max-width: 860px) {
-  #classic .hero-inner { grid-template-columns: 1fr; gap: 32px; }
   #classic .feature { grid-template-columns: 1fr; }
   #classic .feature .shot { aspect-ratio: 16 / 9; }
   #classic .project-grid { grid-template-columns: repeat(2, 1fr); }
@@ -431,7 +403,7 @@ html:has(body.classic-mode), body.classic-mode { background: var(--c-bg); height
   #classic .skill-row dd { font-size: var(--fs-b); }
 }
 @media (prefers-reduced-motion: reduce) {
-  #classic .hero-room img, #classic :is(.card, .feature) .shot img { transition: none; }
+  #classic :is(.card, .feature) .shot img { transition: none; }
 }
 
 /* ===== In-game info panel cards (projects, skills, contact inside #panel) ===== */
@@ -613,7 +585,7 @@ html[data-theme='day'] :is(#classic, #game-view, #mode-switch, #project-modal) {
 html[data-theme='day']:has(body.classic-mode),
 html[data-theme='day'] body.classic-mode { background: #f4f7ff; }
 /* filled gold stays bright by day (the deeper --c-gold is for gold text on white) */
-html[data-theme='day'] #classic :is(.btn-primary, .hero-room-label, .brand-badge) { background: #ffcc4d; }
+html[data-theme='day'] #classic :is(.btn-primary, .brand-badge) { background: #ffcc4d; }
 html[data-theme='day'] #classic .btn-primary:hover { background: #ffd970; }
 html[data-theme='day'] #classic .btn-cv:hover { background: #ffcc4d; border-color: #ffcc4d; color: #1a1423; }
 html[data-theme='day'] :is(#classic, #panel) .chips li { background: rgba(13, 148, 136, 0.1); color: #0b7a70; }
