@@ -1,8 +1,9 @@
 // HTML UI layered over the game: info panel, Skip button, classic page, touch D-pad
-import { PROFILE, SECTIONS, STATS, esc } from './content.js';
+import { PROFILE, SECTIONS, SKILLS, STATS, esc } from './content.js';
 import { DETAILS } from './projectDetails.js';
 import { touch } from './touch.js';
 import { isDaytime } from './view.js';
+import { artImage } from './art.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -100,12 +101,12 @@ function closeProject() {
 function initProjectModal() {
   // one listener for project blocks on the portfolio page and in the game panel
   document.addEventListener('click', (e) => {
-    const card = e.target.closest('.project[data-project]');
+    const card = e.target.closest('[data-project]');
     if (!card || e.target.closest('a')) return; // the title link still opens the store page
     openProject(card.dataset.project);
   });
   document.addEventListener('keydown', (e) => {
-    const card = e.target.closest?.('.project[data-project]');
+    const card = e.target.closest?.('[data-project]');
     if (card && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       openProject(card.dataset.project);
@@ -117,6 +118,73 @@ function initProjectModal() {
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Cover picture for each project card: index of a landscape screenshot, or 'portrait' to set three
+// portrait screenshots side by side (games that only have portrait shots)
+const COVERS = { 'tactic-manager': 4, swatzzapz: 2, 'pop-clover': 'portrait', 'i-am-hero': 'portrait' };
+
+function coverHtml(p) {
+  const shots = DETAILS[p.id]?.screenshots || [];
+  const c = COVERS[p.id] ?? 1;
+  const list = c === 'portrait' ? shots.slice(0, 3) : [shots[c - 1]];
+  return `<div class="shot">${list.map((src) => `<img src="${esc(src)}" alt="" loading="lazy" decoding="async" />`).join('')}</div>`;
+}
+
+const chips = (tags) => `<ul class="chips">${tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`;
+const cardAttrs = (p) => `data-project="${esc(p.id)}" tabindex="0" role="button" aria-label="${esc(p.name)}: show details"`;
+
+// The portfolio page has its own markup (the in-game panel keeps the compact cards from content.js)
+function projectsHtml() {
+  const [first, ...rest] = PROFILE.projects;
+  return `
+    <article class="feature" ${cardAttrs(first)}>
+      ${coverHtml(first)}
+      <div class="feature-body">
+        <img class="icon" src="${esc(first.image)}" alt="" width="72" height="72" />
+        <h3>${esc(first.name)}</h3>
+        <p>${esc(first.desc)}</p>
+        ${chips(first.tags)}
+      </div>
+    </article>
+    <div class="project-grid">
+      ${rest
+        .map(
+          (p) => `<article class="card" ${cardAttrs(p)}>
+            ${coverHtml(p)}
+            <div class="card-body">
+              <img class="icon" src="${esc(p.image)}" alt="" width="48" height="48" loading="lazy" />
+              <div>
+                <h3>${esc(p.name)}</h3>
+                <p>${esc(p.desc)}</p>
+                ${chips(p.tags)}
+              </div>
+            </div>
+          </article>`,
+        )
+        .join('')}
+    </div>`;
+}
+
+function skillsHtml() {
+  return `<dl class="skill-rows">${SKILLS.map(
+    (g) => `<div class="skill-row"><dt>${esc(g.title)}</dt><dd>${g.items.map(esc).join(', ')}</dd></div>`,
+  ).join('')}</dl>`;
+}
+
+function contactHtml() {
+  const email = PROFILE.contact.find((c) => c.href.startsWith('mailto:'));
+  const others = PROFILE.contact.filter((c) => c !== email);
+  return `
+    ${email ? `<a class="contact-email" href="${esc(email.href)}">${esc(email.value)}</a>` : ''}
+    <div class="contact-links">
+      ${others.map((c) => `<a class="btn btn-ghost" href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.label)} <span aria-hidden="true">↗</span></a>`).join('')}
+      <a class="btn btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
+    </div>`;
+}
+
+const SECTION_HTML = { projects: projectsHtml, skills: skillsHtml, contact: contactHtml };
+// the game object that holds each section in the room
+const SECTION_ICON = { projects: 'obj-projects', skills: 'obj-skills', contact: 'obj-contact' };
+
 function renderClassic() {
   const initials = PROFILE.name
     .split(/\s+/)
@@ -125,12 +193,12 @@ function renderClassic() {
     .slice(0, 2);
   const nav = SECTIONS.map((s) => `<a href="#${s.id}">${s.title}</a>`).join('');
   const stats = STATS.map((st) => `<li><strong>${esc(st.value)}</strong><span>${esc(st.label)}</span></li>`).join('');
-  // About lives in the hero; the other sections are numbered cards below it
+  // About lives in the hero; the other sections each have their own layout
   const sections = SECTIONS.filter((s) => s.id !== 'about')
     .map(
-      (s, i) => `<section id="${s.id}" class="block reveal">
-        <h2><span class="sec-num">0${i + 1}</span>${s.title}</h2>
-        ${s.html()}
+      (s) => `<section id="${s.id}" class="block block-${s.id}">
+        <h2><img class="sec-icon" src="${artImage(SECTION_ICON[s.id])}" alt="" />${s.title}</h2>
+        ${(SECTION_HTML[s.id] || s.html)()}
       </section>`,
     )
     .join('');
@@ -144,32 +212,35 @@ function renderClassic() {
     </nav>
     <header class="hero" id="about">
       <div class="hero-inner">
-        <p class="eyebrow"><span class="dot"></span>${esc(PROFILE.role)}</p>
-        <h1>${esc(PROFILE.name)}</h1>
-        <div class="hero-about">${PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
-        <ul class="stats">${stats}</ul>
-        <div class="hero-cta">
-          <a class="btn btn-primary" href="#projects">View projects</a>
-          <a class="btn btn-ghost btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
-          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        <div class="hero-text">
+          <h1>${esc(PROFILE.name)}</h1>
+          <p class="role">${esc(PROFILE.role)}</p>
+          <div class="hero-about">${PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
+          <ul class="stats">${stats}</ul>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#projects">View projects</a>
+            <a class="btn btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
+            <a class="btn btn-ghost" href="#contact">Get in touch</a>
+          </div>
         </div>
+        <button class="hero-room" type="button" aria-label="Play the portfolio game">
+          <img alt="The portfolio game: a room with a portrait, a desk, a bookshelf and a mailbox" width="320" height="240" />
+          <span class="hero-room-label">Walk around the room →</span>
+        </button>
       </div>
     </header>
-    <div class="blocks">${sections}</div>
-    <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)} · Built with Phaser 3</footer>`;
+    ${sections}
+    <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built with Phaser 3.</footer>`;
+  $('classic').querySelector('.hero-room').addEventListener('click', () => switchMode('game'));
+}
 
-  // sections fade up the first time they scroll into view
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting) continue;
-        e.target.classList.add('in');
-        io.unobserve(e.target);
-      }
-    },
-    { threshold: 0.12 },
-  );
-  for (const el of $('classic').querySelectorAll('.reveal')) io.observe(el);
+// The hero picture is the game's room, with the window showing the same day/night sky as the game
+const roomPictures = {};
+function updateRoomPicture() {
+  const day = isDaytime();
+  roomPictures[day] ??= artImage('room', { day });
+  const img = $('classic').querySelector('.hero-room img');
+  if (img) img.src = roomPictures[day];
 }
 
 let game;
@@ -191,11 +262,8 @@ function setMode(mode, sectionId) {
   document.body.classList.toggle('classic-mode', classic);
   if (classic) {
     if (!$('classic').innerHTML) renderClassic();
+    updateRoomPicture();
     game.loop.sleep();
-    // replay the hero entrance animation every time the classic page is shown
-    $('classic').classList.remove('enter');
-    void $('classic').offsetWidth;
-    $('classic').classList.add('enter');
     if (sectionId) {
       document.getElementById(sectionId)?.scrollIntoView();
     } else {

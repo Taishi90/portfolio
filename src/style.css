@@ -81,7 +81,6 @@ button {
   width: calc(50% - 4px);
   border-radius: 999px;
   background: var(--c-gold);
-  box-shadow: 0 4px 14px -4px rgba(255, 204, 77, 0.7);
   transition: transform 0.3s cubic-bezier(0.3, 0.8, 0.3, 1);
 }
 #mode-switch[data-mode='classic'] .thumb { transform: translateX(100%); }
@@ -243,49 +242,46 @@ body.intro #hint, body.intro #dpad { display: none !important; }
   @keyframes pop { from { opacity: 0; } }
 }
 
-/* ===== Classic page: modern gaming dark theme =====
-   Navy/purple base, gold (from the game) as the main accent, teal as the secondary accent. */
+/* ===== Portfolio page =====
+   Reviewed against taste-skill (2026-10-31): no eyebrow labels, index numbers, tracked caps, glows,
+   hairline boxes, decorative gradients or fade-up-everything. Structure comes from tone steps, space,
+   five type sizes far apart, real screenshots and the game's own art (room picture, object icons). */
 #classic {
+  --fs-s: 13px;
+  --fs-b: 16px;
+  --fs-m: 20px;
+  --fs-l: 36px;
+  --fs-xl: clamp(44px, 7vw, 76px);
   color: var(--c-text);
+  font-size: var(--fs-b);
   line-height: 1.6;
 }
-html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: auto; min-height: 100%; scroll-behavior: smooth; }
+html:has(body.classic-mode), body.classic-mode { background: var(--c-bg); height: auto; min-height: 100%; scroll-behavior: smooth; }
 #classic a { color: var(--c-teal); text-decoration: none; }
 #classic a:hover { text-decoration: underline; }
+#classic :is(h1, h2, h3) { color: var(--c-text); }
 
-/* buttons */
+/* buttons: flat, named for their action */
 #classic .btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font: 800 15px/1 var(--font);
-  border: 1px solid transparent;
-  box-shadow: none;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  font: 800 var(--fs-b) / 1 var(--font);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-#classic .btn:hover { transform: translateY(-2px); text-decoration: none; }
-#classic .btn:active { transform: translateY(0); }
-#classic .btn-primary { background: var(--c-gold); color: #1a1423; box-shadow: 0 6px 20px -8px rgba(255, 204, 77, 0.7); }
-#classic .btn-primary:hover { box-shadow: 0 10px 26px -8px rgba(255, 204, 77, 0.85); }
-#classic .btn-ghost { background: transparent; color: var(--c-text); border-color: var(--c-line); }
-#classic .btn-ghost:hover { border-color: var(--c-teal); color: var(--c-teal); }
-/* Get CV: outlined in gold so it stands out next to the other secondary button */
-#classic .btn-cv { border-color: var(--c-gold); color: var(--c-gold); }
-#classic .btn-cv:hover { background: var(--c-gold); color: #1a1423; border-color: var(--c-gold); }
+#classic .btn:hover { text-decoration: none; }
+#classic .btn-primary { background: var(--c-gold); color: #1a1423; }
+#classic .btn-primary:hover { background: #ffd970; }
+#classic .btn-ghost { background: var(--c-surface); color: var(--c-text); }
+#classic .btn-ghost:hover { color: var(--c-teal); }
+#classic .btn-cv { background: transparent; border-color: var(--c-gold); color: var(--c-gold); }
+#classic .btn-cv:hover { background: var(--c-gold); color: #1a1423; }
 
-/* top bar */
-#classic .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(14, 12, 24, 0.78);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--c-line);
-}
+/* top bar: opaque, plain */
+#classic .topbar { position: sticky; top: 0; z-index: 10; background: var(--c-bg); }
 #classic .topbar-inner {
   max-width: var(--c-max);
   margin: 0 auto;
@@ -302,113 +298,156 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 9px;
-  background: linear-gradient(135deg, var(--c-gold), #ff9f43);
+  border-radius: 50%;
+  background: var(--c-gold);
   color: #1a1423;
-  font-size: 14px;
+  font-size: var(--fs-s);
 }
 #classic .topbar-links { display: flex; gap: 22px; margin-left: auto; }
-#classic .topbar-links a { color: var(--c-muted); font-weight: 700; font-size: 15px; }
+#classic .topbar-links a { color: var(--c-muted); font-weight: 700; }
 #classic .topbar-links a:hover { color: var(--c-text); text-decoration: none; }
 
-/* hero */
-#classic .hero {
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid var(--c-line);
-  background:
-    radial-gradient(60% 80% at 15% 0%, rgba(255, 204, 77, 0.13), transparent 70%),
-    radial-gradient(50% 70% at 95% 30%, rgba(95, 227, 208, 0.1), transparent 70%);
-}
-/* faint grid, fading out at the bottom */
-#classic .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--c-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--c-line) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 85%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 85%);
-  pointer-events: none;
-}
-#classic .hero-inner { position: relative; max-width: var(--c-max); margin: 0 auto; padding: 72px 20px 64px; }
-#classic .eyebrow {
-  display: inline-flex;
+/* hero: text on the left, the game's room on the right (click it to play) */
+#classic .hero-inner {
+  max-width: var(--c-max);
+  margin: 0 auto;
+  padding: 56px 20px 72px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 48px;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 16px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 204, 77, 0.35);
-  background: rgba(255, 204, 77, 0.08);
-  color: var(--c-gold);
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
-#classic .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-gold); box-shadow: 0 0 10px var(--c-gold); }
-#classic h1 { margin: 0 0 16px; font-size: clamp(40px, 7vw, 68px); line-height: 1.05; font-weight: 800; letter-spacing: -0.02em; }
-#classic .hero-about { max-width: 640px; color: var(--c-muted); font-size: 18px; }
-#classic .hero-about p { margin: 0 0 10px; }
-#classic .hero-about p:first-child { color: var(--c-text); font-weight: 700; }
-#classic .stats { display: flex; flex-wrap: wrap; gap: 12px; padding: 0; margin: 28px 0; list-style: none; }
-#classic .stats li {
-  min-width: 140px;
-  padding: 14px 18px;
-  border-radius: var(--c-radius);
-  background: rgba(23, 20, 42, 0.7);
-  border: 1px solid var(--c-line);
-}
-#classic .stats strong { display: block; font-size: 28px; line-height: 1.1; color: var(--c-gold); }
-#classic .stats span { color: var(--c-muted); font-size: 13px; font-weight: 600; }
+#classic h1 { margin: 0; font-size: var(--fs-xl); line-height: 1; font-weight: 800; letter-spacing: -0.02em; }
+#classic .role { margin: 12px 0 24px; font-size: var(--fs-m); font-weight: 800; color: var(--c-gold); }
+#classic .hero-about { color: var(--c-muted); }
+#classic .hero-about p { margin: 0 0 12px; }
+#classic .hero-about p:first-child { color: var(--c-text); font-size: var(--fs-m); font-weight: 800; }
+#classic .stats { display: flex; flex-wrap: wrap; gap: 32px; padding: 0; margin: 24px 0 28px; list-style: none; }
+#classic .stats strong { display: block; font-size: var(--fs-l); line-height: 1.1; color: var(--c-gold); }
+#classic .stats span { color: var(--c-muted); font-size: var(--fs-s); font-weight: 700; }
 #classic .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-
-/* sections */
-#classic .blocks { max-width: var(--c-max); margin: 0 auto; padding: 8px 20px 32px; }
-#classic .block { padding: 56px 0 8px; scroll-margin-top: 64px; }
-#classic .block h2 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 24px; font-size: 30px; font-weight: 800; color: var(--c-text); }
-#classic .sec-num { font-size: 14px; color: var(--c-gold); letter-spacing: 0.1em; }
-#classic h3 { color: var(--c-text); }
-
-/* chips */
-:is(#classic, #panel) .chips { gap: 6px; margin: 0; }
-:is(#classic, #panel) .chips li {
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(95, 227, 208, 0.08);
-  border: 1px solid rgba(95, 227, 208, 0.25);
-  color: var(--c-teal);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-/* cards (projects, skill groups, contact rows) */
-:is(#classic, #panel) .project,
-:is(#classic, #panel) .skill-group,
-:is(#classic, #panel) .contact li {
+#classic .hero-room {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  overflow: hidden;
   background: var(--c-surface);
-  border: 1px solid var(--c-line);
-  border-radius: var(--c-radius);
-  box-shadow: none;
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
-:is(#classic, #panel) .project:hover,
-:is(#classic, #panel) .skill-group:hover,
-:is(#classic, #panel) .contact li:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255, 204, 77, 0.45);
-  box-shadow: 0 14px 30px -16px rgba(255, 204, 77, 0.45);
+#classic .hero-room img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; transition: transform 0.4s ease; }
+#classic .hero-room:hover img { transform: scale(1.03); }
+#classic .hero-room-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--c-gold);
+  color: #1a1423;
+  font-weight: 800;
 }
-:is(#classic, #panel) .projects { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-:is(#classic, #panel) .project { padding: 16px; gap: 14px; }
-:is(#classic, #panel) .project img { width: 72px; height: 72px; border-radius: 16px; background: var(--c-surface-2); box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.8); }
-:is(#classic, #panel) .project h3 { margin: 0 0 6px; font-size: 17px; }
-:is(#classic, #panel) .project h3 a { color: var(--c-text); }
-:is(#classic, #panel) .project h3 a:hover { color: var(--c-gold); text-decoration: none; }
-:is(#classic, #panel) .project p {
+#classic .hero-room:focus-visible { outline: 3px solid var(--c-teal); outline-offset: 4px; }
+
+/* sections: each has its own composition; the game object that holds it in the room marks its title */
+#classic .block { max-width: var(--c-max); margin: 0 auto; padding: 64px 20px; scroll-margin-top: 64px; }
+#classic .block h2 { display: flex; align-items: center; gap: 16px; margin: 0 0 32px; font-size: var(--fs-l); line-height: 1.1; font-weight: 800; }
+#classic .sec-icon { height: 56px; width: auto; flex: none; }
+
+#classic .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+#classic .chips li { padding: 4px 10px; border-radius: 999px; background: var(--c-surface-2); color: var(--c-teal); font-size: var(--fs-s); font-weight: 700; }
+
+/* projects: one featured game, then a grid of covers (real screenshots) */
+#classic [data-project] { cursor: pointer; }
+#classic [data-project]:focus-visible { outline: 3px solid var(--c-teal); outline-offset: 4px; }
+#classic .shot { display: flex; gap: 4px; aspect-ratio: 16 / 9; overflow: hidden; background: var(--c-surface-2); }
+#classic .shot img { display: block; flex: 1; min-width: 0; width: 100%; height: 100%; object-fit: cover; }
+#classic .feature {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  margin-bottom: 24px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--c-surface);
+}
+#classic .feature .shot { aspect-ratio: auto; min-height: 100%; }
+#classic .feature-body { padding: 32px; align-self: center; }
+#classic .feature-body .icon { width: 72px; height: 72px; border-radius: 18px; }
+#classic .feature-body h3 { margin: 16px 0 8px; font-size: var(--fs-m); }
+#classic .feature-body p { margin: 0 0 16px; color: var(--c-muted); }
+#classic .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+#classic .card { border-radius: 20px; overflow: hidden; background: var(--c-surface); }
+#classic .card-body { display: flex; gap: 12px; padding: 16px; }
+#classic .card-body .icon { flex: none; width: 48px; height: 48px; border-radius: 12px; }
+#classic .card-body h3 { margin: 0 0 4px; font-size: var(--fs-b); line-height: 1.3; }
+#classic .card-body p {
+  margin: 0 0 10px;
+  color: var(--c-muted);
+  font-size: var(--fs-s);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+#classic :is(.card, .feature):hover h3 { color: var(--c-gold); }
+#classic :is(.card, .feature) .shot img { transition: transform 0.4s ease; }
+#classic :is(.card, .feature):hover .shot img { transform: scale(1.04); }
+
+/* skills: a plain two-column list, group name on the left */
+#classic .skill-rows { margin: 0; }
+#classic .skill-row { display: grid; grid-template-columns: 260px 1fr; gap: 24px; padding: 20px 0; }
+#classic .skill-row + .skill-row { border-top: 2px solid var(--c-surface-2); }
+#classic .skill-row dt { font-size: var(--fs-m); font-weight: 800; color: var(--c-text); }
+#classic .skill-row dd { margin: 0; color: var(--c-muted); font-size: var(--fs-m); line-height: 1.5; }
+
+/* contact: one statement */
+#classic .contact-email { display: inline-block; font-size: var(--fs-l); font-weight: 800; line-height: 1.2; color: var(--c-text); overflow-wrap: anywhere; }
+#classic .contact-email:hover { color: var(--c-gold); text-decoration: none; }
+#classic .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+
+#classic .foot { max-width: var(--c-max); margin: 0 auto; padding: 32px 20px 48px; color: var(--c-muted); font-size: var(--fs-s); }
+
+@media (max-width: 860px) {
+  #classic .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+  #classic .feature { grid-template-columns: 1fr; }
+  #classic .feature .shot { aspect-ratio: 16 / 9; }
+  #classic .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  #classic { --fs-l: 28px; }
+  #classic .topbar-inner { flex-wrap: wrap; gap: 10px 16px; padding: 10px 16px; }
+  #classic .brand { flex: 1 1 100%; min-width: 0; min-height: 38px; padding-right: 206px; } /* switch sits on the brand row */
+  #classic .topbar-links { width: 100%; margin: 0; gap: 18px; overflow-x: auto; }
+  #classic .hero-inner { padding: 32px 16px 48px; }
+  #classic .stats { gap: 24px; }
+  #classic .block { padding: 48px 16px; scroll-margin-top: 100px; }
+  #classic .sec-icon { height: 44px; }
+  #classic .feature-body { padding: 20px; }
+  #classic .project-grid { grid-template-columns: 1fr; }
+  #classic .skill-row { grid-template-columns: 1fr; gap: 4px; }
+  #classic .skill-row dd { font-size: var(--fs-b); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #classic .hero-room img, #classic :is(.card, .feature) .shot img { transition: none; }
+}
+
+/* ===== In-game info panel cards (projects, skills, contact inside #panel) ===== */
+#panel .chips { gap: 6px; margin: 0; }
+#panel .chips li { padding: 3px 10px; border-radius: 999px; background: var(--c-surface-2); color: var(--c-teal); font-size: 12px; font-weight: 700; }
+#panel :is(.project, .skill-group, .contact li) { background: var(--c-surface-2); border-radius: var(--c-radius); }
+#panel .projects { gap: 10px; }
+#panel .project { gap: 14px; }
+#panel .project[data-project] { cursor: pointer; transition: background 0.15s; }
+#panel .project[data-project]:hover { background: var(--c-surface); }
+#panel .project[data-project]:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 3px; }
+#panel .project img { background: var(--c-surface); }
+#panel .project h3 { margin: 0 0 6px; font-size: 16px; }
+#panel .project h3 a { color: var(--c-text); }
+#panel .project h3 a:hover { color: var(--c-gold); }
+#panel .project p {
   margin: 0 0 10px;
   color: var(--c-muted);
   font-size: 14px;
@@ -418,54 +457,17 @@ html:has(body.classic-mode), body.classic-mode { background: #0e0c18; height: au
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-:is(#classic, #panel) .skill-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-:is(#classic, #panel) .skill-group { padding: 18px; }
-:is(#classic, #panel) .skill-group h3 { margin: 0 0 12px; font-size: 16px; }
-:is(#classic, #panel) .contact { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; margin: 0; }
-:is(#classic, #panel) .contact li { margin: 0; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; }
-:is(#classic, #panel) .contact span { min-width: 0; color: var(--c-muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
-:is(#classic, #panel) .contact a { font-size: 17px; font-weight: 800; color: var(--c-text); }
-:is(#classic, #panel) .contact a::after { content: ' ↗'; color: var(--c-gold); }
-:is(#classic, #panel) .contact a:hover { color: var(--c-gold); text-decoration: none; }
-
-#classic .foot {
-  max-width: var(--c-max);
-  margin: 40px auto 0;
-  padding: 24px 20px 40px;
-  border-top: 1px solid var(--c-line);
-  color: var(--c-muted);
-  font-size: 14px;
-  text-align: center;
-}
-
-/* entrance animations */
-#classic.enter .hero-inner > * { animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-#classic.enter .hero-inner > :nth-child(2) { animation-delay: 0.08s; }
-#classic.enter .hero-inner > :nth-child(3) { animation-delay: 0.16s; }
-#classic.enter .hero-inner > :nth-child(4) { animation-delay: 0.24s; }
-#classic.enter .hero-inner > :nth-child(5) { animation-delay: 0.32s; }
-@keyframes rise { from { opacity: 0; transform: translateY(18px); } }
-#classic .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
-#classic .reveal.in { opacity: 1; transform: none; }
-
-@media (max-width: 720px) {
-  #classic .topbar-inner { flex-wrap: wrap; gap: 10px 16px; padding: 10px 16px; }
-  #classic .brand { flex: 1 1 100%; min-width: 0; min-height: 38px; padding-right: 206px; } /* switch sits on the brand row */
-  #classic .topbar-links { width: 100%; margin: 0; gap: 18px; overflow-x: auto; }
-  #classic .hero-inner { padding: 48px 16px 44px; }
-  #classic .hero-about { font-size: 16px; }
-  #classic .stats li { min-width: 0; flex: 1 1 30%; padding: 12px; }
-  #classic .stats strong { font-size: 22px; }
-  #classic .blocks { padding: 0 16px 24px; }
-  #classic .block { padding-top: 44px; scroll-margin-top: 100px; }
-  #classic .block h2 { font-size: 24px; }
-  :is(#classic, #panel) .projects, :is(#classic, #panel) .skill-groups, :is(#classic, #panel) .contact { grid-template-columns: 1fr; }
-}
+#panel .skill-groups { display: grid; }
+#panel .skill-group h3 { margin: 0 0 10px; font-size: 16px; }
+#panel .contact { display: grid; margin: 0; }
+#panel .contact li { display: flex; flex-direction: column; gap: 2px; margin: 0; }
+#panel .contact span { color: var(--c-muted); font-size: 13px; font-weight: 700; }
+#panel .contact a { font-size: 17px; font-weight: 800; color: var(--c-text); }
+#panel .contact a::after { content: ' ↗'; color: var(--c-gold); }
+#panel .contact a:hover { color: var(--c-gold); }
 
 /* ===== Project details window ===== */
 html.modal-open, html.modal-open body { overflow: hidden; }
-:is(#classic, #panel) .project[data-project] { cursor: pointer; }
-:is(#classic, #panel) .project[data-project]:focus-visible { outline: 2px solid var(--c-teal); outline-offset: 3px; }
 
 #project-modal {
   position: fixed;
@@ -610,23 +612,11 @@ html[data-theme='day'] :is(#classic, #game-view, #mode-switch, #project-modal) {
 }
 html[data-theme='day']:has(body.classic-mode),
 html[data-theme='day'] body.classic-mode { background: #f4f7ff; }
-html[data-theme='day'] #classic .topbar { background: rgba(244, 247, 255, 0.85); }
-html[data-theme='day'] #classic .hero {
-  background:
-    radial-gradient(60% 80% at 15% 0%, rgba(255, 204, 77, 0.28), transparent 70%),
-    radial-gradient(50% 70% at 95% 30%, rgba(95, 200, 255, 0.22), transparent 70%);
-}
-html[data-theme='day'] #classic .btn-primary { background: #ffcc4d; box-shadow: 0 6px 18px -8px rgba(232, 147, 12, 0.7); }
-html[data-theme='day'] #classic .eyebrow { background: rgba(255, 204, 77, 0.18); border-color: rgba(232, 147, 12, 0.4); }
-html[data-theme='day'] #classic .dot { background: #f5a524; box-shadow: 0 0 8px rgba(245, 165, 36, 0.8); }
-html[data-theme='day'] #classic .stats li { background: #ffffff; box-shadow: 0 4px 14px -8px rgba(28, 37, 65, 0.25); }
-html[data-theme='day'] :is(#classic, #panel) .chips li { background: rgba(13, 148, 136, 0.08); border-color: rgba(13, 148, 136, 0.28); }
-html[data-theme='day'] :is(#classic, #panel) :is(.project, .skill-group, .contact li) { box-shadow: 0 4px 16px -10px rgba(28, 37, 65, 0.3); }
-html[data-theme='day'] :is(#classic, #panel) :is(.project, .skill-group, .contact li):hover {
-  border-color: rgba(232, 147, 12, 0.5);
-  box-shadow: 0 14px 30px -16px rgba(232, 147, 12, 0.5);
-}
-html[data-theme='day'] :is(#classic, #panel) .project img { box-shadow: 0 4px 12px -6px rgba(28, 37, 65, 0.45); }
+/* filled gold stays bright by day (the deeper --c-gold is for gold text on white) */
+html[data-theme='day'] #classic :is(.btn-primary, .hero-room-label, .brand-badge) { background: #ffcc4d; }
+html[data-theme='day'] #classic .btn-primary:hover { background: #ffd970; }
+html[data-theme='day'] #classic .btn-cv:hover { background: #ffcc4d; border-color: #ffcc4d; color: #1a1423; }
+html[data-theme='day'] :is(#classic, #panel) .chips li { background: rgba(13, 148, 136, 0.1); color: #0b7a70; }
 /* Game | Portfolio switch */
 html[data-theme='day'] #mode-switch {
   border-color: rgba(232, 147, 12, 0.45);
@@ -687,8 +677,3 @@ html[data-theme='day'] #transition { --tile: #f4f7ff; --tile-edge: #ffcc4d; }
   100% { transform: scale(0); background: var(--tile); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #classic.enter .hero-inner > * { animation: none; }
-  #classic .reveal { opacity: 1; transform: none; transition: none; }
-  #classic .btn, :is(#classic, #panel) .project, :is(#classic, #panel) .skill-group, :is(#classic, #panel) .contact li { transition: none; }
-}

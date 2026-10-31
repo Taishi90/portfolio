@@ -18,16 +18,19 @@ const LW = 0.9; // outline width (world px)
 
 // ---------- drawing helpers (all in world units) ----------
 
-function canvasTexture(scene, key, w, h, draw) {
-  if (scene.textures.exists(key)) return scene.textures.get(key);
-  const tex = scene.textures.createCanvas(key, Math.ceil(w * R), Math.ceil(h * R));
-  const ctx = tex.getContext();
+function paint(ctx, scale, draw) {
   ctx.save();
-  ctx.scale(R, R);
+  ctx.scale(scale, scale);
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   draw(ctx);
   ctx.restore();
+}
+
+function canvasTexture(scene, key, w, h, draw) {
+  if (scene.textures.exists(key)) return scene.textures.get(key);
+  const tex = scene.textures.createCanvas(key, Math.ceil(w * R), Math.ceil(h * R));
+  paint(tex.getContext(), R, draw);
   tex.refresh();
   return tex;
 }
@@ -209,9 +212,10 @@ function createPlayerAnims(scene) {
 
 const BOOKS = [['#ff7a8a', '#e5435f'], ['#6bb8ff', '#2f74d6'], ['#ffe066', '#ffb020'], ['#7be35a', '#3fa83a'], ['#c39bff', '#8a5cf0'], ['#ffb36b', '#f07a2a']];
 
-function createObjects(scene) {
+// Each object is defined once: as a game texture (createObjects) and as an image for the HTML page (artImage)
+function defineObjects(def) {
   // About: golden picture frame with a portrait
-  canvasTexture(scene, 'obj-about', 28, 24, (ctx) => {
+  def('obj-about', 28, 24, (ctx) => {
     box(ctx, 0.6, 0.6, 26.8, 22.8, 4, { top: '#ffe680', bottom: '#f5a524' });
     box(ctx, 3.6, 3.6, 20.8, 16.8, 2.5, { top: '#a8e2ff', bottom: '#5aa9f0', gloss: 0, shade: 0, lw: 0.7 });
     ctx.save();
@@ -247,7 +251,7 @@ function createObjects(scene) {
   });
 
   // Projects: desk with a glowing monitor
-  canvasTexture(scene, 'obj-projects', 40, 32, (ctx) => {
+  def('obj-projects', 40, 32, (ctx) => {
     shadow(ctx, 20, 30.6, 18, 1.4);
     box(ctx, 3, 18, 3.6, 12.6, 1.4, { top: '#d9844a', bottom: '#a8552a', gloss: 0.15 });
     box(ctx, 33.4, 18, 3.6, 12.6, 1.4, { top: '#d9844a', bottom: '#a8552a', gloss: 0.15 });
@@ -272,7 +276,7 @@ function createObjects(scene) {
   });
 
   // Skills: bookshelf with colorful books
-  canvasTexture(scene, 'obj-skills', 24, 40, (ctx) => {
+  def('obj-skills', 24, 40, (ctx) => {
     box(ctx, 0.6, 0.6, 22.8, 38.8, 3, { top: '#e8925a', bottom: '#b8612f', gloss: 0.18 });
     box(ctx, 2.6, 2.6, 18.8, 34.8, 1.6, { top: '#7a3f22', bottom: '#5a2c16', gloss: 0, shade: 0, lw: 0.6 });
     [2.8, 14.6, 26.4].forEach((top, shelf) => {
@@ -289,7 +293,7 @@ function createObjects(scene) {
   });
 
   // Contact: red mailbox with a letter and a yellow flag
-  canvasTexture(scene, 'obj-contact', 16, 28, (ctx) => {
+  def('obj-contact', 16, 28, (ctx) => {
     shadow(ctx, 8, 27, 5, 1.1);
     box(ctx, 6.3, 12.5, 3.4, 14.4, 1.2, { top: '#d9844a', bottom: '#a8552a', gloss: 0.15 });
     box(ctx, 13.2, 0.6, 1.3, 7.5, 0.6, { top: '#5b6a9e', bottom: '#3b4a7a', gloss: 0, shade: 0, lw: 0.5 });
@@ -307,7 +311,7 @@ function createObjects(scene) {
   });
 
   // Decoration: potted plant
-  canvasTexture(scene, 'deco-plant', 14, 22, (ctx) => {
+  def('deco-plant', 14, 22, (ctx) => {
     shadow(ctx, 7, 21.2, 5, 1);
     const leaf = (cx, cy, rx, ry, rot) =>
       blob(ctx, () => { ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2); }, [cx - rx, cy - ry, rx * 2, ry * 2], {
@@ -325,7 +329,7 @@ function createObjects(scene) {
   });
 
   // Yellow "!" badge bouncing above each object
-  canvasTexture(scene, 'bang', 10, 12, (ctx) => {
+  def('bang', 10, 12, (ctx) => {
     ctx.beginPath();
     ctx.moveTo(3.4, 8.4);
     ctx.lineTo(5, 11.4);
@@ -340,6 +344,10 @@ function createObjects(scene) {
     box(ctx, 4.3, 2.1, 1.4, 3.8, 0.7, { top: INK, gloss: 0, shade: 0, lw: 0 });
     ellipse(ctx, 5, 7.4, 0.8, 0.8, INK);
   });
+}
+
+function createObjects(scene) {
+  defineObjects((key, w, h, draw) => canvasTexture(scene, key, w, h, draw));
 }
 
 // ---------- intro: door, lamps, house front ----------
@@ -400,11 +408,9 @@ function createSky(scene) {
   });
 }
 
-// day: true = morning/afternoon sky with sun, false = night sky with moon (stars/sun/clouds are added by the scene)
-export function drawFacade(scene, W, H, day = false) {
+function facadePainter(W, H, day) {
   const { x, y, w, h } = DOORWAY;
-  const key = day ? 'facade-day' : 'facade-night';
-  canvasTexture(scene, key, W, H, (ctx) => {
+  return (ctx) => {
     if (day) {
       // bright sky with a soft horizon glow
       ctx.fillStyle = vgrad(ctx, 0, 200, '#5cc2ff', '#c9f0ff');
@@ -474,7 +480,13 @@ export function drawFacade(scene, W, H, day = false) {
       ball(ctx, bx + 9, by, 8, { top: '#8ef06a', bottom: '#3fa83a', gloss: 0.25, shade: 0 });
       ball(ctx, bx, by - 5, 10, { top: '#8ef06a', bottom: '#3fa83a', gloss: 0.25, shade: 0 });
     }
-  });
+  };
+}
+
+// day: true = morning/afternoon sky with sun, false = night sky with moon (stars/sun/clouds are added by the scene)
+export function drawFacade(scene, W, H, day = false) {
+  const key = day ? 'facade-day' : 'facade-night';
+  canvasTexture(scene, key, W, H, facadePainter(W, H, day));
   return scene.add.image(0, 0, key).setOrigin(0).setScale(1 / R);
 }
 
@@ -483,10 +495,8 @@ export function drawFacade(scene, W, H, day = false) {
 // Red rug in the middle of the room (RoomScene shows a message when the player steps on it)
 export const RUG = { x: 112, y: 118, w: 96, h: 60 };
 
-// day: the window shows a blue sky with clouds; false = night sky with the moon and stars
-export function drawRoom(scene, W, H, T, wallTop, day = true) {
-  const key = day ? 'room-bg-day' : 'room-bg-night';
-  canvasTexture(scene, key, W, H, (ctx) => {
+function roomPainter(W, H, T, wallTop, day) {
+  return (ctx) => {
     // wooden floor with staggered planks
     ctx.fillStyle = '#f2b66b';
     ctx.fillRect(0, 0, W, H);
@@ -566,8 +576,62 @@ export function drawRoom(scene, W, H, T, wallTop, day = true) {
     ctx.strokeStyle = '#ffe066';
     ctx.stroke();
     ctx.setLineDash([]);
-  });
+  };
+}
+
+// day: the window shows a blue sky with clouds; false = night sky with the moon and stars
+export function drawRoom(scene, W, H, T, wallTop, day = true) {
+  const key = day ? 'room-bg-day' : 'room-bg-night';
+  canvasTexture(scene, key, W, H, roomPainter(W, H, T, wallTop, day));
   return scene.add.image(0, 0, key).setOrigin(0).setScale(1 / R);
+}
+
+// ---------- the same art as images for the HTML page ----------
+
+// Where things stand in the room (same as OBJECTS in RoomScene.js), for the portfolio hero picture
+const ROOM_LAYOUT = [
+  ['obj-about', 72, 40],
+  ['obj-projects', 248, 80],
+  ['obj-skills', 28, 168],
+  ['obj-contact', 288, 204],
+  ['deco-plant', 300, 66],
+];
+
+const objectArt = {};
+defineObjects((key, w, h, draw) => (objectArt[key] = { w, h, draw }));
+
+// PNG data URL of a piece of game art: 'room' (the room with its objects and the player, day or night)
+// or one object key ('obj-about', 'obj-projects', 'obj-skills', 'obj-contact', 'deco-plant').
+export function artImage(key, { day = true, scale = 3 } = {}) {
+  let w;
+  let h;
+  let draw;
+  if (key === 'room') {
+    [w, h] = [320, 240];
+    const room = roomPainter(w, h, 16, 48, day);
+    draw = (ctx) => {
+      room(ctx);
+      for (const [k, x, y] of ROOM_LAYOUT) {
+        const o = objectArt[k];
+        ctx.save();
+        ctx.translate(x - o.w / 2, y - o.h);
+        o.draw(ctx);
+        ctx.restore();
+      }
+      ctx.save();
+      ctx.translate(160 - 8 * PLAYER_SCALE, 150 - 8 * PLAYER_SCALE);
+      ctx.scale(PLAYER_SCALE, PLAYER_SCALE);
+      drawPlayer(ctx, 'down', 0);
+      ctx.restore();
+    };
+  } else {
+    ({ w, h, draw } = objectArt[key]);
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(w * scale);
+  canvas.height = Math.ceil(h * scale);
+  paint(canvas.getContext('2d'), scale, draw);
+  return canvas.toDataURL('image/png');
 }
 
 export function createTextures(scene) {
