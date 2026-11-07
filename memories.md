@@ -193,7 +193,7 @@
 
 ## 2026-10-24 — "Get CV" button
 
-**What** — Portfolio hero has a gold-outlined **Get CV ↗** button (between "View projects" and "Get in touch") that opens `PROFILE.cv` (Canva link, set in content.js) in a new tab. Style: `#classic .btn-cv`. Not shown in the game.
+**What** — Portfolio hero has a gold-outlined **Get CV ↗** button (between "View projects" and "Get in touch") that opens `PROFILE.cv` (Canva link, set in content.js; changed to canva.link/iukktj9gpdvah4h on 2026-11-07) in a new tab. Style: `#classic .btn-cv`. Not shown in the game.
 
 ## 2026-10-31 — Portfolio page reworked after a taste-skill review
 
