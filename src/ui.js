@@ -59,6 +59,10 @@ function storeLabel(link) {
 }
 
 let lastFocus = null;
+let currentProject = null;
+
+const CHEVRON = (d) =>
+  `<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 
 export const isModalOpen = () => !$('project-modal').hidden;
 
@@ -66,6 +70,8 @@ function openProject(id) {
   const p = PROFILE.projects.find((x) => x.id === id);
   const d = DETAILS[id];
   if (!p || !d) return;
+  const wasOpen = isModalOpen();
+  currentProject = id;
   const shots = d.screenshots
     .map(
       (src, i) =>
@@ -82,8 +88,15 @@ function openProject(id) {
     </header>
     <div class="pm-shots">${shots}</div>
     <div class="pm-desc">${formatDescription(d.description)}</div>
-    ${p.link ? `<a class="pm-store" href="${esc(p.link)}" target="_blank" rel="noopener">${storeLabel(p.link)} <span aria-hidden="true">↗</span></a>` : ''}`;
-  lastFocus = document.activeElement;
+    <div class="pm-actions">
+      ${p.link ? `<a class="pm-store" href="${esc(p.link)}" target="_blank" rel="noopener">${storeLabel(p.link)} <span aria-hidden="true">↗</span></a>` : ''}
+      <span class="pm-nav">
+        <button type="button" class="pm-step" data-step="-1" aria-label="Previous project">${CHEVRON('M15 18l-6-6 6-6')}</button>
+        <button type="button" class="pm-step" data-step="1" aria-label="Next project">${CHEVRON('M9 18l6-6-6-6')}</button>
+      </span>
+    </div>`;
+  // keep the element to return focus to from the first opening (not when stepping between projects)
+  if (!wasOpen) lastFocus = document.activeElement;
   $('project-modal').hidden = false;
   document.documentElement.classList.add('modal-open');
   $('project-modal').querySelector('.pm-dialog').scrollTop = 0;
@@ -95,7 +108,16 @@ function closeProject() {
   if (!isModalOpen()) return;
   $('project-modal').hidden = true;
   document.documentElement.classList.remove('modal-open');
-  lastFocus?.focus?.();
+  // give focus back to the island/card that opened the popup (it may be the visible one in the other view)
+  const back = lastFocus?.isConnected && lastFocus.offsetParent !== null ? lastFocus : document.querySelector(`[data-project="${currentProject}"]`);
+  back?.focus?.();
+}
+
+// ←/→ buttons and arrow keys: previous / next project, wrapping around
+function stepProject(dir) {
+  const ids = PROFILE.projects.map((x) => x.id);
+  const i = ids.indexOf(currentProject);
+  openProject(ids[(i + dir + ids.length) % ids.length]);
 }
 
 function initProjectModal() {
@@ -113,55 +135,134 @@ function initProjectModal() {
     }
   });
   for (const el of $('project-modal').querySelectorAll('[data-close]')) el.addEventListener('click', closeProject);
+  $('project-modal').addEventListener('click', (e) => {
+    const step = e.target.closest('.pm-step');
+    if (step) stepProject(Number(step.dataset.step));
+  });
+  // inside the popup: ←/→ change project, Tab stays in the popup (focus trap)
+  $('project-modal').addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      stepProject(e.key === 'ArrowLeft' ? -1 : 1);
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const focusables = [...$('project-modal').querySelectorAll('.pm-dialog a[href], .pm-dialog button')].filter((el) => el.offsetParent !== null);
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
 }
 
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Cover picture for each project card: index of a landscape screenshot, or 'portrait' to set three
+// Cover picture for each project: index of a landscape screenshot, or 'portrait' to set three
 // portrait screenshots side by side (games that only have portrait shots)
 const COVERS = { 'tactic-manager': 4, swatzzapz: 2, 'pop-clover': 'portrait', 'i-am-hero': 'portrait' };
 
 function coverHtml(p) {
   const shots = DETAILS[p.id]?.screenshots || [];
   const c = COVERS[p.id] ?? 1;
-  const list = c === 'portrait' ? shots.slice(0, 3) : [shots[c - 1]];
-  return `<div class="shot">${list.map((src) => `<img src="${esc(src)}" alt="" loading="lazy" decoding="async" />`).join('')}</div>`;
+  const portrait = c === 'portrait';
+  const list = portrait ? shots.slice(0, 3) : [shots[c - 1]];
+  const [w, h] = portrait ? [405, 720] : [1280, 720];
+  return `<span class="shot">${list
+    .map((src) => `<img src="${esc(src)}" alt="Screenshot of ${esc(p.name)}" width="${w}" height="${h}" loading="lazy" decoding="async" />`)
+    .join('')}</span>`;
 }
 
 const chips = (tags) => `<ul class="chips">${tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`;
-const cardAttrs = (p) => `data-project="${esc(p.id)}" tabindex="0" role="button" aria-label="${esc(p.name)}: show details"`;
 
-// The portfolio page has its own markup (the in-game panel keeps the compact cards from content.js)
+// Island colours cycle through the clay pastels (display only, no data needed)
+const ISLAND_COLORS = ['mint', 'peach', 'sky', 'lilac', 'sand'];
+
+// Projects as an archipelago: each game is an island (screenshot on top, wooden name sign, genre badge).
+// The first project is the featured, bigger island. A list view is there for visitors in a hurry.
 function projectsHtml() {
-  const [first, ...rest] = PROFILE.projects;
+  const islands = PROFILE.projects
+    .map(
+      (p, i) => `<li class="isl-slot${i === 0 ? ' featured' : ''}" style="--i:${i}">
+        <button type="button" class="island isl-${ISLAND_COLORS[i % ISLAND_COLORS.length]}" data-project="${esc(p.id)}" aria-label="${esc(p.name)}: open details">
+          <span class="isl-body">
+            <span class="isl-top">${coverHtml(p)}</span>
+            <span class="isl-cliff" aria-hidden="true"></span>
+          </span>
+          <span class="isl-sign">
+            <img src="${esc(p.image)}" alt="" width="40" height="40" loading="lazy" />
+            <span class="isl-name">${esc(p.name)}</span>
+          </span>
+          <span class="isl-badge">${esc(p.tags[0])}</span>
+        </button>
+      </li>`,
+    )
+    .join('');
+  const rows = PROFILE.projects
+    .map(
+      (p) => `<li>
+        <button type="button" class="proj-row" data-project="${esc(p.id)}" aria-label="${esc(p.name)}: open details">
+          <img src="${esc(p.image)}" alt="" width="56" height="56" loading="lazy" />
+          <span class="proj-row-text">
+            <span class="proj-row-name">${esc(p.name)}</span>
+            <span class="proj-row-desc">${esc(p.desc)}</span>
+          </span>
+          <span class="proj-row-tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</span>
+        </button>
+      </li>`,
+    )
+    .join('');
   return `
-    <article class="feature" ${cardAttrs(first)}>
-      ${coverHtml(first)}
-      <div class="feature-body">
-        <img class="icon" src="${esc(first.image)}" alt="" width="72" height="72" />
-        <h3>${esc(first.name)}</h3>
-        <p>${esc(first.desc)}</p>
-        ${chips(first.tags)}
-      </div>
-    </article>
-    <div class="project-grid">
-      ${rest
-        .map(
-          (p) => `<article class="card" ${cardAttrs(p)}>
-            ${coverHtml(p)}
-            <div class="card-body">
-              <img class="icon" src="${esc(p.image)}" alt="" width="48" height="48" loading="lazy" />
-              <div>
-                <h3>${esc(p.name)}</h3>
-                <p>${esc(p.desc)}</p>
-                ${chips(p.tags)}
-              </div>
-            </div>
-          </article>`,
-        )
-        .join('')}
-    </div>`;
+    <div class="view-toggle">
+      <button type="button" class="btn btn-ghost" id="view-toggle" aria-pressed="false">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        <span>List view</span>
+      </button>
+    </div>
+    <ul class="islands" aria-label="Projects map">${islands}</ul>
+    <ul class="proj-list" aria-label="Projects list" hidden>${rows}</ul>`;
+}
+
+const VIEW_KEY = 'portfolio-projects-view';
+
+// Map <-> list toggle (remembered in this browser) and arrow-key movement between projects
+function initProjectsView() {
+  const section = $('projects');
+  const btn = $('view-toggle');
+  const setView = (view) => {
+    const list = view === 'list';
+    section.querySelector('.islands').hidden = list;
+    section.querySelector('.proj-list').hidden = !list;
+    btn.setAttribute('aria-pressed', String(list));
+    btn.querySelector('span').textContent = list ? 'Map view' : 'List view';
+    btn.querySelector('svg').innerHTML = list
+      ? '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>'
+      : '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>';
+    try {
+      localStorage.setItem(VIEW_KEY, view);
+    } catch {}
+  };
+  btn.addEventListener('click', () => setView(btn.getAttribute('aria-pressed') === 'true' ? 'map' : 'list'));
+  let saved = 'map';
+  try {
+    saved = localStorage.getItem(VIEW_KEY) || 'map';
+  } catch {}
+  setView(saved);
+
+  section.addEventListener('keydown', (e) => {
+    const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+    const current = e.target.closest('[data-project]');
+    if (!current || !(e.key in keys)) return;
+    const all = [...section.querySelectorAll('[data-project]')].filter((el) => el.offsetParent !== null);
+    const next = all[(all.indexOf(current) + keys[e.key] + all.length) % all.length];
+    e.preventDefault();
+    next.focus();
+  });
 }
 
 function skillsHtml() {
@@ -230,6 +331,7 @@ function renderClassic() {
     </header>
     ${sections}
     <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built with Phaser 3.</footer>`;
+  initProjectsView();
 }
 
 let game;
