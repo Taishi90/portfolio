@@ -363,17 +363,6 @@ html:has(body.classic-mode), body.classic-mode {
 }
 #classic .brand { display: flex; align-items: center; gap: 10px; color: var(--text); font: 700 var(--fs-m) / 1 var(--font-display); }
 #classic .brand:hover { text-decoration: none; }
-#classic .brand-badge {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: var(--border);
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-size: var(--fs-s);
-}
 #classic .topbar-links { display: flex; gap: 8px; margin-left: auto; }
 #classic .topbar-links a {
   display: inline-flex;
@@ -448,7 +437,8 @@ html:has(body.classic-mode), body.classic-mode {
 #classic .sec-icon { height: 56px; width: auto; flex: none; }
 
 #classic .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
-#classic .chips li { padding: 4px 10px; border-radius: 999px; background: var(--c-surface-2); color: var(--c-teal); font-size: var(--fs-s); font-weight: 700; }
+/* category tags: clay pills, dark text by day, light text by night (both well above 4.5:1) */
+#classic .chips li { padding: 4px 12px; border: 2px solid var(--line); border-radius: 999px; background: var(--sky); color: var(--text); font-size: var(--fs-s); font-weight: 700; }
 
 /* projects: one featured game, then a grid of covers (real screenshots) */
 #classic [data-project] { cursor: pointer; }
@@ -495,7 +485,7 @@ html:has(body.classic-mode), body.classic-mode {
 #classic .skill-row dd { margin: 0; color: var(--c-muted); font-size: var(--fs-m); line-height: 1.5; }
 
 /* contact: one statement */
-#classic .contact-email { display: inline-block; font-size: var(--fs-l); font-weight: 800; line-height: 1.2; color: var(--c-text); overflow-wrap: anywhere; }
+#classic .contact-email { display: inline-block; font: 700 var(--fs-m) / 1.3 var(--font-display); color: var(--text); overflow-wrap: anywhere; }
 #classic .contact-email:hover { color: var(--c-gold); text-decoration: none; }
 #classic .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 

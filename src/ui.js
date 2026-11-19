@@ -186,11 +186,6 @@ const SECTION_HTML = { projects: projectsHtml, skills: skillsHtml, contact: cont
 const SECTION_ICON = { projects: 'obj-projects', skills: 'obj-skills', contact: 'obj-contact' };
 
 function renderClassic() {
-  const initials = PROFILE.name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2);
   const nav = SECTIONS.map((s) => `<a href="#${s.id}">${s.title}</a>`).join('');
   // the first stat (years of experience) becomes the "Lv." badge on the player card, the rest are small badges
   const [years, ...otherStats] = STATS;
@@ -208,7 +203,7 @@ function renderClassic() {
   $('classic').innerHTML = `
     <nav class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="#about"><span class="brand-badge">${esc(initials)}</span>${esc(PROFILE.name)}</a>
+        <a class="brand" href="#about">${esc(PROFILE.name)}</a>
         <div class="topbar-links">${nav}</div>
       </div>
     </nav>
