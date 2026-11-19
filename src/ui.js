@@ -97,6 +97,7 @@ function openProject(id) {
     </div>`;
   // keep the element to return focus to from the first opening (not when stepping between projects)
   if (!wasOpen) lastFocus = document.activeElement;
+  if (document.body.classList.contains('classic-mode')) pop();
   $('project-modal').hidden = false;
   document.documentElement.classList.add('modal-open');
   $('project-modal').querySelector('.pm-dialog').scrollTop = 0;
@@ -247,7 +248,10 @@ function initProjectsView() {
       localStorage.setItem(VIEW_KEY, view);
     } catch {}
   };
-  btn.addEventListener('click', () => setView(btn.getAttribute('aria-pressed') === 'true' ? 'map' : 'list'));
+  btn.addEventListener('click', () => {
+    setView(btn.getAttribute('aria-pressed') === 'true' ? 'map' : 'list');
+    pop();
+  });
   let saved = 'map';
   try {
     saved = localStorage.getItem(VIEW_KEY) || 'map';
@@ -265,21 +269,126 @@ function initProjectsView() {
   });
 }
 
+// Skills as a backpack: each group from skill.md is a pocket, each skill an inventory slot (no % bars)
+const POCKET_COLORS = ['mint', 'sky', 'lilac', 'peach', 'sand'];
 function skillsHtml() {
-  return `<dl class="skill-rows">${SKILLS.map(
-    (g) => `<div class="skill-row"><dt>${esc(g.title)}</dt><dd>${g.items.map(esc).join(', ')}</dd></div>`,
-  ).join('')}</dl>`;
+  return `<div class="backpack">
+    <div class="bp-pockets">${SKILLS.map(
+      (g, i) => `<section class="bp-pocket" aria-label="${esc(g.title)}">
+        <h3>${esc(g.title)}</h3>
+        <ul class="bp-slots bp-${POCKET_COLORS[i % POCKET_COLORS.length]}">${g.items.map((it) => `<li class="bp-slot">${esc(it)}</li>`).join('')}</ul>
+      </section>`,
+    ).join('')}</div>
+  </div>`;
 }
 
+// Contact as a mailbox island: email with a copy button, then LinkedIn and the CV
 function contactHtml() {
   const email = PROFILE.contact.find((c) => c.href.startsWith('mailto:'));
   const others = PROFILE.contact.filter((c) => c !== email);
-  return `
-    ${email ? `<a class="contact-email" href="${esc(email.href)}">${esc(email.value)}</a>` : ''}
-    <div class="contact-links">
-      ${others.map((c) => `<a class="btn btn-ghost" href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.label)} <span aria-hidden="true">↗</span></a>`).join('')}
-      <a class="btn btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
-    </div>`;
+  return `<div class="mailbox">
+    <div class="mb-art isl-peach" aria-hidden="true">
+      <span class="isl-top"><img src="${artImage('obj-contact', { scale: 6 })}" alt="" width="64" height="112" /></span>
+      <span class="isl-cliff"></span>
+    </div>
+    <div class="mb-card">
+      ${
+        email
+          ? `<p class="mb-label">Email</p>
+      <div class="mb-email">
+        <a class="contact-email" href="${esc(email.href)}">${esc(email.value)}</a>
+        <button type="button" class="btn btn-primary" id="copy-email" data-email="${esc(email.value)}">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+          Copy
+        </button>
+      </div>`
+          : ''
+      }
+      <div class="contact-links">
+        ${others.map((c) => `<a class="btn btn-ghost" href="${esc(c.href)}" target="_blank" rel="noopener">${esc(c.label)} <span aria-hidden="true">↗</span></a>`).join('')}
+        <a class="btn btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ---------- small toast + optional "pop" sound (off by default) ----------
+
+let toastTimer = 0;
+function showToast(message) {
+  const t = $('toast');
+  t.textContent = message;
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (t.hidden = true), 3000);
+}
+
+async function copyEmail(btn) {
+  const value = btn.dataset.email;
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch {
+    // older browsers: copy through a temporary text field
+    const field = document.createElement('textarea');
+    field.value = value;
+    document.body.append(field);
+    field.select();
+    document.execCommand('copy');
+    field.remove();
+  }
+  pop();
+  showToast('Email copied');
+}
+
+const SOUND_KEY = 'portfolio-sound';
+let audio = null;
+const soundOn = () => {
+  try {
+    return localStorage.getItem(SOUND_KEY) === 'on';
+  } catch {
+    return false;
+  }
+};
+
+// a soft "pop" made with Web Audio (no sound file): short sine blip that drops in pitch
+function pop() {
+  if (!soundOn()) return;
+  try {
+    audio ??= new (window.AudioContext || window.webkitAudioContext)();
+    const t = audio.currentTime;
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(660, t);
+    osc.frequency.exponentialRampToValueAtTime(280, t + 0.12);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.16, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    osc.connect(gain).connect(audio.destination);
+    osc.start(t);
+    osc.stop(t + 0.18);
+  } catch {}
+}
+
+const SPEAKER_ON = '<path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>';
+const SPEAKER_OFF = '<path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m16 9 6 6M22 9l-6 6"/>';
+
+function initSoundToggle() {
+  const btn = $('sound-toggle');
+  const render = () => {
+    const on = soundOn();
+    btn.setAttribute('aria-pressed', String(on));
+    btn.querySelector('svg').innerHTML = on ? SPEAKER_ON : SPEAKER_OFF;
+    btn.title = on ? 'Sound on' : 'Sound off';
+  };
+  btn.addEventListener('click', () => {
+    try {
+      localStorage.setItem(SOUND_KEY, soundOn() ? 'off' : 'on');
+    } catch {}
+    render();
+    pop();
+  });
+  render();
 }
 
 const SECTION_HTML = { projects: projectsHtml, skills: skillsHtml, contact: contactHtml };
@@ -306,6 +415,9 @@ function renderClassic() {
       <div class="topbar-inner">
         <a class="brand" href="#about">${esc(PROFILE.name)}</a>
         <div class="topbar-links">${nav}</div>
+        <button type="button" class="sound-toggle" id="sound-toggle" aria-pressed="false" aria-label="Sound effects">
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg>
+        </button>
       </div>
     </nav>
     <header class="hero" id="about">
@@ -330,8 +442,11 @@ function renderClassic() {
       </div>
     </header>
     ${sections}
-    <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built with Phaser 3.</footer>`;
+    <footer class="foot">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built with Phaser 3.</footer>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>`;
   initProjectsView();
+  initSoundToggle();
+  $('copy-email')?.addEventListener('click', (e) => copyEmail(e.currentTarget));
 }
 
 let game;
