@@ -600,13 +600,16 @@ const ROOM_LAYOUT = [
 const objectArt = {};
 defineObjects((key, w, h, draw) => (objectArt[key] = { w, h, draw }));
 
-// PNG data URL of a piece of game art: 'room' (the room with its objects and the player, day or night)
-// or one object key ('obj-about', 'obj-projects', 'obj-skills', 'obj-contact', 'deco-plant').
+// PNG data URL of a piece of game art: 'room' (the room with its objects and the player, day or night),
+// 'player' (the chibi character, facing the viewer) or one object key ('obj-about', 'obj-projects', 'obj-skills', 'obj-contact', 'deco-plant').
 export function artImage(key, { day = true, scale = 3 } = {}) {
   let w;
   let h;
   let draw;
-  if (key === 'room') {
+  if (key === 'player') {
+    [w, h] = [16, 16];
+    draw = (ctx) => drawPlayer(ctx, 'down', 0);
+  } else if (key === 'room') {
     [w, h] = [320, 240];
     const room = roomPainter(w, h, 16, 48, day);
     draw = (ctx) => {

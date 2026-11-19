@@ -192,7 +192,9 @@ function renderClassic() {
     .join('')
     .slice(0, 2);
   const nav = SECTIONS.map((s) => `<a href="#${s.id}">${s.title}</a>`).join('');
-  const stats = STATS.map((st) => `<li><strong>${esc(st.value)}</strong><span>${esc(st.label)}</span></li>`).join('');
+  // the first stat (years of experience) becomes the "Lv." badge on the player card, the rest are small badges
+  const [years, ...otherStats] = STATS;
+  const stats = otherStats.map((st) => `<li><strong>${esc(st.value)}</strong><span>${esc(st.label)}</span></li>`).join('');
   // About lives in the hero; the other sections each have their own layout
   const sections = SECTIONS.filter((s) => s.id !== 'about')
     .map(
@@ -212,17 +214,23 @@ function renderClassic() {
     </nav>
     <header class="hero" id="about">
       <div class="hero-inner">
-        <div class="hero-text">
-          <h1>${esc(PROFILE.name)}</h1>
-          <p class="role">${esc(PROFILE.role)}</p>
+        <article class="player-card">
+          <div class="pc-head">
+            <div class="pc-avatar"><img src="${artImage('player', { scale: 6 })}" alt="${esc(PROFILE.name)}'s character from the portfolio game" width="92" height="92" /></div>
+            <div>
+              <span class="pc-level" title="${esc(years.label)}">Lv. ${esc(years.value)}</span>
+              <h1>${esc(PROFILE.name)}</h1>
+              <p class="role">${esc(PROFILE.role)}</p>
+            </div>
+          </div>
           <div class="hero-about">${PROFILE.about.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
           <ul class="stats">${stats}</ul>
           <div class="hero-cta">
             <a class="btn btn-primary" href="#projects">View projects</a>
             <a class="btn btn-cv" href="${esc(PROFILE.cv)}" target="_blank" rel="noopener">Get CV <span aria-hidden="true">↗</span></a>
-            <a class="btn btn-ghost" href="#contact">Get in touch</a>
+            <a class="btn btn-ghost" href="#contact">Contact</a>
           </div>
-        </div>
+        </article>
       </div>
     </header>
     ${sections}
